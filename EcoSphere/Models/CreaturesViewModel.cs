@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 
 namespace EcoSphere.Models
 {
     public class CreaturesViewModel
     {
+        [DisplayName("Creature ID")]
         public int CreatureId { get; set; }
         [DisplayName("Upper Realm ID")]
         public int? UpperRealmId { get; set; }
@@ -58,10 +60,47 @@ namespace EcoSphere.Models
         [DisplayName("SubspeciesName")]
         public string? SubspeciesName { get; set; }
 
-        [DisplayName("IucnName")]
-        public string? IucnName { get; set; }
+        [DisplayName("IucnCode")]
+        public string? IucnCode { get; set; }
 
         [DisplayName("AuthorName")]
         public string? AuthorName { get; set; }
+
+        public int SelectedCretureId { get; set; }
+        public IEnumerable<SelectListItem> AddCreatures { get; set; } = new List<SelectListItem>();
+        
+        [DisplayName("Upper Realm")]
+        public IEnumerable<SelectListItem> UpperRealmNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Kingdom")]
+        public IEnumerable<SelectListItem> KingdomNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Phylum")]
+        public IEnumerable<SelectListItem> PhylumNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Class")]
+        public IEnumerable<SelectListItem> ClassNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Order")]
+        public IEnumerable<SelectListItem> OrderNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Family")]
+        public IEnumerable<SelectListItem> FamilyNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Genus")]
+        public IEnumerable<SelectListItem> GenusNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Species")]
+        public IEnumerable<SelectListItem> SpeciesNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Subspecies")]
+        public IEnumerable<SelectListItem> SubspeciesNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("IUCN")]
+        public IEnumerable<SelectListItem> IucnCoded { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Author")]
+        public IEnumerable<SelectListItem> AuthorNamed { get; set; } = new List<SelectListItem>();
+
     }
 }

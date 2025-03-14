@@ -29,6 +29,8 @@ public partial class TblCreature
 
     public int? AuthorId { get; set; }
 
+    public string? KingdomName { get; set; }
+
     public string? ScientificName { get; set; }
 
     public string? CommonName { get; set; }

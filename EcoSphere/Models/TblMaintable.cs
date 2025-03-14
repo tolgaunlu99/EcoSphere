@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace EcoSphere.Models;
 
@@ -46,6 +47,9 @@ public partial class TblMaintable
     public DateTime? SeenTime { get; set; }
 
     public DateTime? CreationDate { get; set; }
+    public string? UserName { get; set; }
+    public string? UsersurName { get; set; }
+    public string? FullName => $"{UserName} {UsersurName}";
 
     public virtual TblCitation? Citation { get; set; }
 
