@@ -18,17 +18,21 @@
     <br>
 
     <!-- Kingdom Combobox -->
-    <div class="form-group">
+       <div class="form-group">
         <label for="KingdomName">Select Kingdom</label>
-        @Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control" })
+        @Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown" })
     </div>
     <br>
 
-    <!-- Phylum Combobox -->
-    <div class="form-group">
-        <label for="PhylumName">Select Phylum</label>
-        @Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-phylum-btn">Add New</button>
+    <!-- Phylum Combobox (Başlangıçta gizli) -->
+    <div id="PhylumSection" style="display: none;">
+        <div class="form-group">
+            <label for="PhylumName">Select Phylum</label>
+            @Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown" })
+            <button type="button" class="btn btn-primary" id="add-new-phylum-btn" data-bs-toggle="modal" data-bs-target="#AddPhylumModal">
+                Add New
+            </button>
+        </div>
     </div>
     <br>
 
@@ -110,63 +114,63 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 
     <!-- Modal for Phylum -->
-    <div class="modal" tabindex="-1" id="addNewPhylumModal">
+       <div class="modal fade" id="AddPhylumModal" tabindex="-1" aria-labelledby="AddPhylumModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Phylum</h5>
+                    <h5 class="modal-title" id="AddPhylumModalLabel">Add New Phylum</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="addNewPhylumForm">
-                        <div class="mb-3">
-                            <label for="newPhylumScientificName" class="form-label">Phylum Scientific Name</label>
-                            <input type="text" class="form-control" id="newPhylumScientificName" placeholder="Enter new scientific phylum name">
-                            <label for="newPhylumCommonName" class="form-label">Phylum Common Name</label>
-                            <input type="text" class="form-control" id="newPhylumCommonName" placeholder="Enter new common phylum name">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submit-new-phylum">Submit</button>
-                </div>
+                <form id="AddPhylumForm" method="post" action="/Phylum/Add">
+                    <div class="modal-body">
+                        <input type="hidden" id="SelectedKingdomID" name="KingdomID">
+
+                        <label for="ScientificName">Scientific Name:</label>
+                        <input type="text" id="ScientificName" name="ScientificName" class="form-control" required>
+
+                        <label for="CommonName">Common Name:</label>
+                        <input type="text" id="CommonName" name="CommonName" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 <script>
-    // Add New Phylum button clicked
-        $('#add-new-phylum-btn').on('click', function() {
-        $('#addNewPhylumModal').modal('show');
-    });
+          // Phylum Dropdown'da Kingdom seçildiğinde Phylumları yükleyip modal'ı açma
+    document.getElementById('KingdomDropdown').addEventListener('change', function () {
+        const kingdomID = this.value;
+        const phylumSection = document.getElementById('PhylumSection');
+        const selectedKingdomID = document.getElementById('SelectedKingdomID');
 
-    // Submit new Phylum
-    $('#submit-new-phylum').on('click', function() {
-        var scientificName = $('#newPhylumScientificName').val().trim();
-        var commonName = $('#newPhylumCommonName').val().trim();
+        if (kingdomID) {
+            phylumSection.style.display = 'block';
+            selectedKingdomID.value = kingdomID;
 
-        if (scientificName === "" || commonName === "") {
-            alert("Please fill in both Scientific Name and Common Name.");
-            return;
+            // AJAX ile Phylumları yükle
+            fetch(`/Phylum/GetByKingdom?kingdomID=${kingdomID}`)
+                .then(response => response.json())
+                .then(data => {
+                    const phylumDropdown = document.getElementById('PhylumDropdown');
+                    phylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
+                    data.forEach(phylum => {
+                        phylumDropdown.innerHTML += `<option value="${phylum.PhylumID}">${phylum.Name}</option>`;
+                    });
+                });
+
+            // Modal'ı aç
+            const addNewPhylumBtn = document.getElementById('add-new-phylum-btn');
+            addNewPhylumBtn.addEventListener('click', function () {
+                $('#AddPhylumModal').modal('show');
+            });
+        } else {
+            phylumSection.style.display = 'none';
         }
-
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("AddNewPhylum", "CreaturesViewController")',
-            data: { scientificName: scientificName, commonName: commonName },
-            success: function(response) {
-                $('#addNewPhylumModal').modal('hide');
-                var newOption = new Option(response.scientificName + " (" + response.commonName + ")", response.id, true, true);
-                $('#PhylumName').append(newOption).trigger('change');
-            },
-            error: function() {
-                alert("Error while adding the new Phylum.");
-            }
-        });
     });
-
     // Add similar blocks for Phylum, Class, Order, Family, Genus, Species, Subspecies, IUCN, and Author
 </script>
 }

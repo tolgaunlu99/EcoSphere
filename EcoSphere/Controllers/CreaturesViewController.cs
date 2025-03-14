@@ -151,7 +151,37 @@ namespace EcoSphere.Controllers
                 AuthorNamed = authors
             };
 
+
+
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddCreature(CreaturesViewModel model)
+        {
+            // Veritabanına ekleme işlemi
+            if (ModelState.IsValid)
+            {
+                // Yeni bir Phylum objesi oluştur
+                var newPhylum = new TblPhylum
+                {
+                    KingdomId = model.KingdomId,  // Modaldan gelen KingdomId
+                    PhylumName = model.PhylumName, // Modaldan gelen Phylum Name
+                    ScientificName = model.ScientificName // Modaldan gelen Scientific Name
+                };
+
+                // Veritabanına ekle
+                _context.TblPhylums.Add(newPhylum);
+                await _context.SaveChangesAsync();
+
+                // Başarı mesajı dön
+                return Json(new { success = true, message = "Phylum added successfully." });
+            }
+
+            // Hata durumunda
+            return Json(new { success = false, message = "There was an error saving the data." });
+        }
+
+
+
     }
 }

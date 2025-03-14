@@ -1,80 +1,91 @@
 ﻿@model List<EcoSphere.Models.ObservationViewModel>
 @{
-	ViewData["Title"] = "Observation Details";
-
+    ViewData["Title"] = "Observation Details";
 }
-<h3>@ViewData["Title"] </h3>
+
+<h3>@ViewData["Title"]</h3>
 <hr />
-<form>
-	<button>Create Observation</button>
-	<table class="table table-responsive table-hover">
-		<thead>
-			<tr class="table-active">
-				<th> Creature Name</th> 
-				<th> User Name </th>
-				<th> Region</th> 
-				<th> Province </th>
-				<th> District</th> 
-				<th> Locality</th>
-				<th>Neighborhood</th>
-				<th> Migration Status</th> 
-				<th> Endemic Status</th> 
-				<th> Project Name</th> 
-				<th>Citation Name </th>
-				<th> Reference</th> 
-				<th>Location Type </th>
-				<th>Location Range </th> 
-				<th>Gender</th> 
-				<th>Longitude</th> 
-				<th>Latitude</th> 
-				<th>Activity</th> 
-				<th>Seen Time</th> 
-				<th>Creation Date</th> 
-			</tr>
-		</thead> 
-		<tbody>
-			@if (Model != null && Model.Any())
-			{
-				@foreach (var observation in Model)
-				{
-								<tr>
-									<td>@observation.CreatureName</td>
-									<td>@observation.FullName</td>							
-									<td>@observation.RegionName</td>
-									<td>@observation.provincename</td>
-									<td>@observation.DistrictName</td>
-									<td>@observation.LocalityName</td>							
-									<td>@observation.HoodName</td>
-									<td>@observation.MigrationStatName</td>
-									<td>@observation.EndemicStatName</td>
-									<td>@observation.ProjectName</td>							
-									<td>@observation.CitationName</td>
-									<td>@observation.ReferenceName</td>
-									<td>@observation.LocationType</td>
-									<td>@observation.LocationRange</td>
-									<td>@observation.GenderName</td>
-									<td>@observation.Long</td>
-									<td>@observation.Lat</td>
-									<td>@observation.Activity</td>
-									<td>@observation.SeenTime</td>
-									<td>@observation.CreationDate</td>
-									<td>
-									</td>
-								</tr>
 
-				}
-
-			}
-			else
-			{
-					<tr>
-						<td colspan="21">
-							<div>
-								No Observation Available
-							</div>
-						</td>
-					</tr>
-			}
-		</tbody>
-	</table>
+<!-- Arama Formu -->
+<form method="get" action="/ObservationView/Index">
+    <label for="searchTerm">Search:</label>
+    <input type="text" id="searchTerm" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Enter province or creature name...">
+    <button type="submit">Filter</button>
+    <button type="button" onclick="clearSearch()">Clear</button>
 </form>
+
+<br />
+
+<button>Create Observation</button>
+
+<table class="table table-responsive table-hover">
+    <thead>
+        <tr class="table-active">
+            <th>Creature Name</th>
+            <th>User Name</th>
+            <th>Region</th>
+            <th>Province</th>
+            <th>District</th>
+            <th>Locality</th>
+            <th>Neighborhood</th>
+            <th>Migration Status</th>
+            <th>Endemic Status</th>
+            <th>Project Name</th>
+            <th>Citation Name</th>
+            <th>Reference</th>
+            <th>Location Type</th>
+            <th>Location Range</th>
+            <th>Gender</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+            <th>Activity</th>
+            <th>Seen Time</th>
+            <th>Creation Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var observation in Model)
+            {
+                        <tr>
+                            <td>@observation.CreatureName</td>
+                            <td>@observation.UserName @observation.UsersurName</td>
+                            <td>@observation.RegionName</td>
+                            <td>@observation.provincename</td>
+                            <td>@observation.DistrictName</td>
+                            <td>@observation.LocalityName</td>
+                            <td>@observation.HoodName</td>
+                            <td>@observation.MigrationStatName</td>
+                            <td>@observation.EndemicStatName</td>
+                            <td>@observation.ProjectName</td>
+                            <td>@observation.CitationName</td>
+                            <td>@observation.ReferenceName</td>
+                            <td>@observation.LocationType</td>
+                            <td>@observation.LocationRange</td>
+                            <td>@observation.GenderName</td>
+                            <td>@observation.Long</td>
+                            <td>@observation.Lat</td>
+                            <td>@observation.Activity</td>
+                            <td>@observation.SeenTime</td>
+                            <td>@observation.CreationDate</td>
+                        </tr>
+            }
+        }
+        else
+        {
+                <tr>
+                    <td colspan="21">
+                        <div>No Observation Available</div>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function clearSearch() {
+        document.getElementById('searchTerm').value = '';
+        document.forms[0].submit();
+    }
+</script>

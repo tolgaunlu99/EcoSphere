@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+
 namespace EcoSphere.Controllers
 {
     public class ObservationViewController : Controller
@@ -14,8 +14,9 @@ namespace EcoSphere.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
-        public async Task<IActionResult>Index()
+        public async Task<IActionResult> Index(string searchTerm = "")
         {
             var observationsWithNames = from m in _context.TblMaintables
                                         join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
@@ -58,6 +59,16 @@ namespace EcoSphere.Controllers
                                             SeenTime = m.SeenTime,
                                             CreationDate = m.CreationDate
                                         };
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                observationsWithNames = observationsWithNames.Where(o =>
+                    o.CreatureName.Contains(searchTerm) ||
+                    o.provincename.Contains(searchTerm));
+            }
+
+            ViewData["SearchTerm"] = searchTerm;
+
             var viewModel = await observationsWithNames.ToListAsync();
             return View(viewModel);
         }
