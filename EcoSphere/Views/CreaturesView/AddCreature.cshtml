@@ -1,155 +1,172 @@
 ﻿@model CreaturesViewModel
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 @using (Html.BeginForm())
 {
 	//Kanka Buradaki Dropdownlistler normal biz search filter dropdown list olmasını arzuluyoruz.
-										<!-- Upper Realm Combobox -->
-										<div class="form-group">
-											<label for="UpperRealmName">Select Upper Realm</label>
-		@Html.DropDownListFor(m => m.UpperRealmName, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control" })				
-										</div>
-										<br>
-										<!-- Kingdom Combobox -->
-										<div class="form-group">
-											<label for="KingdomName">Select Kingdom</label>
-		@Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control" })
-										</div>
-											<br>
+									<!-- Upper Realm Combobox -->
+									<div class="form-group">
+        <label for="UpperRealmName">Select Upper Realm</label>
+        @Html.DropDownListFor(m => m.UpperRealmName, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control" })                
+    </div>
+    <br>
 
-										<!-- Phylum Combobox -->
-										<div class="form-group">
-											<label for="PhylumName">Select Phylum</label>
-		@Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control" })
-										<button type="button" class="btn btn-primary" id="add-new-phylum-btn">Add New</button>
-										</div>
-											<br>
+    <!-- Kingdom Combobox -->
+    <div class="form-group">
+        <label for="KingdomName">Select Kingdom</label>
+        @Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control" })
+    </div>
+    <br>
 
-										<!-- Class Combobox -->
-										<div class="form-group">
-											<label for="ClassName">Select Class</label>
-		@Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control" })
-									 <button type="button" class="btn btn-primary" id="add-new-class-btn">Add New</button>
-										</div>
-											<br>
+    <!-- Phylum Combobox -->
+    <div class="form-group">
+        <label for="PhylumName">Select Phylum</label>
+        @Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-phylum-btn">Add New</button>
+    </div>
+    <br>
 
-										<!-- Order Combobox -->
-										<div class="form-group">
-											<label for="OrderName">Select Order</label>
-		@Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control" })
-						<button type="button" class="btn btn-primary" id="add-new-order-btn">Add New</button>					
-					</div>
-											<br>
+    <!-- Class Combobox -->
+    <div class="form-group">
+        <label for="ClassName">Select Class</label>
+        @Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-class-btn">Add New</button>
+    </div>
+    <br>
 
-										<!-- Family Combobox -->
-										<div class="form-group">
-											<label for="FamilyName">Select Family</label>
-		@Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control" })
-							<button type="button" class="btn btn-primary" id="add-new-family-btn">Add New</button>				
-						</div>
-											<br>
+    <!-- Order Combobox -->
+    <div class="form-group">
+        <label for="OrderName">Select Order</label>
+        @Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-order-btn">Add New</button>					
+    </div>
+    <br>
 
-										<!-- Genus Combobox -->
-										<div class="form-group">
-											<label for="GenusName">Select Genus</label>
-		@Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control" })
-					<button type="button" class="btn btn-primary" id="add-new-genus-btn">Add New</button>						
-				</div>
-											<br>
+    <!-- Family Combobox -->
+    <div class="form-group">
+        <label for="FamilyName">Select Family</label>
+        @Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-family-btn">Add New</button>				
+    </div>
+    <br>
 
-										<!-- Species Combobox -->
-										<div class="form-group">
-											<label for="SpeciesName">Select Species</label>
-		@Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control" })
-					<button type="button" class="btn btn-primary" id="add-new-species-btn">Add New</button>						
-				</div>
-											<br>
+    <!-- Genus Combobox -->
+    <div class="form-group">
+        <label for="GenusName">Select Genus</label>
+        @Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-genus-btn">Add New</button>						
+    </div>
+    <br>
 
-										<!-- Subspecies Combobox -->
-										<div class="form-group">
-											<label for="SubspeciesName">Select Subspecies</label>
-		@Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control" })
-					<button type="button" class="btn btn-primary" id="add-new-supspecies-btn">Add New</button>						
-				</div>
-											<br>
+    <!-- Species Combobox -->
+    <div class="form-group">
+        <label for="SpeciesName">Select Species</label>
+        @Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-species-btn">Add New</button>						
+    </div>
+    <br>
 
-										<!-- IUCN Combobox -->
-										<div class="form-group">
-											<label for="IucnCode">Select IUCN</label>
-		@Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control" })
-										</div>
-											<br>
+    <!-- Subspecies Combobox -->
+    <div class="form-group">
+        <label for="SubspeciesName">Select Subspecies</label>
+        @Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-supspecies-btn">Add New</button>						
+    </div>
+    <br>
 
-										<!-- Author Combobox -->
-										<div class="form-group">
-											<label for="AuthorName">Select Author</label>
-		@Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control" })
-					<button type="button" class="btn btn-primary" id="add-new-kingdom-btn">Add New</button>						
-				</div>
-											<br>
-										<div class="form-group">
-											 <label for="Common Name">Enter Common Name</label>
-		@Html.TextBoxFor(m => m.CommonName, new { @class = "form-control" })
-										</div>
-										<br>
-										<div class="form-group">
-											  <label for="Scientific Name">Enter Common Name</label>
-		@Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control" })
-										</div>
-											<br>
+    <!-- IUCN Combobox -->
+    <div class="form-group">
+        <label for="IucnCode">Select IUCN</label>
+        @Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control" })
+    </div>
+    <br>
 
-										<button type="submit" class="btn btn-primary">Submit</button>
-											<!-- Modal for Kingdom -->
-			<div class="modal" tabindex="-1" id="addNewPhylumModal">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Add New Phylum</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form id="addNewPhylumForm">
-								<div class="mb-3">
-									<label for="newPhylumName" class="form-label">Phylum Name</label>
-									<input type="text" class="form-control" id="newPhylumName" placeholder="Enter new phylum name">
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" id="submit-new-phylum">Submit</button>
-						</div>
-					</div>
-				</div>
-			</div>
-				<script>
-			// Add New Kingdom button clicked
-				$('#add-new-phylum-btn').on('click', function() {
-					$('#addNewPhylumForm').modal('show');
-			});
+    <!-- Author Combobox -->
+    <div class="form-group">
+        <label for="AuthorName">Select Author</label>
+        @Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control" })
+        <button type="button" class="btn btn-primary" id="add-new-kingdom-btn">Add New</button>						
+    </div>
+    <br>
 
-			// Submit the new Kingdom
-			$('#submit-new-phylum').on('click', function() {
-				var newPhylumName = $('#newPhylumName').val();
-					if (newPhylumName.trim() == "") {
-					alert("Please fill in the Phylum Name.");
-					return;
-				}
+    <div class="form-group">
+        <label for="Common Name">Enter Common Name</label>
+        @Html.TextBoxFor(m => m.CommonName, new { @class = "form-control" })
+    </div>
+    <br>
 
-				$.ajax({
-					type: "POST",
-							url: '@Url.Action("AddNewPhylum", "CreaturesViewController")',
-						data: { name: newPhylumName },
-					success: function(response) {
-							$('#addNewPhylumModal').modal('hide');
-						var newOption = new Option(response.name, response.id, true, true);
-							$('#phylum-dropdown').append(newOption).trigger('change');
-					},
-					error: function() {
-							alert("Error while adding the new Phylum.");
-					}
-				});
-			});
+    <div class="form-group">
+        <label for="Scientific Name">Enter Common Name</label>
+        @Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control" })
+    </div>
+    <br>
 
-			// Add similar blocks for Phylum, Class, Order, Family, Genus, Species, Subspecies, IUCN, and Author
-		</script>
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <!-- Modal for Phylum -->
+    <div class="modal" tabindex="-1" id="addNewPhylumModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Phylum</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addNewPhylumForm">
+                        <div class="mb-3">
+                            <label for="newPhylumScientificName" class="form-label">Phylum Scientific Name</label>
+                            <input type="text" class="form-control" id="newPhylumScientificName" placeholder="Enter new scientific phylum name">
+                            <label for="newPhylumCommonName" class="form-label">Phylum Common Name</label>
+                            <input type="text" class="form-control" id="newPhylumCommonName" placeholder="Enter new common phylum name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submit-new-phylum">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    // Add New Phylum button clicked
+        $('#add-new-phylum-btn').on('click', function() {
+        $('#addNewPhylumModal').modal('show');
+    });
+
+    // Submit new Phylum
+    $('#submit-new-phylum').on('click', function() {
+        var scientificName = $('#newPhylumScientificName').val().trim();
+        var commonName = $('#newPhylumCommonName').val().trim();
+
+        if (scientificName === "" || commonName === "") {
+            alert("Please fill in both Scientific Name and Common Name.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddNewPhylum", "CreaturesViewController")',
+            data: { scientificName: scientificName, commonName: commonName },
+            success: function(response) {
+                $('#addNewPhylumModal').modal('hide');
+                var newOption = new Option(response.scientificName + " (" + response.commonName + ")", response.id, true, true);
+                $('#PhylumName').append(newOption).trigger('change');
+            },
+            error: function() {
+                alert("Error while adding the new Phylum.");
+            }
+        });
+    });
+
+    // Add similar blocks for Phylum, Class, Order, Family, Genus, Species, Subspecies, IUCN, and Author
+</script>
 }
