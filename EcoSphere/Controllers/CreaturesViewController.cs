@@ -92,7 +92,6 @@ namespace EcoSphere.Controllers
                     Text = a.AuthorName
                 }).ToList();
 
-            //ViewModel'e tüm combobox verilerini gönderiyoruz
             model.SubspeciesNamed = subspecies;
             model.IucnCoded = iucn;
             model.AuthorNamed = authors;          
@@ -211,5 +210,6 @@ namespace EcoSphere.Controllers
             TempData["ErrorMessage"] = "There was an error saving the data.";
             return RedirectToAction("AddCreature");
         }
+
     }
 }
