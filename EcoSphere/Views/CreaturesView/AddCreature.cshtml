@@ -7,170 +7,401 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 @using (Html.BeginForm())
 {
-	//Kanka Buradaki Dropdownlistler normal biz search filter dropdown list olmasını arzuluyoruz.
-									<!-- Upper Realm Combobox -->
-									<div class="form-group">
-        <label for="UpperRealmName">Select Upper Realm</label>
-        @Html.DropDownListFor(m => m.UpperRealmName, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control" })                
-    </div>
-    <br>
+				<!-- Upper Realm Combobox -->
+				<div class="form-group">
+					<label for="UpperRealmName">Select Upper Realm</label>
+		@Html.DropDownListFor(m => m.UpperRealmName, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control", id = "UpperRealmDropdown" })
+				</div>
+				<br>
 
-    <!-- Kingdom Combobox -->
-       <div class="form-group">
-        <label for="KingdomName">Select Kingdom</label>
-        @Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown" })
-    </div>
-    <br>
+				<!-- Kingdom Combobox -->
+				<div id="KingdomSection" class="form-group" style="display: none;">
+					<label for="KingdomName">Select Kingdom</label>
+		@Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown" })
+				</div>
+				<br>
 
-    <!-- Phylum Combobox (Başlangıçta gizli) -->
-    <div id="PhylumSection" style="display: none;">
-        <div class="form-group">
-            <label for="PhylumName">Select Phylum</label>
-            @Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown" })
-            <button type="button" class="btn btn-primary" id="add-new-phylum-btn" data-bs-toggle="modal" data-bs-target="#AddPhylumModal">
-                Add New
-            </button>
-        </div>
-    </div>
-    <br>
+				<!-- Phylum Combobox -->
+				<div id="PhylumSection" style="display: none;">
+					<div class="form-group">
+						<label for="PhylumName">Select Phylum</label>
+			@Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown" })
+						<button type="button" class="btn btn-primary" id="add-new-phylum-btn" data-bs-toggle="modal" data-bs-target="#AddPhylumModal">Add New</button>
+					</div>
+				</div>
+				<br>
 
-    <!-- Class Combobox -->
-    <div class="form-group">
-        <label for="ClassName">Select Class</label>
-        @Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-class-btn">Add New</button>
-    </div>
-    <br>
+				<!-- Class Combobox -->
+				<div id="ClassSection" class="form-group" style="display: none;">
+					<label for="ClassName">Select Class</label>
+		@Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown" })
+				</div>
+				<br>
 
-    <!-- Order Combobox -->
-    <div class="form-group">
-        <label for="OrderName">Select Order</label>
-        @Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-order-btn">Add New</button>					
-    </div>
-    <br>
+				<!-- Order Combobox -->
+				<div id="OrderSection" class="form-group" style="display: none;">
+					<label for="OrderName">Select Order</label>
+		@Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown" })
+				</div>
+				<br>
 
-    <!-- Family Combobox -->
-    <div class="form-group">
-        <label for="FamilyName">Select Family</label>
-        @Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-family-btn">Add New</button>				
-    </div>
-    <br>
+				<!-- Family Combobox -->
+				<div id="FamilySection" class="form-group" style="display: none;">
+					<label for="FamilyName">Select Family</label>
+		@Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown" })
+				</div>
+				<br>
 
-    <!-- Genus Combobox -->
-    <div class="form-group">
-        <label for="GenusName">Select Genus</label>
-        @Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-genus-btn">Add New</button>						
-    </div>
-    <br>
+				<!-- Genus Combobox -->
+				<div id="GenusSection" class="form-group" style="display: none;">
+					<label for="GenusName">Select Genus</label>
+		@Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown" })
+				</div>
+				<br>
 
-    <!-- Species Combobox -->
-    <div class="form-group">
-        <label for="SpeciesName">Select Species</label>
-        @Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-species-btn">Add New</button>						
-    </div>
-    <br>
+				<!-- Species Combobox -->
+				<div id="SpeciesSection" class="form-group" style="display: none;">
+					<label for="SpeciesName">Select Species</label>
+		@Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown" })
+				</div>
+				<br>
 
-    <!-- Subspecies Combobox -->
-    <div class="form-group">
-        <label for="SubspeciesName">Select Subspecies</label>
-        @Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-supspecies-btn">Add New</button>						
-    </div>
-    <br>
+				<!-- Subspecies Combobox -->
+				<div id="SubspeciesSection" class="form-group" style="display: none;">
+					<label for="SubspeciesName">Select Subspecies</label>
+		@Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown" })
+				</div>
+				<br>
 
-    <!-- IUCN Combobox -->
-    <div class="form-group">
-        <label for="IucnCode">Select IUCN</label>
-        @Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control" })
-    </div>
-    <br>
+				<!-- IUCN Combobox -->
+				<div id="IucnSection" class="form-group" style="display: none;">
+					<label for="IucnCode">Select IUCN</label>
+		@Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control", id = "IucnDropdown" })
+				</div>
+				<br>
 
-    <!-- Author Combobox -->
-    <div class="form-group">
-        <label for="AuthorName">Select Author</label>
-        @Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control" })
-        <button type="button" class="btn btn-primary" id="add-new-kingdom-btn">Add New</button>						
-    </div>
-    <br>
+				<!-- Author Combobox -->
+				<div id="AuthorSection" class="form-group" style="display: none;">
+					<label for="AuthorName">Select Author</label>
+		@Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown" })
+				</div>
+				<br>
 
-    <div class="form-group">
-        <label for="Common Name">Enter Common Name</label>
-        @Html.TextBoxFor(m => m.CommonName, new { @class = "form-control" })
-    </div>
-    <br>
+				<!-- Common Name -->
+				<div id="CommonNameSection" class="form-group" style="display: none;">
+					<label for="CommonName">Enter Common Name</label>
+		@Html.TextBoxFor(m => m.CommonName, new { @class = "form-control", id = "CommonNameInput" })
+				</div>
+				<br>
 
-    <div class="form-group">
-        <label for="Scientific Name">Enter Common Name</label>
-        @Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control" })
-    </div>
-    <br>
+				<!-- Scientific Name -->
+				<div id="ScientificNameSection" class="form-group" style="display: none;">
+					<label for="ScientificName">Enter Scientific Name</label>
+		@Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control" })
+				</div>
+				<br>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+				<button type="submit" class="btn btn-primary">Submit</button>
 
-    <!-- Modal for Phylum -->
-       <div class="modal fade" id="AddPhylumModal" tabindex="-1" aria-labelledby="AddPhylumModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddPhylumModalLabel">Add New Phylum</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="AddPhylumForm" method="post" action="/Phylum/Add">
-                    <div class="modal-body">
-                        <input type="hidden" id="SelectedKingdomID" name="KingdomID">
+				<!-- Modal for Phylum -->
+				<div class="modal fade" id="AddPhylumModal" tabindex="-1" aria-labelledby="AddPhylumModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="AddPhylumModalLabel">Add New Phylum</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<form id="AddPhylumForm" method="post" action="/CreaturesViewController/AddCreature">
+								<div class="modal-body">
+									<input type="hidden" id="SelectedKingdomID" name="KingdomID">
+									<label for="PhylumName">Phylum Name:</label>
+									<input type="text" id="PhylumName2" name="PhylumName2" class="form-control" required>
+									<label for="PhylumScientificName">Phylum Scientific Name:</label>
+									<input type="text" id="PhylumScientificName" name="PhylumScientificName" class="form-control" required>
+								</div>
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-success">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
 
-                        <label for="ScientificName">Scientific Name:</label>
-                        <input type="text" id="ScientificName" name="ScientificName" class="form-control" required>
+				<script>
+					document.addEventListener("DOMContentLoaded", function () {
+						// Başlangıçta tüm dropdown'lar gizli
+						hideAllSections();
 
-                        <label for="CommonName">Common Name:</label>
-                        <input type="text" id="CommonName" name="CommonName" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+						// Upper Realm seçildiğinde Kingdom'u göster
+							document.getElementById('UpperRealmDropdown').addEventListener('change', function () {
+							const upperRealmID = this.value;
+							const kingdomSection = document.getElementById('KingdomSection');
+							const kingdomDropdown = document.getElementById('KingdomDropdown');
+
+							// Eğer bir Upper Realm seçilmişse Kingdom bölümü göster, değilse gizle
+							kingdomSection.style.display = upperRealmID ? 'block' : 'none';
+
+							// Seçilen Upper Realm'e bağlı Kingdomları getir
+				if (upperRealmID) {
+					fetch(`/CreaturesView/GetKingdomsByUpperRealm?upperRealmId=${upperRealmID}`)
+						.then(response => response.json())
+						.then(data => {
+							// Önce Kingdom dropdown'ını temizle
+							kingdomDropdown.innerHTML = '<option value="">Select Kingdom</option>';
+
+							// Gelen veriyi dropdown'a ekle
+							data.forEach(kingdom => {
+								const option = document.createElement('option');
+								option.value = kingdom.value;
+								option.textContent = kingdom.text;
+								kingdomDropdown.appendChild(option);
+							});
+						})
+						.catch(error => console.error('Error fetching kingdoms:', error));
+				} else {
+					// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+					kingdomDropdown.innerHTML = '<option value="">Select Kingdom</option>';
+				}
+			});
+
+						// Kingdom seçildiğinde Phylum'u göster
+						document.getElementById('KingdomDropdown').addEventListener('change', function () {
+							const kingdomID = this.value;
+							const phylumSection = document.getElementById('PhylumSection');
+							const PhylumDropdown = document.getElementById('PhylumDropdown');
+
+								// Eğer bir Upper Realm seçilmişse Kingdom bölümü göster, değilse gizle
+								PhylumSection.style.display = kingdomID ? 'block' : 'none';
+
+								// Seçilen Upper Realm'e bağlı Kingdomları getir
+					if (kingdomID) {
+									fetch(`/CreaturesView/GetPhylumsByKingdom?kingdomID=${kingdomID}`)
+							.then(response => response.json())
+							.then(data => {
+									PhylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
+
+								data.forEach(phylum => {
+									const option = document.createElement('option');
+									option.value = phylum.value;
+									option.textContent = phylum.text;
+									PhylumDropdown.appendChild(option);
+								});
+							})
+							.catch(error => console.error('Error fetching Phylums:', error));
+					} else {
+						// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+							PhylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
+					}
+				});
+
+						// Phylum seçildiğinde Class'ı göster
+						document.getElementById('PhylumDropdown').addEventListener('change', function () {
+							const phylumID = this.value;
+							const classSection = document.getElementById('ClassSection');
+							const ClassDropdown = document.getElementById('ClassDropdown');
+							ClassSection.style.display = phylumID ? 'block' : 'none';
+						if (phylumID) {
+								fetch(`/CreaturesView/GetClassByPhylum?phylumID=${phylumID}`)
+								.then(response => response.json())
+								.then(data => {
+								ClassDropdown.innerHTML = '<option value="">Select Class</option>';
+
+									data.forEach(classes => {
+										const option = document.createElement('option');
+										option.value = classes.value;
+										option.textContent = classes.text;
+										ClassDropdown.appendChild(option);
+									});
+								})
+								.catch(error => console.error('Error fetching Class:', error));
+						} else {
+							// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+								ClassDropdown.innerHTML = '<option value="">Select Class</option>';
+						}
+					});
+
+						// Class seçildiğinde Order'ı göster
+						document.getElementById('ClassDropdown').addEventListener('change', function () {
+						const ClassID = this.value;
+						const OrderSection = document.getElementById('OrderSection');
+						const OrderDropdown = document.getElementById('OrderDropdown');
+						OrderSection.style.display = ClassID ? 'block' : 'none';
+									if (ClassID) {
+									fetch(`/CreaturesView/GetOrderByClass?ClassID=${ClassID}`)
+									.then(response => response.json())
+									.then(data => {
+									OrderDropdown.innerHTML = '<option value="">Select Order</option>';
+
+										data.forEach(Order => {
+											const option = document.createElement('option');
+											option.value = Order.value;
+											option.textContent = Order.text;
+											OrderDropdown.appendChild(option);
+										});
+									})
+									.catch(error => console.error('Error fetching Order:', error));
+							} else {
+								// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+									OrderDropdown.innerHTML = '<option value="">Select Order</option>';
+							}
+						});
+
+						// Order seçildiğinde Family'yi göster
+						document.getElementById('OrderDropdown').addEventListener('change', function () {
+							const OrderID = this.value;
+							const FamilySection = document.getElementById('FamilySection');
+							const FamilyDropdown = document.getElementById('FamilyDropdown');
+							FamilySection.style.display = OrderID ? 'block' : 'none';
+										if (OrderID) {
+										fetch(`/CreaturesView/GetFamilyByOrder?OrderID=${OrderID}`)
+										.then(response => response.json())
+										.then(data => {
+										FamilyDropdown.innerHTML = '<option value="">Select Family</option>';
+
+											data.forEach(Family => {
+												const option = document.createElement('option');
+												option.value = Family.value;
+												option.textContent = Family.text;
+												FamilyDropdown.appendChild(option);
+											});
+										})
+										.catch(error => console.error('Error fetching Family:', error));
+								} else {
+									// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+										FamilyDropdown.innerHTML = '<option value="">Select Family</option>';
+								}
+							});
+
+						// Family seçildiğinde Genus'u göster
+						document.getElementById('FamilyDropdown').addEventListener('change', function () {
+						const FamilyID = this.value;
+						const GenusSection = document.getElementById('GenusSection');
+						const GenusDropdown = document.getElementById('GenusDropdown');
+						GenusSection.style.display = FamilyID ? 'block' : 'none';
+											if (FamilyID) {
+											fetch(`/CreaturesView/GetGenusByFamily?FamilyID=${FamilyID}`)
+											.then(response => response.json())
+											.then(data => {
+												GenusDropdown.innerHTML = '<option value="">Select Genus</option>';
+
+												data.forEach(Genus => {
+													const option = document.createElement('option');
+													option.value = Genus.value;
+													option.textContent = Genus.text;
+													GenusDropdown.appendChild(option);
+												});
+											})
+											.catch(error => console.error('Error fetching Genus:', error));
+									} else {
+										// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+												GenusDropdown.innerHTML = '<option value="">Select Genus</option>';
+									}
+								});
+
+						// Genus seçildiğinde Species'i göster
+						document.getElementById('GenusDropdown').addEventListener('change', function () {
+							const genusID = this.value;
+							const SpeciesSection = document.getElementById('SpeciesSection');
+							const SpeciesDropdown = document.getElementById('SpeciesDropdown');
+							SpeciesSection.style.display = genusID ? 'block' : 'none';
+													if (genusID) {
+														fetch(`/CreaturesView/GetSpeciesByGenus?genusID=${genusID}`)
+												.then(response => response.json())
+												.then(data => {
+														SpeciesDropdown.innerHTML = '<option value="">Select Species</option>';
+
+													data.forEach(Species => {
+														const option = document.createElement('option');
+														option.value = Species.value;
+														option.textContent = Species.text;
+														SpeciesDropdown.appendChild(option);
+													});
+												})
+												.catch(error => console.error('Error fetching Species:', error));
+										} else {
+											// Upper Realm seçilmezse Kingdom dropdown'ını temizle
+														SpeciesDropdown.innerHTML = '<option value="">Select Species</option>';
+										}
+									});
+
+						// Species seçildiğinde Subspecies'i göster
+							document.getElementById('SpeciesDropdown').addEventListener('change', function () {
+							const speciesID = this.value;
+							const subspeciesSection = document.getElementById('SubspeciesSection');
+									subspeciesSection.style.display = speciesID ? 'block' : 'none';
+							});
 
 
-<script>
-          // Phylum Dropdown'da Kingdom seçildiğinde Phylumları yükleyip modal'ı açma
-    document.getElementById('KingdomDropdown').addEventListener('change', function () {
-        const kingdomID = this.value;
-        const phylumSection = document.getElementById('PhylumSection');
-        const selectedKingdomID = document.getElementById('SelectedKingdomID');
+						// Subspecies seçildiğinde IUCN'yi göster
+						document.getElementById('SubspeciesDropdown').addEventListener('change', function () {
+							const subspeciesID = this.value;
+							const iucnSection = document.getElementById('IucnSection');
 
-        if (kingdomID) {
-            phylumSection.style.display = 'block';
-            selectedKingdomID.value = kingdomID;
+							iucnSection.style.display = subspeciesID ? 'block' : 'none';
+						});
 
-            // AJAX ile Phylumları yükle
-            fetch(`/Phylum/GetByKingdom?kingdomID=${kingdomID}`)
-                .then(response => response.json())
-                .then(data => {
-                    const phylumDropdown = document.getElementById('PhylumDropdown');
-                    phylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
-                    data.forEach(phylum => {
-                        phylumDropdown.innerHTML += `<option value="${phylum.PhylumID}">${phylum.Name}</option>`;
-                    });
-                });
+						// IUCN seçildiğinde Author'ı göster
+						document.getElementById('IucnDropdown').addEventListener('change', function () {
+							const iucnID = this.value;
+							const authorSection = document.getElementById('AuthorSection');
 
-            // Modal'ı aç
-            const addNewPhylumBtn = document.getElementById('add-new-phylum-btn');
-            addNewPhylumBtn.addEventListener('click', function () {
-                $('#AddPhylumModal').modal('show');
-            });
-        } else {
-            phylumSection.style.display = 'none';
-        }
-    });
-    // Add similar blocks for Phylum, Class, Order, Family, Genus, Species, Subspecies, IUCN, and Author
-</script>
+							authorSection.style.display = iucnID ? 'block' : 'none';
+						});
+
+						// Author seçildiğinde Common Name alanını göster
+						document.getElementById('AuthorDropdown').addEventListener('change', function () {
+							const authorID = this.value;
+							const commonNameSection = document.getElementById('CommonNameSection');
+
+							commonNameSection.style.display = authorID ? 'block' : 'none';
+						});
+
+						// Common Name girildiğinde Scientific Name alanını göster
+						document.getElementById('CommonNameInput').addEventListener('input', function () {
+							const commonName = this.value;
+							const scientificNameSection = document.getElementById('ScientificNameSection');
+
+							scientificNameSection.style.display = commonName ? 'block' : 'none';
+						});
+
+						// Sayfa yüklendiğinde başarılı mesaj varsa, alert göster
+						window.onload = function () {
+							const successMessage = '@TempData["SuccessMessage"]';
+							if (successMessage) {
+								alert(successMessage);
+							}
+						};
+					});
+
+						  document.getElementById('KingdomDropdown').addEventListener('change', function () {
+					const kingdomID = this.value;
+					const phylumSection = document.getElementById('PhylumSection');
+
+					if (kingdomID) {
+						phylumSection.style.display = 'block';
+						document.getElementById('SelectedKingdomID').value = kingdomID;
+					} else {
+						phylumSection.style.display = 'none';
+					}
+				});
+
+					// Dropdownlar arasında geçiş
+					function hideAllSections() {
+						document.getElementById('KingdomSection').style.display = 'none';
+						document.getElementById('PhylumSection').style.display = 'none';
+						document.getElementById('ClassSection').style.display = 'none';
+						document.getElementById('OrderSection').style.display = 'none';
+						document.getElementById('FamilySection').style.display = 'none';
+						document.getElementById('GenusSection').style.display = 'none';
+						document.getElementById('SpeciesSection').style.display = 'none';
+						document.getElementById('SubspeciesSection').style.display = 'none';
+						document.getElementById('IucnSection').style.display = 'none';
+						document.getElementById('AuthorSection').style.display = 'none';
+						document.getElementById('CommonNameSection').style.display = 'none';
+						document.getElementById('ScientificNameSection').style.display = 'none';
+					}
+				</script>
 }

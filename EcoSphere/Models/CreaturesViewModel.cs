@@ -39,8 +39,14 @@ namespace EcoSphere.Models
         [DisplayName("KingdomName")]
         public string? KingdomName { get; set; }
 
-        [DisplayName("PhylumName")]
+        [DisplayName("Phylum Name")]
         public string? PhylumName { get; set; }
+
+        [DisplayName("Phylum Name2")]
+        public string? PhylumName2 { get; set; }
+
+        [DisplayName("Phylum Scientific Name")]
+        public string? PhylumScientificName { get; set; }
 
         [DisplayName("ClassName")]
         public string? ClassName { get; set; }

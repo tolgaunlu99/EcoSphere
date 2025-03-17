@@ -53,9 +53,11 @@ namespace EcoSphere.Controllers
             var viewModel = await creaturesWithNames.ToListAsync();
             return View(viewModel);
         }
-        public ActionResult AddCreature()
+
+
+        [HttpGet]
+        public async Task<IActionResult> AddCreature()
         {
-            // UpperRealm combobox verisi
             var upperRealms = _context.TblUpperrealms
                 .Select(ur => new SelectListItem
                 {
@@ -63,56 +65,11 @@ namespace EcoSphere.Controllers
                     Text = ur.RealmName
                 }).ToList();
 
-            // Kingdom combobox verisi
-            var kingdoms = _context.TblKingdoms
-                .Select(k => new SelectListItem
-                {
-                    Value = k.KingdomId.ToString(),
-                    Text = k.KingdomName
-                }).ToList();
-
-            // Diğer combobox verilerini benzer şekilde alıyoruz
-            var phylums = _context.TblPhylums
-                .Select(p => new SelectListItem
-                {
-                    Value = p.PhylumId.ToString(),
-                    Text = p.PhylumName
-                }).ToList();
-
-            var classes = _context.TblClasses
-                .Select(c => new SelectListItem
-                {
-                    Value = c.ClassId.ToString(),
-                    Text = c.ClassName
-                }).ToList();
-
-            var orders = _context.TblOrders
-                .Select(o => new SelectListItem
-                {
-                    Value = o.OrderId.ToString(),
-                    Text = o.OrderName
-                }).ToList();
-
-            var families = _context.TblFamilies
-                .Select(f => new SelectListItem
-                {
-                    Value = f.FamilyId.ToString(),
-                    Text = f.FamilyName
-                }).ToList();
-
-            var genus = _context.TblGenus
-                .Select(g => new SelectListItem
-                {
-                    Value = g.GenusId.ToString(),
-                    Text = g.GenusName
-                }).ToList();
-
-            var species = _context.TblSpecies
-                .Select(s => new SelectListItem
-                {
-                    Value = s.SpeciesId.ToString(),
-                    Text = s.SpeciesName
-                }).ToList();
+            var model = new CreaturesViewModel
+            {
+                UpperRealmNamed = upperRealms,
+                KingdomNamed = new List<SelectListItem>() // Başlangıçta boş liste
+            };
 
             var subspecies = _context.TblSubspecies
                 .Select(ss => new SelectListItem
@@ -135,53 +92,124 @@ namespace EcoSphere.Controllers
                     Text = a.AuthorName
                 }).ToList();
 
-            // ViewModel'e tüm combobox verilerini gönderiyoruz
-            var model = new CreaturesViewModel
-            {
-                UpperRealmNamed = upperRealms,
-                KingdomNamed = kingdoms,
-                PhylumNamed = phylums,
-                ClassNamed = classes,
-                OrderNamed = orders,
-                FamilyNamed = families,
-                GenusNamed = genus,
-                SpeciesNamed = species,
-                SubspeciesNamed = subspecies,
-                IucnCoded = iucn,
-                AuthorNamed = authors
-            };
-
-
-
+            //ViewModel'e tüm combobox verilerini gönderiyoruz
+            model.SubspeciesNamed = subspecies;
+            model.IucnCoded = iucn;
+            model.AuthorNamed = authors;          
+            
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetKingdomsByUpperRealm(int upperRealmId)
+        {
+            var kingdoms = await _context.TblKingdoms
+                .Where(k => k.RealmId == upperRealmId)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.KingdomId.ToString(),
+                    Text = k.KingdomName
+                }).ToListAsync();
+
+            return Json(kingdoms);
+        }
+        public async Task<IActionResult> GetPhylumsByKingdom(int KingdomID)
+        {
+            var phylums = await _context.TblPhylums
+                .Where(k => k.KingdomId == KingdomID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.PhylumId.ToString(),
+                    Text = k.PhylumName
+                }).ToListAsync();
+
+            return Json(phylums);
+        }
+        public async Task<IActionResult> GetClassByPhylum(int PhylumID)
+        {
+            var classes = await _context.TblClasses
+                .Where(k => k.PhylumId == PhylumID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.ClassId.ToString(),
+                    Text = k.ClassName
+                }).ToListAsync();
+
+            return Json(classes);
+        }
+        public async Task<IActionResult> GetOrderByClass(int ClassID)
+        {
+            var order = await _context.TblOrders
+                .Where(k => k.ClassId == ClassID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.OrderId.ToString(),
+                    Text = k.OrderName
+                }).ToListAsync();
+
+            return Json(order);
+        }
+        public async Task<IActionResult> GetFamilyByOrder(int OrderID)
+        {
+            var family = await _context.TblFamilies
+                .Where(k => k.OrderId == OrderID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.FamilyId.ToString(),
+                    Text = k.FamilyName
+                }).ToListAsync();
+
+            return Json(family);
+        }
+        public async Task<IActionResult> GetGenusByFamily(int FamilyID)
+        {
+            var genus = await _context.TblGenus
+                .Where(k => k.FamilyId == FamilyID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.GenusId.ToString(),
+                    Text = k.GenusName
+                }).ToListAsync();
+            return Json(genus);
+        }
+        public async Task<IActionResult> GetSpeciesByGenus(int GenusID)
+        {
+            var species = await _context.TblSpecies
+                .Where(k => k.GenusId == GenusID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.SpeciesId.ToString(),
+                    Text = k.SpeciesName
+                }).ToListAsync();
+            return Json(species);
+        }
+    
         [HttpPost]
         public async Task<IActionResult> AddCreature(CreaturesViewModel model)
         {
-            // Veritabanına ekleme işlemi
             if (ModelState.IsValid)
             {
-                // Yeni bir Phylum objesi oluştur
+                // Yeni Phylum oluştur
                 var newPhylum = new TblPhylum
                 {
                     KingdomId = model.KingdomId,  // Modaldan gelen KingdomId
-                    PhylumName = model.PhylumName, // Modaldan gelen Phylum Name
-                    ScientificName = model.ScientificName // Modaldan gelen Scientific Name
+                    PhylumName = model.PhylumName2, // Modaldan gelen Phylum Name
+                    ScientificName = model.PhylumScientificName // Modaldan gelen Scientific Name
                 };
 
                 // Veritabanına ekle
                 _context.TblPhylums.Add(newPhylum);
                 await _context.SaveChangesAsync();
 
-                // Başarı mesajı dön
-                return Json(new { success = true, message = "Phylum added successfully." });
+                // Başarılı ekleme sonrası mesajı TempData'ya gönder
+                TempData["SuccessMessage"] = "Phylum added successfully.";  // Success mesajını geçici veriye kaydet
+
+                // Sayfayı yenile (AddCreature view'ine yönlendir)
+                return RedirectToAction("AddCreature");  // AddCreature action'ını tekrar çağırarak sayfayı yenileyebiliriz
             }
 
-            // Hata durumunda
-            return Json(new { success = false, message = "There was an error saving the data." });
+            // Hata durumunda JSON yanıtı dön
+            TempData["ErrorMessage"] = "There was an error saving the data.";
+            return RedirectToAction("AddCreature");
         }
-
-
-
     }
 }

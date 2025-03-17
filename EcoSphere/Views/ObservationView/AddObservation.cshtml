@@ -1,0 +1,26 @@
+﻿@model ObservationViewModel
+@using (Html.BeginForm())
+{
+
+<div class="form-group">
+        <label for="CreatureName">Select Creature</label>
+    @Html.DropDownListFor(m => m.CreatureName, Model.CreatureNamed, "Select Creature", new { @class = "form-control" })        
+                <a href="/CreaturesView/AddCreature">    
+    <button type="button" class="btn btn-primary" id="add-new-class-btn">Go to Creature Add</button>
+        </a>
+    </div>
+    <br>
+        <div class="form-group">
+            <label for="Usernname">Select Username</label>
+        @Html.DropDownListFor(m => m.UserName, Model.Usernamed, "Select User", new { @class = "form-control" })    
+              
+        </div>
+        <br>
+            <div class="form-group">
+            <label for="RegionNamed">Select Region</label>
+        @Html.DropDownListFor(m => m.RegionName, Model.RegionNamed, "Select Region", new { @class = "form-control" })        
+                  
+        </div>
+        <br>
+
+}
