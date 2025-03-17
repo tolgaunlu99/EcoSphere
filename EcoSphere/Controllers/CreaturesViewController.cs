@@ -56,7 +56,7 @@ namespace EcoSphere.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> AddCreature()
+        public IActionResult AddCreature()
         {
             var upperRealms = _context.TblUpperrealms
                 .Select(ur => new SelectListItem
@@ -181,32 +181,124 @@ namespace EcoSphere.Controllers
                 }).ToListAsync();
             return Json(species);
         }
-    
+
         [HttpPost]
         public async Task<IActionResult> AddCreature(CreaturesViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Yeni Phylum oluştur
-                var newPhylum = new TblPhylum
+                
+                // Eğer Phylum ekleniyorsa
+                if (!string.IsNullOrEmpty(model.PhylumName2) && !string.IsNullOrEmpty(model.PhylumScientificName))
                 {
-                    KingdomId = model.KingdomId,  // Modaldan gelen KingdomId
-                    PhylumName = model.PhylumName2, // Modaldan gelen Phylum Name
-                    ScientificName = model.PhylumScientificName // Modaldan gelen Scientific Name
-                };
+                    var newPhylum = new TblPhylum
+                    {
+                        KingdomId = model.KingdomId,
+                        PhylumName = model.PhylumName2,
+                        ScientificName = model.PhylumScientificName
+                    };
 
-                // Veritabanına ekle
-                _context.TblPhylums.Add(newPhylum);
-                await _context.SaveChangesAsync();
+                    _context.TblPhylums.Add(newPhylum);
+                    await _context.SaveChangesAsync();
 
-                // Başarılı ekleme sonrası mesajı TempData'ya gönder
-                TempData["SuccessMessage"] = "Phylum added successfully.";  // Success mesajını geçici veriye kaydet
+                    TempData["SuccessMessage"] = "Phylum added successfully.";
+                }
 
-                // Sayfayı yenile (AddCreature view'ine yönlendir)
-                return RedirectToAction("AddCreature");  // AddCreature action'ını tekrar çağırarak sayfayı yenileyebiliriz
+                // Eğer Class ekleniyorsa
+                if (!string.IsNullOrEmpty(model.ClassName2) && !string.IsNullOrEmpty(model.ClassScientificName))
+                {
+                    var newClass = new TblClass
+                    {
+                        PhylumId = model.PhylumId,
+                        ClassName = model.ClassName2,
+                        ScientificName = model.ClassScientificName
+                    };
+                    _context.TblClasses.Add(newClass);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Class added successfully.";
+                }
+                // Eğer Order ekleniyorsa
+                if (!string.IsNullOrEmpty(model.OrderName2) && !string.IsNullOrEmpty(model.OrderScientificName))
+                {
+                    var newClass = new TblOrder
+                    {
+                        ClassId = model.ClassId,
+                        OrderName = model.OrderName2,
+                        ScientificName = model.OrderScientificName
+                    };
+                    _context.TblOrders.Add(newClass);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Order added successfully.";
+                }
+                // Eğer Family ekleniyorsa
+                if (!string.IsNullOrEmpty(model.FamilyName2) && !string.IsNullOrEmpty(model.FamilyScientificName))
+                {
+                    var newFamily = new TblFamily
+                    {
+                        OrderId = model.OrderId,
+                        FamilyName = model.FamilyName2,
+                        ScientificName = model.FamilyScientificName
+                    };
+                    _context.TblFamilies.Add(newFamily);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Family added successfully.";
+                }
+                // Eğer Genus ekleniyorsa
+                if (!string.IsNullOrEmpty(model.GenusName2) && !string.IsNullOrEmpty(model.GenusScientificName))
+                {
+                    var newGenus = new TblGenu
+                    {
+                        FamilyId = model.FamilyId,
+                        GenusName = model.GenusName2,
+                        ScientificName = model.GenusScientificName
+                    };
+                    _context.TblGenus.Add(newGenus);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Genus added successfully.";
+                }
+                // Eğer Species ekleniyorsa
+                if (!string.IsNullOrEmpty(model.SpeciesName2) && !string.IsNullOrEmpty(model.SpeciesScientificName))
+                {
+                    var newSpecies = new TblSpecy
+                    {
+                        GenusId = model.GenusId,
+                        SpeciesName = model.SpeciesName2,
+                        ScientificName = model.SpeciesScientificName
+                    };
+                    _context.TblSpecies.Add(newSpecies);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Species added successfully.";
+                }
+                // Eğer Subspecies ekleniyorsa
+                if (!string.IsNullOrEmpty(model.SubspeciesName2) && !string.IsNullOrEmpty(model.SubspeciesScientificName))
+                {
+                    var newSubspecies = new TblSubspecy
+                    {
+                        SubspeciesName = model.SubspeciesName2,
+                        ScientificName = model.SubspeciesScientificName
+                    };
+                    _context.TblSubspecies.Add(newSubspecies);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Subspecies added successfully.";
+                }
+                // Eğer Author ekleniyorsa
+                if (!string.IsNullOrEmpty(model.AuthorName2))
+                {
+                    var newAuthor = new TblSpeciesauthor
+                    {
+                        AuthorName = model.AuthorName2
+                    };
+                    _context.TblSpeciesauthors.Add(newAuthor);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Author added successfully.";
+                }
+
+
+                return RedirectToAction("AddCreature");
             }
 
-            // Hata durumunda JSON yanıtı dön
             TempData["ErrorMessage"] = "There was an error saving the data.";
             return RedirectToAction("AddCreature");
         }

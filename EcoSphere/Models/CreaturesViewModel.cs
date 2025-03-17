@@ -50,27 +50,66 @@ namespace EcoSphere.Models
 
         [DisplayName("ClassName")]
         public string? ClassName { get; set; }
+        
+        [DisplayName("ClassName2")]
+        public string? ClassName2 { get; set; }
+
+        [DisplayName("Class Scientific Name")]
+        public string? ClassScientificName { get; set; }
 
         [DisplayName("OrderName")]
         public string? OrderName { get; set; }
 
+        [DisplayName("OrderName2")]
+        public string? OrderName2 { get; set; }
+
+        [DisplayName("Order Scientific Name")]
+        public string? OrderScientificName { get; set; }
+
         [DisplayName("FamilyName")]
         public string? FamilyName { get; set; }
+
+        [DisplayName("FamilyName2")]
+        public string? FamilyName2 { get; set; }
+
+        [DisplayName("Family Scientific Name")]
+        public string? FamilyScientificName { get; set; }
 
         [DisplayName("GenusName")]
         public string? GenusName { get; set; }
 
+        [DisplayName("GenusName2")]
+        public string? GenusName2 { get; set; }
+
+        [DisplayName("Genus Scientific Name")]
+        public string? GenusScientificName { get; set; }
+
         [DisplayName("SpeciesName")]
         public string? SpeciesName { get; set; }
+        
+        [DisplayName("SpeciesName2")]
+        public string? SpeciesName2 { get; set; }
+
+        [DisplayName("Species Scientific Name")]
+        public string? SpeciesScientificName { get; set; }
 
         [DisplayName("SubspeciesName")]
         public string? SubspeciesName { get; set; }
+        
+        [DisplayName("SubspeciesName2")]
+        public string? SubspeciesName2 { get; set; }
+        
+        [DisplayName("Sunspecies Scientific Name")]
+        public string? SubspeciesScientificName { get; set; }
 
         [DisplayName("IucnCode")]
         public string? IucnCode { get; set; }
 
         [DisplayName("AuthorName")]
         public string? AuthorName { get; set; }
+        
+        [DisplayName("AuthorName2")]
+        public string? AuthorName2 { get; set; }
 
         public int SelectedCretureId { get; set; }
         public IEnumerable<SelectListItem> AddCreatures { get; set; } = new List<SelectListItem>();

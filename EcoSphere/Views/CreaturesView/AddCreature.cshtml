@@ -33,48 +33,60 @@
 					</div>
 				</div>
 				<br>
-
-				<!-- Class Combobox -->
-				<div id="ClassSection" class="form-group" style="display: none;">
-					<label for="ClassName">Select Class</label>
-		@Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown" })
-				</div>
-				<br>
-
-				<!-- Order Combobox -->
-				<div id="OrderSection" class="form-group" style="display: none;">
-					<label for="OrderName">Select Order</label>
-		@Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown" })
-				</div>
-				<br>
-
-				<!-- Family Combobox -->
-				<div id="FamilySection" class="form-group" style="display: none;">
-					<label for="FamilyName">Select Family</label>
-		@Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown" })
-				</div>
-				<br>
-
-				<!-- Genus Combobox -->
-				<div id="GenusSection" class="form-group" style="display: none;">
-					<label for="GenusName">Select Genus</label>
-		@Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown" })
-				</div>
-				<br>
-
-				<!-- Species Combobox -->
-				<div id="SpeciesSection" class="form-group" style="display: none;">
-					<label for="SpeciesName">Select Species</label>
-		@Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown" })
-				</div>
-				<br>
-
-				<!-- Subspecies Combobox -->
-				<div id="SubspeciesSection" class="form-group" style="display: none;">
-					<label for="SubspeciesName">Select Subspecies</label>
-		@Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown" })
-				</div>
-				<br>
+	<!-- Class Combobox -->
+	<div id="ClassSection" style="display: none;">
+		<div class="form-group">
+			<label for="ClassName">Select Class</label>
+			@Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddClassModal">Add New</button>
+		</div>
+	</div>
+	<br>
+	<!-- Order Combobox -->
+	<div id="OrderSection" style="display: none;">
+		<div class="form-group">
+			<label for="OrderName">Select Order</label>
+			@Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddOrderModal">Add New</button>
+		</div>
+	</div>
+	<br>
+	<!-- Family Combobox -->
+	<div id="FamilySection" style="display: none;">
+		<div class="form-group">
+			<label for="FamilyName">Select Family</label>
+			@Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddFamilyModal">Add New</button>
+		</div>
+	</div>
+	<br>
+	<!-- Genus Combobox -->
+	<div id="GenusSection" style="display: none;">
+		<div class="form-group">
+			<label for="GenusName">Select Genus</label>
+			@Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddGenusModal">Add New</button>
+		</div>
+	</div>
+	<br>
+	<!-- Species Combobox -->
+	<div id="SpeciesSection" style="display: none;">
+		<div class="form-group">
+			<label for="SpeciesName">Select Species</label>
+			@Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddSpeciesModal">Add New</button>
+		</div>
+	</div>
+	<br>
+	<!-- Subspecies Combobox -->
+	<div id="SubspeciesSection" style="display: none;">
+		<div class="form-group">
+			<label for="SubspeciesName">Select Subspecies</label>
+			@Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddSubSpeciesModal">Add New</button>
+		</div>
+	</div>
+	<br>
 
 				<!-- IUCN Combobox -->
 				<div id="IucnSection" class="form-group" style="display: none;">
@@ -82,13 +94,15 @@
 		@Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control", id = "IucnDropdown" })
 				</div>
 				<br>
-
-				<!-- Author Combobox -->
-				<div id="AuthorSection" class="form-group" style="display: none;">
-					<label for="AuthorName">Select Author</label>
-		@Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown" })
-				</div>
-				<br>
+	<!-- Author Combobox -->
+	<div id="AuthorSection" style="display: none;">
+		<div class="form-group">
+			<label for="AuthorName">Select Author</label>
+			@Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown" })
+			<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddAuthorModal">Add New</button>
+		</div>
+	</div>
+	<br>
 
 				<!-- Common Name -->
 				<div id="CommonNameSection" class="form-group" style="display: none;">
@@ -114,7 +128,7 @@
 								<h5 class="modal-title" id="AddPhylumModalLabel">Add New Phylum</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
-							<form id="AddPhylumForm" method="post" action="/CreaturesViewController/AddCreature">
+							<form id="AddPhylumForm" method="post" action="/CreaturesView/AddCreature">
 								<div class="modal-body">
 									<input type="hidden" id="SelectedKingdomID" name="KingdomID">
 									<label for="PhylumName">Phylum Name:</label>
@@ -129,6 +143,167 @@
 						</div>
 					</div>
 				</div>
+	<!-- Modal for Class -->
+	<div class="modal fade" id="AddClassModal" tabindex="-1" aria-labelledby="AddClassModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddClassModalLabel">Add New Class</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddClassForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<input type="hidden" id="SelectedPhylumID" name="PhylumID">
+						<label for="ClassName">Class Name:</label>
+						<input type="text" id="ClassName2" name="ClassName2" class="form-control" required>
+						<label for="ClassScientificName">Class Scientific Name:</label>
+						<input type="text" id="ClassScientificName" name="ClassScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Order -->
+	<div class="modal fade" id="AddOrderModal" tabindex="-1" aria-labelledby="AddOrderModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddOrderModalLabel">Add New Order</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddOrderForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<input type="hidden" id="SelectedClassID" name="ClassID">
+						<label for="OrderName">Order Name:</label>
+						<input type="text" id="OrderName2" name="OrderName2" class="form-control" required>
+						<label for="OrderScientificName">Order Scientific Name:</label>
+						<input type="text" id="OrderScientificName" name="OrderScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Family -->
+	<div class="modal fade" id="AddFamilyModal" tabindex="-1" aria-labelledby="AddFamilyModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddFamilyModalLabel">Add New Family</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddFamilyForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<input type="hidden" id="SelectedOrderID" name="OrderID">
+						<label for="FamilyName">Family Name:</label>
+						<input type="text" id="FamilyName2" name="FamilyName2" class="form-control" required>
+						<label for="FamilyScientificName">Family Scientific Name:</label>
+						<input type="text" id="FamilyScientificName" name="FamilyScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Genus -->
+	<div class="modal fade" id="AddGenusModal" tabindex="-1" aria-labelledby="AddGenusModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddGenusModalLabel">Add New Genus</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddGenusForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<input type="hidden" id="SelectedFamilyID" name="FamilyID">
+						<label for="GenusName">Genus Name:</label>
+						<input type="text" id="GenusName2" name="GenusName2" class="form-control" required>
+						<label for="GenusScientificName">Genus Scientific Name:</label>
+						<input type="text" id="GenusScientificName" name="GenusScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+				</div>
+				</div>
+				</div>
+	<!-- Modal for Species -->
+	<div class="modal fade" id="AddSpeciesModal" tabindex="-1" aria-labelledby="AddSpeciesModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddSpeciesModalLabel">Add New Species</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddSpeciesForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<input type="hidden" id="SelectedGenusID" name="GenusID">
+						<label for="SpeciesName">Species Name:</label>
+						<input type="text" id="SpeciesName2" name="SpeciesName2" class="form-control" required>
+						<label for="SpeciesScientificName">Species Scientific Name:</label>
+						<input type="text" id="SpeciesScientificName" name="SpeciesScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Subspecies -->
+	<div class="modal fade" id="AddSubSpeciesModal" tabindex="-1" aria-labelledby="AddSubSpeciesModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddSubSpeciesModalLabel">Add New Subspecies</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddSubSpeciesForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<label for="SubspeciesName">Subspecies Name:</label>
+						<input type="text" id="SubspeciesName2" name="SubspeciesName2" class="form-control" required>
+						<label for="SubspeciesScientificName">Subspecies Scientific Name:</label>
+						<input type="text" id="SubspeciesScientificName" name="SubspeciesScientificName" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for Author -->
+	<div class="modal fade" id="AddAuthorModal" tabindex="-1" aria-labelledby="AddAuthorModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddAuthorModalLabel">Add New Author</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form id="AddAuthorForm" method="post" action="/CreaturesView/AddCreature">
+					<div class="modal-body">
+						<label for="AuthorName2">Author Name:</label>
+						<input type="text" id="AuthorName2" name="AuthorName2" class="form-control" required>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+				
 
 				<script>
 					document.addEventListener("DOMContentLoaded", function () {
@@ -170,7 +345,7 @@
 						// Kingdom seçildiğinde Phylum'u göster
 						document.getElementById('KingdomDropdown').addEventListener('change', function () {
 							const kingdomID = this.value;
-							const phylumSection = document.getElementById('PhylumSection');
+							const PhylumSection = document.getElementById('PhylumSection');
 							const PhylumDropdown = document.getElementById('PhylumDropdown');
 
 								// Eğer bir Upper Realm seçilmişse Kingdom bölümü göster, değilse gizle
@@ -387,6 +562,62 @@
 						phylumSection.style.display = 'none';
 					}
 				});
+					document.getElementById('PhylumDropdown').addEventListener('change', function () {
+					const phylumID = this.value;
+					const classSection = document.getElementById('ClassSection');
+
+			if (phylumID) {
+				classSection.style.display = 'block';
+				document.getElementById('SelectedPhylumID').value = phylumID;
+			} else {
+				classSection.style.display = 'none';
+			}
+		});
+				document.getElementById('ClassDropdown').addEventListener('change', function () {
+					const classID = this.value;
+					const orderSection = document.getElementById('OrderSection');
+
+			if (classID) {
+				orderSection.style.display = 'block';
+				document.getElementById('SelectedClassID').value = classID;
+			} else {
+				classSection.style.display = 'none';
+			}
+		});
+		document.getElementById('OrderDropdown').addEventListener('change', function () {
+					const orderID = this.value;
+					const familySection = document.getElementById('FamilySection');
+
+			if (orderID) {
+				familySection.style.display = 'block';
+				document.getElementById('SelectedOrderID').value = orderID;
+			} else {
+				classSection.style.display = 'none';
+			}
+		});
+		document.getElementById('FamilyDropdown').addEventListener('change', function () {
+			const familyID = this.value;
+			const genusSection = document.getElementById('GenusSection');
+
+			if (familyID) {
+				genusSection.style.display = 'block';
+				document.getElementById('SelectedFamilyID').value = familyID;
+				} else {
+					genusSection.style.display = 'none';
+					}
+					});
+					document.getElementById('GenusDropdown').addEventListener('change', function () {
+						const genusID = this.value;
+						const speciesSection = document.getElementById('SpeciesSection');
+						if (genusID) {
+							speciesSection.style.display = 'block';
+							document.getElementById('SelectedGenusID').value = genusID;
+						} else {
+							speciesSection.style.display = 'none';
+						}
+					});
+
+				
 
 					// Dropdownlar arasında geçiş
 					function hideAllSections() {
