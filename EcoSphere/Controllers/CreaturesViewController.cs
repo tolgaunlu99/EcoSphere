@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+//merhaba togla
 namespace EcoSphere.Controllers
 {
     public class CreaturesViewController : Controller
