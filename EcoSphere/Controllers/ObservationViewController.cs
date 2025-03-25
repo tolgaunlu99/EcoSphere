@@ -98,34 +98,6 @@ namespace EcoSphere.Controllers
                     Text = p.RegionName
                 }).ToList();
 
-            var city = _context.TblProvinces
-                .Select(c => new SelectListItem
-                {
-                    Value = c.ProvinceId.ToString(),
-                    Text = c.ProvinceName
-                }).ToList();
-
-            var district = _context.TblDistricts
-                .Select(o => new SelectListItem
-                {
-                    Value = o.DistrictId.ToString(),
-                    Text = o.DistrictName
-                }).ToList();
-
-            var locality = _context.TblLocalities
-                .Select(f => new SelectListItem
-                {
-                    Value = f.LocalityId.ToString(),
-                    Text = f.LocalityName
-                }).ToList();
-
-            var hood = _context.TblNeighbourhoods
-                .Select(g => new SelectListItem
-                {
-                    Value = g.NeighbourhoodId.ToString(),
-                    Text = g.HoodName
-                }).ToList();
-
             var migrationstat = _context.TblMigrationstatuses
                 .Select(s => new SelectListItem
                 {
@@ -183,10 +155,6 @@ namespace EcoSphere.Controllers
                 CreatureNamed = creatures,
                 Usernamed = user,
                 RegionNamed = region,
-                ProvinceNamed = city,
-                DistrictNamed = district,
-                LocalityNamed = locality,
-                HoodNamed = hood,
                 MigrationstatNamed = migrationstat,
                 EndemicstatNamed = endemicstat,
                 ProjectNamed = project,
@@ -197,9 +165,58 @@ namespace EcoSphere.Controllers
                 GenderNamed = gender
             };
 
-
-
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetCitysByRegion(int RegionID)
+        {
+            var cities = await _context.TblProvinces
+                .Where(k => k.RegionId == RegionID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.ProvinceId.ToString(),
+                    Text = k.ProvinceName
+                }).ToListAsync();
+
+            return Json(cities);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDistrictsByCity(int CityID)
+        {
+            var Districts = await _context.TblDistricts
+                .Where(k => k.ProvinceId == CityID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.DistrictId.ToString(),
+                    Text = k.DistrictName
+                }).ToListAsync();
+
+            return Json(Districts);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetLocalitiesByDistrict(int DistrictID)
+        {
+            var Localities = await _context.TblLocalities
+                .Where(k => k.DistrictId == DistrictID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.LocalityId.ToString(),
+                    Text = k.LocalityName
+                }).ToListAsync();
+            return Json(Localities);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetNeighbourhoodsByLocality(int LocalityID)
+        {
+            var Neighbourhoods = await _context.TblNeighbourhoods
+                .Where(k => k.LocalityId == LocalityID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.NeighbourhoodId.ToString(),
+                    Text = k.HoodName
+                }).ToListAsync();
+            return Json(Neighbourhoods);
+        }
+
     }
 }

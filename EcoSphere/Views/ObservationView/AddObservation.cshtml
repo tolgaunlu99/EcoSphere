@@ -19,7 +19,14 @@
         </a>
     </div>
     <br>
-    
+    <div id="UserSection" style="display: none;">
+        <div class="form-group">
+            <label for="UserNamed">Select User</label>
+            @Html.DropDownListFor(m => m.UserName, Model.Usernamed, "Select User", new { @class = "form-control", id = "UserDropdown" })
+        </div>
+    </div>
+    <br>
+
     <div id="RegionSection" style="display: none;">
             <div class="form-group">
             <label for="RegionNamed">Select Region</label>
@@ -27,20 +34,73 @@
         </div>
     </div>
         <br>
-       <script>
-           document.addEventListener("DOMContentLoaded", function () {
-                        // Başlangıçta tüm dropdown'lar gizli
-                        hideAllSections();
+    <div id="CitySection" style="display: none;">
+        <div class="form-group">
+            <label for="CityNamed">Select City</label>
+            @Html.DropDownListFor(m => m.provincename, Model.ProvinceNamed, "Select Province", new { @class = "form-control", id = "ProvinceDropdown" })
+        </div>
+    </div>
+    <br>
+    <div id="DisctrictSection" style="display: none;">
+        <div class="form-group">
+            <label for="DistrictNamed">Select District</label>
+            @Html.DropDownListFor(m => m.DistrictName, Model.DistrictNamed, "Select District", new { @class = "form-control", id = "DistrictDropdown" })
+        </div>
+    </div>
+    <br>
+    <div id="LocalitySection" style="display: none;">
+        <div class="form-group">
+            <label for="LocalityNamed">Select City</label>
+            @Html.DropDownListFor(m => m.LocalityName, Model.LocalityNamed, "Select Locality", new { @class = "form-control", id = "LocalityDropdown" })
+        </div>
+    </div>
+    <br>
+    <div id="NeighborhoodSection" style="display: none;">
+        <div class="form-group">
+            <label for="NeighborhoodNamed">Select Neighborhood</label>
+	@Html.DropDownListFor(m => m.HoodName, Model.HoodNamed, "Select Neighborhood", new { @class = "form-control", id = "NeighborhoodDropdown" })
+    </div>
+    </div>
+	<br>
 
-                        document.getElementById('CreatureDropdown').addEventListener('change', function () {
-                            const creatureID = this.value;
-                            const UserSection = document.getElementById('UserSection');
-                                    UserSection.style.display = 'block';
-                            });
-           }
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Başlangıçta tüm dropdown'lar gizli
+            hideAllSections();
+
+            document.getElementById('CreatureDropdown').addEventListener('change', function () {
+                const creatureID = this.value;
+                const UserSection = document.getElementById('UserSection');
+                if (creatureID) {
+                            UserSection.style.display = 'block';
+                            document.getElementById('SelectedCreatureID').value = creatureID;
+                        } else {
+                            UserSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('UserDropdown').addEventListener('change', function () {
+                const userID = this.value;
+                const RegionSection = document.getElementById('RegionSection');
+                if (userID) {
+                            RegionSection.style.display = 'block';
+                            document.getElementById('SelectedUserID').value = userID;
+                        } else {
+                            RegionSection.style.display = 'none';
+                        }
+            });
+        }); 
+
         function hideAllSections() {
-                        document.getElementById('UserSection').style.display = 'none';
-                        document.getElementById('RegionSection').style.display = 'none';
-					}
-		</script>
+            document.getElementById('UserSection').style.display = 'none';
+            document.getElementById('RegionSection').style.display = 'none';
+            document.getElementById('CitySection').style.display = 'none';
+            document.getElementById('DisctrictSection').style.display = 'none';
+            document.getElementById('LocalitySection').style.display = 'none';
+            document.getElementById('NeighborhoodSection').style.display = 'none';
+        }
+    </script>
 }
