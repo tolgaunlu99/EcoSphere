@@ -14,37 +14,42 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg ">
-            <div class="container">
-                <a class="navbar-brand text-dark font size="30" asp-area="" asp-controller="Home" asp-action="Index">EcoSphere</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <header>
+            <nav class="navbar navbar-expand-lg bg-light">
+                <div class="container d-flex justify-content-between align-items-center">
+                    <!-- Logo ve Marka İsmi (Sola Hizalı) -->
+                    <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="https://dkm.org.tr/sites/other/dkm/assets//images/logo.png" alt="EcoSphere Logo" width="30" height="30" class="me-2">
+                        <span class="fw-bold fs-5 text-dark">EcoSphere</span>
+                    </a>
 
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ObservationView" asp-action="Index">Observation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CreaturesView" asp-action="Index">Creatures</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserView" asp-action="SignIN">Sign IN</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserView" asp-action="SignUP">Sign Up</a>
-                        </li>
-                    </ul>
+                    <!-- Orta Menü -->
+                    <div class="d-none d-lg-flex flex-grow-1 justify-content-center">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ObservationView" asp-action="Index">Observation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CreaturesView" asp-action="Index">Creatures</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Sign In & Sign Up (Sağda Küçük) -->
+                    <div class="d-flex">
+                        <a class="btn btn-outline-dark btn-sm me-2" asp-area="" asp-controller="UserView" asp-action="SignIN">Sign In</a>
+                        <a class="btn btn-dark btn-sm" asp-area="" asp-controller="UserView" asp-action="SignUP">Sign Up</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </header>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
