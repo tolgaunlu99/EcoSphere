@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 namespace EcoSphere.Models
 {
     public class ObservationViewModel
@@ -116,6 +117,56 @@ namespace EcoSphere.Models
 
         [DisplayName("Full Name")]
         public string? FullName => $"{UserName} {UsersurName}";
+
+        public int SelectedObservationId { get; set; }
+        public IEnumerable<SelectListItem> AddObservations { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Creatures")]
+        public IEnumerable<SelectListItem> CreatureNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("User")]
+        public IEnumerable<SelectListItem> Usernamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Region")]
+        public IEnumerable<SelectListItem> RegionNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Province")]
+        public IEnumerable<SelectListItem> ProvinceNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("District")]
+        public IEnumerable<SelectListItem> DistrictNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Locality")]
+        public IEnumerable<SelectListItem> LocalityNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Neighborhood")]
+        public IEnumerable<SelectListItem> HoodNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Migration Status")]
+        public IEnumerable<SelectListItem> MigrationstatNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Endemic Status")]
+        public IEnumerable<SelectListItem> EndemicstatNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Project")]
+        public IEnumerable<SelectListItem> ProjectNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Citation")]
+        public IEnumerable<SelectListItem> CitationNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Reference")]
+        public IEnumerable<SelectListItem> ReferenceNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Location Type")]
+        public IEnumerable<SelectListItem> LocationtypeNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Location Range")]
+        public IEnumerable<SelectListItem> LocationRangeNamed { get; set; } = new List<SelectListItem>();
+
+        [DisplayName("Gender")]
+        public IEnumerable<SelectListItem> GenderNamed { get; set; } = new List<SelectListItem>();
+
+
 
 
     }

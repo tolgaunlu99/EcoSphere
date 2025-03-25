@@ -1,0 +1,46 @@
+﻿@model ObservationViewModel
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+@using (Html.BeginForm())
+{
+
+<div class="form-group">
+        <label for="CreatureName">Select Creature</label>
+    @Html.DropDownListFor(m => m.CreatureName, Model.CreatureNamed, "Select Creature", new { @class = "form-control", id = "CreatureDropdown" })        
+                <a href="/CreaturesView/AddCreature">    
+    <button type="button" class="btn btn-primary" id="add-new-class-btn">Go to Creature Add</button>
+        </a>
+    </div>
+    <br>
+    
+    <div id="RegionSection" style="display: none;">
+            <div class="form-group">
+            <label for="RegionNamed">Select Region</label>
+            @Html.DropDownListFor(m => m.RegionName, Model.RegionNamed, "Select Region", new { @class = "form-control", id = "RegionDropdown" })
+        </div>
+    </div>
+        <br>
+       <script>
+           document.addEventListener("DOMContentLoaded", function () {
+                        // Başlangıçta tüm dropdown'lar gizli
+                        hideAllSections();
+
+                        document.getElementById('CreatureDropdown').addEventListener('change', function () {
+                            const creatureID = this.value;
+                            const UserSection = document.getElementById('UserSection');
+                                    UserSection.style.display = 'block';
+                            });
+           }
+        function hideAllSections() {
+                        document.getElementById('UserSection').style.display = 'none';
+                        document.getElementById('RegionSection').style.display = 'none';
+					}
+		</script>
+}

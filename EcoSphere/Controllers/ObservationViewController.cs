@@ -1,5 +1,6 @@
 ﻿using EcoSphere.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -71,6 +72,134 @@ namespace EcoSphere.Controllers
 
             var viewModel = await observationsWithNames.ToListAsync();
             return View(viewModel);
+        }
+        public ActionResult AddObservation()
+        {
+            // creatures combobox verisi
+            var creatures = _context.TblCreatures
+                .Select(ur => new SelectListItem
+                {
+                    Value = ur.CreatureId.ToString(),
+                    Text = ur.ScientificName,
+                }).ToList();
+
+            // User combobox verisi
+            var user = _context.TblUsers
+                .Select(k => new SelectListItem
+                {
+                    Value = k.UserId.ToString(),
+                    Text = k.Name 
+                }).ToList();
+           
+            var region = _context.TblRegions
+                .Select(p => new SelectListItem
+                {
+                    Value = p.RegionId.ToString(),
+                    Text = p.RegionName
+                }).ToList();
+
+            var city = _context.TblProvinces
+                .Select(c => new SelectListItem
+                {
+                    Value = c.ProvinceId.ToString(),
+                    Text = c.ProvinceName
+                }).ToList();
+
+            var district = _context.TblDistricts
+                .Select(o => new SelectListItem
+                {
+                    Value = o.DistrictId.ToString(),
+                    Text = o.DistrictName
+                }).ToList();
+
+            var locality = _context.TblLocalities
+                .Select(f => new SelectListItem
+                {
+                    Value = f.LocalityId.ToString(),
+                    Text = f.LocalityName
+                }).ToList();
+
+            var hood = _context.TblNeighbourhoods
+                .Select(g => new SelectListItem
+                {
+                    Value = g.NeighbourhoodId.ToString(),
+                    Text = g.HoodName
+                }).ToList();
+
+            var migrationstat = _context.TblMigrationstatuses
+                .Select(s => new SelectListItem
+                {
+                    Value = s.MigrationStatusId.ToString(),
+                    Text = s.MigrationStatusName
+                }).ToList();
+
+            var endemicstat = _context.TblEndemicstatuses
+                .Select(ss => new SelectListItem
+                {
+                    Value = ss.EndemicStatusId.ToString(),
+                    Text = ss.EndemicStatus
+                }).ToList();
+
+            var project = _context.TblProjects
+                .Select(i => new SelectListItem
+                {
+                    Value = i.ProjectId.ToString(),
+                    Text = i.ProjectName
+                }).ToList();
+            var citation = _context.TblCitations
+                .Select(i => new SelectListItem
+                {
+                    Value = i.CitationId.ToString(),
+                    Text = i.CitationName
+                }).ToList();
+            var reference = _context.TblReferences
+                .Select(i => new SelectListItem
+                {
+                    Value = i.ReferenceId.ToString(),
+                    Text = i.ReferenceName
+                }).ToList();
+            var locationtype = _context.TblLocationtypes
+                .Select(i => new SelectListItem
+                {
+                    Value = i.LocationTypeId.ToString(),
+                    Text = i.LocationType
+                }).ToList();
+            var locationrange = _context.TblLocationranges
+                .Select(i => new SelectListItem
+                {
+                    Value = i.LocationRangeId.ToString(),
+                    Text = i.LocationRangeValue
+                }).ToList();
+            var gender = _context.TblGenders
+                .Select(i => new SelectListItem
+                {
+                    Value = i.GenderId.ToString(),
+                    Text = i.GenderName
+                }).ToList();
+
+            // ViewModel'e tüm combobox verilerini gönderiyoruz
+            var model = new ObservationViewModel
+            {
+                CreatureNamed = creatures,
+                Usernamed = user,
+                RegionNamed = region,
+                ProvinceNamed = city,
+                DistrictNamed = district,
+                LocalityNamed = locality,
+                HoodNamed = hood,
+                MigrationstatNamed = migrationstat,
+                EndemicstatNamed = endemicstat,
+                ProjectNamed = project,
+                CitationNamed = citation,
+                ReferenceNamed = reference,
+                LocationtypeNamed = locationtype,
+                LocationRangeNamed = locationrange,
+                GenderNamed = gender
+            };
+
+
+
+            return View(model);
         }
     }
 }

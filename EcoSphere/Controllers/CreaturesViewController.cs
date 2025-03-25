@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+//merhaba togla
 namespace EcoSphere.Controllers
 {
     public class CreaturesViewController : Controller
@@ -53,9 +53,11 @@ namespace EcoSphere.Controllers
             var viewModel = await creaturesWithNames.ToListAsync();
             return View(viewModel);
         }
-        public ActionResult AddCreature()
+
+
+        [HttpGet]
+        public IActionResult AddCreature()
         {
-            // UpperRealm combobox verisi
             var upperRealms = _context.TblUpperrealms
                 .Select(ur => new SelectListItem
                 {
@@ -63,56 +65,11 @@ namespace EcoSphere.Controllers
                     Text = ur.RealmName
                 }).ToList();
 
-            // Kingdom combobox verisi
-            var kingdoms = _context.TblKingdoms
-                .Select(k => new SelectListItem
-                {
-                    Value = k.KingdomId.ToString(),
-                    Text = k.KingdomName
-                }).ToList();
-
-            // Diğer combobox verilerini benzer şekilde alıyoruz
-            var phylums = _context.TblPhylums
-                .Select(p => new SelectListItem
-                {
-                    Value = p.PhylumId.ToString(),
-                    Text = p.PhylumName
-                }).ToList();
-
-            var classes = _context.TblClasses
-                .Select(c => new SelectListItem
-                {
-                    Value = c.ClassId.ToString(),
-                    Text = c.ClassName
-                }).ToList();
-
-            var orders = _context.TblOrders
-                .Select(o => new SelectListItem
-                {
-                    Value = o.OrderId.ToString(),
-                    Text = o.OrderName
-                }).ToList();
-
-            var families = _context.TblFamilies
-                .Select(f => new SelectListItem
-                {
-                    Value = f.FamilyId.ToString(),
-                    Text = f.FamilyName
-                }).ToList();
-
-            var genus = _context.TblGenus
-                .Select(g => new SelectListItem
-                {
-                    Value = g.GenusId.ToString(),
-                    Text = g.GenusName
-                }).ToList();
-
-            var species = _context.TblSpecies
-                .Select(s => new SelectListItem
-                {
-                    Value = s.SpeciesId.ToString(),
-                    Text = s.SpeciesName
-                }).ToList();
+            var model = new CreaturesViewModel
+            {
+                UpperRealmNamed = upperRealms,
+                KingdomNamed = new List<SelectListItem>() // Başlangıçta boş liste
+            };
 
             var subspecies = _context.TblSubspecies
                 .Select(ss => new SelectListItem
@@ -135,53 +92,216 @@ namespace EcoSphere.Controllers
                     Text = a.AuthorName
                 }).ToList();
 
-            // ViewModel'e tüm combobox verilerini gönderiyoruz
-            var model = new CreaturesViewModel
-            {
-                UpperRealmNamed = upperRealms,
-                KingdomNamed = kingdoms,
-                PhylumNamed = phylums,
-                ClassNamed = classes,
-                OrderNamed = orders,
-                FamilyNamed = families,
-                GenusNamed = genus,
-                SpeciesNamed = species,
-                SubspeciesNamed = subspecies,
-                IucnCoded = iucn,
-                AuthorNamed = authors
-            };
-
-
-
+            model.SubspeciesNamed = subspecies;
+            model.IucnCoded = iucn;
+            model.AuthorNamed = authors;          
+            
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetKingdomsByUpperRealm(int upperRealmId)
+        {
+            var kingdoms = await _context.TblKingdoms
+                .Where(k => k.RealmId == upperRealmId)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.KingdomId.ToString(),
+                    Text = k.KingdomName
+                }).ToListAsync();
+
+            return Json(kingdoms);
+        }
+        public async Task<IActionResult> GetPhylumsByKingdom(int KingdomID)
+        {
+            var phylums = await _context.TblPhylums
+                .Where(k => k.KingdomId == KingdomID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.PhylumId.ToString(),
+                    Text = k.PhylumName
+                }).ToListAsync();
+
+            return Json(phylums);
+        }
+        public async Task<IActionResult> GetClassByPhylum(int PhylumID)
+        {
+            var classes = await _context.TblClasses
+                .Where(k => k.PhylumId == PhylumID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.ClassId.ToString(),
+                    Text = k.ClassName
+                }).ToListAsync();
+
+            return Json(classes);
+        }
+        public async Task<IActionResult> GetOrderByClass(int ClassID)
+        {
+            var order = await _context.TblOrders
+                .Where(k => k.ClassId == ClassID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.OrderId.ToString(),
+                    Text = k.OrderName
+                }).ToListAsync();
+
+            return Json(order);
+        }
+        public async Task<IActionResult> GetFamilyByOrder(int OrderID)
+        {
+            var family = await _context.TblFamilies
+                .Where(k => k.OrderId == OrderID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.FamilyId.ToString(),
+                    Text = k.FamilyName
+                }).ToListAsync();
+
+            return Json(family);
+        }
+        public async Task<IActionResult> GetGenusByFamily(int FamilyID)
+        {
+            var genus = await _context.TblGenus
+                .Where(k => k.FamilyId == FamilyID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.GenusId.ToString(),
+                    Text = k.GenusName
+                }).ToListAsync();
+            return Json(genus);
+        }
+        public async Task<IActionResult> GetSpeciesByGenus(int GenusID)
+        {
+            var species = await _context.TblSpecies
+                .Where(k => k.GenusId == GenusID)
+                .Select(k => new SelectListItem
+                {
+                    Value = k.SpeciesId.ToString(),
+                    Text = k.SpeciesName
+                }).ToListAsync();
+            return Json(species);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddCreature(CreaturesViewModel model)
         {
-            // Veritabanına ekleme işlemi
             if (ModelState.IsValid)
             {
-                // Yeni bir Phylum objesi oluştur
-                var newPhylum = new TblPhylum
+                
+                // Eğer Phylum ekleniyorsa
+                if (!string.IsNullOrEmpty(model.PhylumName2) && !string.IsNullOrEmpty(model.PhylumScientificName))
                 {
-                    KingdomId = model.KingdomId,  // Modaldan gelen KingdomId
-                    PhylumName = model.PhylumName, // Modaldan gelen Phylum Name
-                    ScientificName = model.ScientificName // Modaldan gelen Scientific Name
-                };
+                    var newPhylum = new TblPhylum
+                    {
+                        KingdomId = model.KingdomId,
+                        PhylumName = model.PhylumName2,
+                        ScientificName = model.PhylumScientificName
+                    };
 
-                // Veritabanına ekle
-                _context.TblPhylums.Add(newPhylum);
-                await _context.SaveChangesAsync();
+                    _context.TblPhylums.Add(newPhylum);
+                    await _context.SaveChangesAsync();
 
-                // Başarı mesajı dön
-                return Json(new { success = true, message = "Phylum added successfully." });
+                    TempData["SuccessMessage"] = "Phylum added successfully.";
+                }
+
+                // Eğer Class ekleniyorsa
+                if (!string.IsNullOrEmpty(model.ClassName2) && !string.IsNullOrEmpty(model.ClassScientificName))
+                {
+                    var newClass = new TblClass
+                    {
+                        PhylumId = model.PhylumId,
+                        ClassName = model.ClassName2,
+                        ScientificName = model.ClassScientificName
+                    };
+                    _context.TblClasses.Add(newClass);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Class added successfully.";
+                }
+                // Eğer Order ekleniyorsa
+                if (!string.IsNullOrEmpty(model.OrderName2) && !string.IsNullOrEmpty(model.OrderScientificName))
+                {
+                    var newClass = new TblOrder
+                    {
+                        ClassId = model.ClassId,
+                        OrderName = model.OrderName2,
+                        ScientificName = model.OrderScientificName
+                    };
+                    _context.TblOrders.Add(newClass);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Order added successfully.";
+                }
+                // Eğer Family ekleniyorsa
+                if (!string.IsNullOrEmpty(model.FamilyName2) && !string.IsNullOrEmpty(model.FamilyScientificName))
+                {
+                    var newFamily = new TblFamily
+                    {
+                        OrderId = model.OrderId,
+                        FamilyName = model.FamilyName2,
+                        ScientificName = model.FamilyScientificName
+                    };
+                    _context.TblFamilies.Add(newFamily);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Family added successfully.";
+                }
+                // Eğer Genus ekleniyorsa
+                if (!string.IsNullOrEmpty(model.GenusName2) && !string.IsNullOrEmpty(model.GenusScientificName))
+                {
+                    var newGenus = new TblGenu
+                    {
+                        FamilyId = model.FamilyId,
+                        GenusName = model.GenusName2,
+                        ScientificName = model.GenusScientificName
+                    };
+                    _context.TblGenus.Add(newGenus);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Genus added successfully.";
+                }
+                // Eğer Species ekleniyorsa
+                if (!string.IsNullOrEmpty(model.SpeciesName2) && !string.IsNullOrEmpty(model.SpeciesScientificName))
+                {
+                    var newSpecies = new TblSpecy
+                    {
+                        GenusId = model.GenusId,
+                        SpeciesName = model.SpeciesName2,
+                        ScientificName = model.SpeciesScientificName
+                    };
+                    _context.TblSpecies.Add(newSpecies);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Species added successfully.";
+                }
+                // Eğer Subspecies ekleniyorsa
+                if (!string.IsNullOrEmpty(model.SubspeciesName2) && !string.IsNullOrEmpty(model.SubspeciesScientificName))
+                {
+                    var newSubspecies = new TblSubspecy
+                    {
+                        SubspeciesName = model.SubspeciesName2,
+                        ScientificName = model.SubspeciesScientificName
+                    };
+                    _context.TblSubspecies.Add(newSubspecies);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Subspecies added successfully.";
+                }
+                // Eğer Author ekleniyorsa
+                if (!string.IsNullOrEmpty(model.AuthorName2))
+                {
+                    var newAuthor = new TblSpeciesauthor
+                    {
+                        AuthorName = model.AuthorName2
+                    };
+                    _context.TblSpeciesauthors.Add(newAuthor);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Author added successfully.";
+                }
+
+
+                return RedirectToAction("AddCreature");
             }
 
-            // Hata durumunda
-            return Json(new { success = false, message = "There was an error saving the data." });
+            TempData["ErrorMessage"] = "There was an error saving the data.";
+            return RedirectToAction("AddCreature");
         }
-
-
 
     }
 }
