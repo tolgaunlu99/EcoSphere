@@ -1,71 +1,82 @@
 ﻿@model List<EcoSphere.Models.CreaturesViewModel>
 @{
-	ViewData["Title"] = "Creatures Details";
-
+    ViewData["Title"] = "Creatures Details";
 }
-<h3>@ViewData["Title"] </h3>
-<hr />
-<form>
-	 <a href="/CreaturesView/AddCreature">Add Creature</a></p>
-	 <br>
-	<table class="table table-responsive table-hover">
-		<thead>
-			<tr class="table-active">
-				<th> Upper Realm</th> 
-				<th> Kingdom </th>
-				<th> Phylum </th>
-				<th> Class </th> 
-				<th> Order </th>
-				<th> Family</th> 
-				<th> Genus</th>
-				<th> Species</th> 
-				<th> Sub Species </th> 
-				<th> IUCN</th> 
-				<th>Author </th>
-				<th> Scientific Name</th> 
-				<th>Common Name </th> 
-			</tr>
-		</thead> 
-		<tbody>
-			@if (Model != null && Model.Any())
-			{
-				@foreach (var creatures in Model)
-					{
-						<tr>
-							<td>@creatures.UpperRealmName</td>
-							<td>@creatures.KingdomName</td>							
-							<td>@creatures.PhylumName</td>
-							<td>@creatures.ClassName</td>
-							<td>@creatures.OrderName</td>
-							<td>@creatures.FamilyName</td>							
-							<td>@creatures.GenusName</td>
-							<td>@creatures.SpeciesName</td>
-							<td>@creatures.SubspeciesName</td>
-							<td>@creatures.IucnCode</td>							
-							<td>@creatures.AuthorName</td>
-							<td>@creatures.ScientificName</td>
-							<td>@creatures.CommonName</td>
-							<td>
-								<div class="btn-group btn-group-sm">
-									<a asp-controller="Creatures" asp-action="Edit" asp-route-id="@creatures.CreatureId" class="btn btn-primary">Edit</a>
-									<a asp-controller="Creatures" asp-action="Delete" asp-route-id="@creatures.CreatureId" class="btn btn-danger">Delete</a>
- 								</div>
-							</td>
-						</tr>
-						
-					}
 
-			}
-			else
-			{
-				<tr>
-					<td colspan="14">
-						<div>
-							No Creatures Available
-						</div>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-</form>
+<head>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="mb-0">@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <a href="/CreaturesView/AddCreature" class="btn btn-success mb-3">Add Creature</a>
+
+            <!-- Yatay kaydırma  -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-active">
+                            <th> Upper Realm</th>
+                            <th> Kingdom </th>
+                            <th> Phylum </th>
+                            <th> Class </th>
+                            <th> Order </th>
+                            <th> Family</th>
+                            <th> Genus</th>
+                            <th> Species</th>
+                            <th> Sub Species </th>
+                            <th> IUCN</th>
+                            <th> Author </th>
+                            <th> Scientific Name</th>
+                            <th> Common Name </th>
+                            <th> Actions </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var creatures in Model)
+                            {
+                                <tr>
+                                    <td>@creatures.UpperRealmName</td>
+                                    <td>@creatures.KingdomName</td>
+                                    <td>@creatures.PhylumName</td>
+                                    <td>@creatures.ClassName</td>
+                                    <td>@creatures.OrderName</td>
+                                    <td>@creatures.FamilyName</td>
+                                    <td>@creatures.GenusName</td>
+                                    <td>@creatures.SpeciesName</td>
+                                    <td>@creatures.SubspeciesName</td>
+                                    <td>@creatures.IucnCode</td>
+                                    <td>@creatures.AuthorName</td>
+                                    <td>@creatures.ScientificName</td>
+                                    <td>@creatures.CommonName</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-controller="Creatures" asp-action="Edit" asp-route-id="@creatures.CreatureId" class="btn btn-primary">Edit</a>
+                                            <a asp-controller="Creatures" asp-action="Delete" asp-route-id="@creatures.CreatureId" class="btn btn-danger">Delete</a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="14" class="text-center">
+                                    <div>No Creatures Available</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div> <!-- table-responsive bitiş -->
+        </div>
+    </div>
+</div>

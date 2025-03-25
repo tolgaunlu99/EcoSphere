@@ -1,0 +1,139 @@
+﻿/* 📌 Sayfa Düzeni */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    margin: 20px;
+    padding: 0;
+}
+
+/* 📌 Card Tasarımı */
+.card {
+    font-family: 'Poppins', sans-serif;
+    background-color: #161616;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* 📌 Card Başlığı */
+.card-header {
+    color: white;
+    background-color: #69df29;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+}
+
+/* 📌 "Add Creature" Butonu */
+.btn-success {
+    display: inline-block;
+    font-weight: bold;
+    background-color: #69df29 !important; /* 🌟 Yeşil arka plan */
+    color: black !important; /* 🌟 Siyah metin rengi */
+    border: 2px solid #69df29 !important; /* 🌟 Yeşil kenarlık */
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-success:hover {
+        background-color: #55d42b !important; /* 🌟 Hoverda biraz daha koyu yeşil */
+        color: white !important; /* 🌟 Hoverda metin beyaz olacak */
+    }
+
+/* 📌 Edit ve Delete Butonları */
+.btn-primary {
+    background-color: #69df29 !important; /* 🌟 Yeşil arka plan */
+    color: black !important; /* 🌟 Siyah metin rengi */
+    border: 2px solid #69df29 !important; /* 🌟 Yeşil kenarlık */
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-edit:hover {
+        background-color: #55d42b !important; /* 🌟 Hoverda biraz daha koyu yeşil */
+        color: white !important; /* 🌟 Hoverda metin beyaz olacak */
+    }
+
+.btn-danger {
+    background-color: #f44336 !important; /* 🌟 Kırmızı arka plan */
+    color: white !important; /* 🌟 Beyaz metin rengi */
+    border: 2px solid #f44336 !important; /* 🌟 Kırmızı kenarlık */
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-delete:hover {
+        background-color: #d32f2f !important; /* 🌟 Hoverda biraz daha koyu kırmızı */
+        color: white !important; /* 🌟 Hoverda metin beyaz olacak */
+    }
+
+/* Butonlar Arası Mesafe */
+.btn-group .btn {
+    margin-right: 10px !important; /* Butonlar arasına mesafe ekler */
+}
+
+
+
+/* 📌 Tablo Çerçevesi */
+.table {
+    font-size: 18px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #161616;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid #69df29; /* 🌟 Tüm tabloya yeşil çerçeve */
+    color: white; /* 🌟 Metin rengi beyaz */
+    box-sizing: border-box; /* 🌟 Çerçeveye göre hesaplama yaparak boşlukları minimize eder */
+}
+
+    /* 📌 Tablodaki Satırlar Arası Çizgiler */
+    .table th,
+    .table td {
+        padding: 0; /* 🌟 Padding'i sıfırlıyoruz, boşluk yok */
+        text-align: center;
+        border-bottom: 2px solid #69df29; /* 🌟 Satırların alt çizgisi yeşil */
+    }
+
+    /* 📌 Tablo Başlıkları */
+    .table th {
+        background-color: #69df29; /* 🌟 Card header ile aynı renk */
+        color: black; /* 🌟 Başlık yazıları siyah */
+        font-weight: bold;
+    }
+
+/* 📌 Hover Etkisi */
+.table-hover tbody tr:hover {
+    background-color: #69df29 !important; /* 🌟 Tam yeşil arka plan */
+    color: black !important; /* 🌟 Hover sırasında metin rengi siyah */
+    transition: background-color 0.3s ease; /* 🌟 Yumuşak geçiş efekti */
+}
+
+/* 📌 Tabloyu Saran Kapsayıcı */
+.table-responsive {
+    border: 3px solid #69df29; /* 🌟 Tüm tabloyu saran kapsayıcı çerçeve */
+    border-radius: 10px; /* 🌟 Köşeleri yuvarla */
+    padding: 0; /* 🌟 Çerçevenin etrafındaki boşluğu sıfırlıyoruz */
+}
+
+/* 📌 Yatay Scroll */
+.table-responsive {
+    overflow-x: auto; /* 🌟 Büyük ekranlarda taşma olursa yatay kaydırma ekler */
+}
+
+/* 📌 Hover Etkisi */
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* 📌 Butonlar */
+.btn-group .btn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
