@@ -50,7 +50,7 @@
     <br>
     <div id="LocalitySection" style="display: none;">
         <div class="form-group">
-            <label for="LocalityNamed">Select City</label>
+            <label for="LocalityNamed">Select Locality</label>
             @Html.DropDownListFor(m => m.LocalityName, Model.LocalityNamed, "Select Locality", new { @class = "form-control", id = "LocalityDropdown" })
         </div>
     </div>
@@ -62,8 +62,192 @@
     </div>
     </div>
 	<br>
+    <div id="MigrationstatSection" style="display: none;">
+        <div class="form-group">
+            <label for="MigrationstatNamed">Select Migration Status</label>
+            @Html.DropDownListFor(m => m.MigrationStatName, Model.MigrationstatNamed, "Select Migration Status", new { @class = "form-control", id = "MigrationStatDropdown" })
+        </div>
+    </div>
+    <br>
+    <div id="EndemicstatSection" style="display: none;">
+        <div class="form-group">
+            <label for="EndemicstatNamed">Select Endemic Status</label>
+            @Html.DropDownListFor(m => m.EndemicStatName, Model.EndemicstatNamed, "Select Endemic Status", new { @class = "form-control", id = "EndemicstatDropdown" })
+        </div>
+    </div>
+    <br>
+    <!-- Project Combobox -->
+    <div id="ProjectSection" style="display: none;">
+        <div class="form-group">
+            <label for="ProjectName">Select Project</label>
+            @Html.DropDownListFor(m => m.ProjectName, Model.ProjectNamed, "Select Project", new { @class = "form-control", id = "ProjectDropdown" })
+            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddProjectModal">Add New</button>
+        </div>
+    </div>
+    <br>
+    <!-- Citation Combobox -->
+    <div id="CitationSection" style="display: none;">
+        <div class="form-group">
+            <label for="CitationName">Select Citation</label>
+            @Html.DropDownListFor(m => m.CitationName, Model.CitationNamed, "Select Citation", new { @class = "form-control", id = "CitationDropdown" })
+            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddCitationModal">Add New</button>
+        </div>
+    </div>
+    <br>
+    <!-- Reference Combobox -->
+    <div id="ReferenceSection" style="display: none;">
+        <div class="form-group">
+            <label for="ReferenceName">Select Reference</label>
+            @Html.DropDownListFor(m => m.ReferenceName, Model.ReferenceNamed, "Select Reference", new { @class = "form-control", id = "ReferenceDropdown" })
+            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddReferenceModal">Add New</button>
+        </div>
+    </div>
+    <br>
+	<!-- Location Type Combobox -->
+    <div id="LocationTypeSection" style="display: none;">
+        <div class="form-group">
+            <label for="LocationTypeName">Select Location Type</label>
+            @Html.DropDownListFor(m => m.LocationType, Model.LocationtypeNamed, "Select Location Type", new { @class = "form-control", id = "LocationTypeDropdown" })
+        </div>
+    </div>
+    <br>
+	<!-- Location Range Combobox -->
+    <div id="LocationRangeSection" style="display: none;">
+        <div class="form-group">
+            <label for="LocationRangeName">Select Location Range</label>
+            @Html.DropDownListFor(m => m.LocationRange, Model.LocationRangeNamed, "Select Location Range", new { @class = "form-control", id = "LocationRangeDropdown" })
+            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddLocationRangeModal">Add New</button>
+        </div>
+    </div>
+    <br>
+    <!-- Gender Combobox -->
+    <div id="GenderSection" style="display: none;">
+        <div class="form-group">
+            <label for="GenderName">Select Gender</label>
+            @Html.DropDownListFor(m => m.GenderName, Model.GenderNamed, "Select Gender", new { @class = "form-control", id = "GenderDropdown" })
+        </div>
+    </div>
+    <br>
+    <div id="LongSection" style="display: none;">
+        <div class="form-group">
+            <label for="LongInput">Longitude</label>
+            <input type="text" id="LongInput" name="LongInput" class="form-control" required>
+        </div>
+	</div>
+	<br>
+    <div id="LatSection" style="display: none;">
+        <div class="form-group">
+            <label for="LatInput">Latitude</label>
+            <input type="text" id="LatInput" name="LatInput" class="form-control" required>
+        </div>
+	</div>
+    <br>
+    <div id="ActivitySection" style="display: none;">
+        <div class="form-group">
+            <label for="ActivityInput">Activity</label>
+            <input type="text" id="ActivityInput" name="ActivityInput" class="form-control" required>
+        </div>
+    </div>
+    <br>
+    <div id="SeenTimeSection" style="display: none;">
+        <div class="form-group">
+            <label for="SeenTimeInput">Seen Time</label>
+            <input type="text" id="SeenTimeInput" name="SeenTimeInput" class="form-control" required>
+        </div>
+    </div>
+    <br>
+    <div id="CreationDateSection" style="display: none;">
+        <div class="form-group">
+            <label for="CreationDateInput">Creation Date</label>
+            <input type="text" id="CreationDateInput" name="CreationDateInput" class="form-control" required>
+        </div>
+    </div>
+    <br>
 
 
+
+
+    <!-- Modal for Project -->
+    <div class="modal fade" id="AddProjectModal" tabindex="-1" aria-labelledby="AddProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddProjectModalLabel">Add New Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddProjectForm" method="post" action="/ObservationView/AddObservation">
+                    <div class="modal-body">
+                        <label for="ProjectName2">Project Name:</label>
+                        <input type="text" id="ProjectName2" name="ProjectName2" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Citation -->
+    <div class="modal fade" id="AddCitationModal" tabindex="-1" aria-labelledby="AddCitationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddCitationModalLabel">Add New Citation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddCitationForm" method="post" action="/ObservationView/AddObservation">
+                    <div class="modal-body">
+                        <label for="CitationName2">Citation Name:</label>
+                        <input type="text" id="CitationName2" name="CitationName2" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Reference -->
+    <div class="modal fade" id="AddReferenceModal" tabindex="-1" aria-labelledby="AddReferenceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddReferenceModalLabel">Add New Reference</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddReferenceForm" method="post" action="/ObservationView/AddObservation">
+                    <div class="modal-body">
+                        <label for="ReferenceName2">Reference Name:</label>
+                        <input type="text" id="ReferenceName2" name="ReferenceName2" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Location Range -->
+    <div class="modal fade" id="AddLocationRangeModal" tabindex="-1" aria-labelledby="AddLocationRangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddLocationRangeModalLabel">Add New Location Range</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddLocationRangeForm" method="post" action="/ObservationView/AddObservation">
+                    <div class="modal-body">
+                        <label for="LocationRange2">Location Range:</label>
+                        <input type="text" id="LocationRange2" name="LocationRange2" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 
 
 
@@ -92,6 +276,235 @@
                             RegionSection.style.display = 'none';
                         }
             });
+            document.getElementById('RegionDropdown').addEventListener('change', function () {
+                            const RegionID = this.value;
+                            const CitySection = document.getElementById('CitySection');
+                            const ProvinceDropdown = document.getElementById('ProvinceDropdown');
+
+                            CitySection.style.display = RegionID ? 'block' : 'none';
+
+                if (RegionID) {
+                    fetch(`/ObservationView/GetCitysByRegion?RegionID=${RegionID}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Önce Kingdom dropdown'ını temizle
+                            ProvinceDropdown.innerHTML = '<option value="">Select City</option>';
+
+                            // Gelen veriyi dropdown'a ekle
+                            data.forEach(province => {
+                                const option = document.createElement('option');
+                                option.value = province.value;
+                                option.textContent = province.text;
+                                ProvinceDropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching Cities:', error));
+                } else {
+                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
+                    ProvinceDropdown.innerHTML = '<option value="">Select Province</option>';
+                }
+            });
+            document.getElementById('ProvinceDropdown').addEventListener('change', function () {
+                            const CityID = this.value;
+                            const DisctrictSection = document.getElementById('DisctrictSection');
+                            const DistrictDropdown = document.getElementById('DistrictDropdown');
+
+                            DisctrictSection.style.display = CityID ? 'block' : 'none';
+
+                if (CityID) {
+                    fetch(`/ObservationView/GetDistrictsByCity?CityID=${CityID}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Önce Kingdom dropdown'ını temizle
+                            DistrictDropdown.innerHTML = '<option value="">Select District</option>';
+
+                            // Gelen veriyi dropdown'a ekle
+                            data.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.value;
+                                option.textContent = district.text;
+                                DistrictDropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching Districts:', error));
+                } else {
+                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
+                    DistrictDropdown.innerHTML = '<option value="">Select District</option>';
+                }
+            });
+            document.getElementById('DistrictDropdown').addEventListener('change', function () {
+                            const DistrictID = this.value;
+                            const LocalitySection = document.getElementById('LocalitySection');
+                            const LocalityDropdown = document.getElementById('LocalityDropdown');
+
+                            LocalitySection.style.display = DistrictID ? 'block' : 'none';
+
+                if (DistrictID) {
+                    fetch(`/ObservationView/GetLocalitiesByDistrict?DistrictID=${DistrictID}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            LocalityDropdown.innerHTML = '<option value="">Select Locality</option>';
+
+                            // Gelen veriyi dropdown'a ekle
+                            data.forEach(locality => {
+                                const option = document.createElement('option');
+                                option.value = locality.value;
+                                option.textContent = locality.text;
+                                LocalityDropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching Localities:', error));
+                } else {
+                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
+                    LocalityDropdown.innerHTML = '<option value="">Select Locality</option>';
+                }
+            });
+            document.getElementById('LocalityDropdown').addEventListener('change', function () {
+                            const LocalityID = this.value;
+                            const NeighborhoodSection = document.getElementById('NeighborhoodSection');
+                            const NeighborhoodDropdown = document.getElementById('NeighborhoodDropdown');
+
+                            NeighborhoodSection.style.display = LocalityID ? 'block' : 'none';
+
+                if (LocalityID) {
+                    fetch(`/ObservationView/GetNeighbourhoodsByLocality?LocalityID=${LocalityID}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            NeighborhoodDropdown.innerHTML = '<option value="">Select Hood</option>';
+
+                            // Gelen veriyi dropdown'a ekle
+                            data.forEach(hood => {
+                                const option = document.createElement('option');
+                                option.value = hood.value;
+                                option.textContent = hood.text;
+                                NeighborhoodDropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching Hoods:', error));
+                } else {
+                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
+                    NeighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
+                }
+            });
+            document.getElementById('NeighborhoodDropdown').addEventListener('change', function () {
+                const HoodID = this.value;
+                const MigrationstatSection = document.getElementById('MigrationstatSection');
+                if (HoodID) {
+                            MigrationstatSection.style.display = 'block';
+                            document.getElementById('SelectedHoodID').value = HoodID;
+                        } else {
+                            MigrationstatSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('MigrationStatDropdown').addEventListener('change', function () {
+                const MigrationstatID = this.value;
+                const EndemicstatSection = document.getElementById('EndemicstatSection');
+                if (MigrationstatID) {
+                            EndemicstatSection.style.display = 'block';
+                            document.getElementById('SelectedMigrationstatID').value = MigrationstatID;
+                        } else {
+                            EndemicstatSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('EndemicstatDropdown').addEventListener('change', function () {
+                const EndemicstatID = this.value;
+                const ProjectSection = document.getElementById('ProjectSection');
+                if (EndemicstatID) {
+                            ProjectSection.style.display = 'block';
+                            document.getElementById('SelectedEndemicstatID').value = EndemicstatID;
+                        } else {
+                            ProjectSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('ProjectDropdown').addEventListener('change', function () {
+                const ProjectID = this.value;
+                const CitationSection = document.getElementById('CitationSection');
+                if (ProjectID) {
+                            CitationSection.style.display = 'block';
+                            document.getElementById('SelectedProjectID').value = ProjectID;
+                        } else {
+                            CitationSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('CitationDropdown').addEventListener('change', function () {
+                const CitationID = this.value;
+                const ReferenceSection = document.getElementById('ReferenceSection');
+                if (CitationID) {
+                            ReferenceSection.style.display = 'block';
+                            document.getElementById('SelectedCitationID').value = CitationID;
+                        } else {
+                            ReferenceSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('ReferenceDropdown').addEventListener('change', function () {
+                const ReferenceID = this.value;
+                const LocationTypeSection = document.getElementById('LocationTypeSection');
+                if (ReferenceID) {
+                            LocationTypeSection.style.display = 'block';
+                            document.getElementById('SelectedReferenceID').value = ReferenceID;
+                        } else {
+                            LocationTypeSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('LocationTypeDropdown').addEventListener('change', function () {
+                const LocationTypeID = this.value;
+                const LocationRangeSection = document.getElementById('LocationRangeSection');
+                if (LocationTypeID) {
+                            LocationRangeSection.style.display = 'block';
+                            document.getElementById('SelectedLocationTypeID').value = LocationTypeID;
+                        } else {
+                            LocationRangeSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('LocationRangeDropdown').addEventListener('change', function () {
+                const LocationRangeID = this.value;
+                const GenderSection = document.getElementById('GenderSection');
+                if (LocationRangeID) {
+                            GenderSection.style.display = 'block';
+                            document.getElementById('SelectedLocationRangeID').value = LocationRangeID;
+                        } else {
+                            GenderSection.style.display = 'none';
+                        }
+            });
+            document.getElementById('GenderDropdown').addEventListener('change', function () {
+                            const GenderID = this.value;
+                            const LongSection = document.getElementById('LongSection');
+
+                            LongSection.style.display = GenderID ? 'block' : 'none';
+                        });
+            document.getElementById('LongInput').addEventListener('input', function () {
+                            const LongName = this.value;
+                            const LatSection = document.getElementById('LatSection');
+
+                            LatSection.style.display = LongName ? 'block' : 'none';
+                        });
+            document.getElementById('LatInput').addEventListener('input', function () {
+                            const LatName = this.value;
+                            const ActivitySection = document.getElementById('ActivitySection');
+
+                            ActivitySection.style.display = LatName ? 'block' : 'none';
+                        });
+            document.getElementById('ActivityInput').addEventListener('input', function () {
+                            const ActivityName = this.value;
+                            const SeenTimeSection = document.getElementById('SeenTimeSection');
+
+                            SeenTimeSection.style.display = ActivityName ? 'block' : 'none';
+                        });
+            document.getElementById('SeenTimeInput').addEventListener('input', function () {
+                            const SeenTimeName = this.value;
+                            const CreationDateSection = document.getElementById('CreationDateSection');
+
+                            CreationDateSection.style.display = SeenTimeName ? 'block' : 'none';
+                        });
+
+
+
+            window.onload = function () {
+                            const successMessage2 = '@TempData["SuccessMessage2"]';
+                            if (successMessage2) {
+                                alert(successMessage2);
+                            }
+                        };
         }); 
 
         function hideAllSections() {

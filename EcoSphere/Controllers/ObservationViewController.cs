@@ -217,6 +217,65 @@ namespace EcoSphere.Controllers
                 }).ToListAsync();
             return Json(Neighbourhoods);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddObservation(ObservationViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                // Eğer Project ekleniyorsa
+                if (!string.IsNullOrEmpty(model.ProjectName2))
+                {
+                    var newProject = new TblProject
+                    {
+                        ProjectName = model.ProjectName2
+                    };
+                    _context.TblProjects.Add(newProject);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage2"] = "Project added successfully.";
+                }
+                // Eğer Citation ekleniyorsa
+                if (!string.IsNullOrEmpty(model.CitationName2))
+                {
+                    var newCitation = new TblCitation
+                    {
+                        CitationName = model.CitationName2
+                    };
+                    _context.TblCitations.Add(newCitation);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage2"] = "Citation added successfully.";
+                }
+                // Eğer Reference ekleniyorsa
+                if (!string.IsNullOrEmpty(model.ReferenceName2))
+                {
+                    var newReference = new TblReference
+                    {
+                        ReferenceName = model.ReferenceName2
+                    };
+                    _context.TblReferences.Add(newReference);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage2"] = "Reference added successfully.";
+                }
+                // Eğer Reference ekleniyorsa
+                if (!string.IsNullOrEmpty(model.LocationRange2))
+                {
+                    var newLocationRange = new TblLocationrange
+                    {
+                        LocationRangeValue = model.LocationRange2
+                    };
+                    _context.TblLocationranges.Add(newLocationRange);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage2"] = "Location Range added successfully.";
+                }
+
+
+                return RedirectToAction("AddObservation");
+            }
+
+            TempData["ErrorMessage"] = "There was an error saving the data.";
+            return RedirectToAction("AddObservation");
+        }
+
 
     }
 }
