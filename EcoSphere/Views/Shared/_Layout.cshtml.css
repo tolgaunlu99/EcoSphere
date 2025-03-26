@@ -1,27 +1,24 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 nav {
-    background: #3333; /* veya */
     
-
+    background: #74a11f;
     padding: 0 20px;
     border-bottom: 1px solid #ddd;
     display: flex;
-}   
-.navbar-brand{
-    color:black;
-    font-size:30px;
-
+}
+.navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    color: ghostwhite;
+    font-size: 40px;
 }
 .navbar-nav {
-    font-size:25px;
-    color:black;
-
-    
+    font-size: 25px;
+    color: ghostwhite;
 }
 
 .footer {
-    background: #3333;
+    background: #74a11f;
     border-bottom: 1px solid #ddd;
     position: absolute;
     bottom: 0;
