@@ -1,10 +1,8 @@
 ﻿@model UserViewModel
 
 <form asp-action="Login" method="post">
-    <label for="UserId">Select User:</label>
-    <select asp-for="UserId" asp-items="Model.UserNamed" class="form-control">
-        <option value="">-- Select User --</option>
-    </select>
+    <label for="Username">Username:</label>
+    <input type="text" asp-for="Username" class="form-control" />
 
     <label for="Password">Password:</label>
     <input type="password" asp-for="Password" class="form-control" />
@@ -16,3 +14,7 @@
         <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
     }
 </form>
+
+
+
+
