@@ -17,7 +17,7 @@ body {
 /* 📌 Card Başlığı */
 .card-header {
     color: white;
-    background-color: #69df29;
+    background-color: #74a11f;
     font-size: 30px;
     font-weight: bold;
     padding: 15px;
@@ -28,9 +28,9 @@ body {
 .btn-success {
     display: inline-block;
     font-weight: bold;
-    background-color: #69df29 !important; /* 🌟 Yeşil arka plan */
+    background-color: #74a11f !important; /* 🌟 Yeşil arka plan */
     color: black !important; /* 🌟 Siyah metin rengi */
-    border: 2px solid #69df29 !important; /* 🌟 Yeşil kenarlık */
+    border: 2px solid #74a11f !important; /* 🌟 Yeşil kenarlık */
     padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
@@ -44,18 +44,18 @@ body {
 
 /* 📌 Edit ve Delete Butonları */
 .btn-primary {
-    background-color: #69df29 !important; /* 🌟 Yeşil arka plan */
+    background-color: #74a11f !important; /* 🌟 Yeşil arka plan */
     color: black !important; /* 🌟 Siyah metin rengi */
-    border: 2px solid #69df29 !important; /* 🌟 Yeşil kenarlık */
+    border: 2px solid #74a11f !important; /* 🌟 Yeşil kenarlık */
     padding: 8px 16px;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-    .btn-edit:hover {
-        background-color: #55d42b !important; /* 🌟 Hoverda biraz daha koyu yeşil */
-        color: white !important; /* 🌟 Hoverda metin beyaz olacak */
-    }
+.btn-edit:hover {
+    background-color: #55d42b !important; /* 🌟 Hoverda biraz daha koyu yeşil */
+    color: white !important; /* 🌟 Hoverda metin beyaz olacak */
+}
 
 .btn-danger {
     background-color: #f44336 !important; /* 🌟 Kırmızı arka plan */
@@ -66,10 +66,10 @@ body {
     transition: background-color 0.3s ease;
 }
 
-    .btn-delete:hover {
-        background-color: #d32f2f !important; /* 🌟 Hoverda biraz daha koyu kırmızı */
-        color: white !important; /* 🌟 Hoverda metin beyaz olacak */
-    }
+.btn-delete:hover {
+    background-color: #d32f2f !important; /* 🌟 Hoverda biraz daha koyu kırmızı */
+    color: white !important; /* 🌟 Hoverda metin beyaz olacak */
+}
 
 /* Butonlar Arası Mesafe */
 .btn-group .btn {
@@ -86,7 +86,7 @@ body {
     background-color: #161616;
     border-radius: 10px;
     overflow: hidden;
-    border: 3px solid #69df29; /* 🌟 Tüm tabloya yeşil çerçeve */
+    border: 3px solid #74a11f; /* 🌟 Tüm tabloya yeşil çerçeve */
     color: white; /* 🌟 Metin rengi beyaz */
     box-sizing: border-box; /* 🌟 Çerçeveye göre hesaplama yaparak boşlukları minimize eder */
 }
@@ -96,26 +96,26 @@ body {
     .table td {
         padding: 0; /* 🌟 Padding'i sıfırlıyoruz, boşluk yok */
         text-align: center;
-        border-bottom: 2px solid #69df29; /* 🌟 Satırların alt çizgisi yeşil */
+        border-bottom: 2px solid #74a11f; /* 🌟 Satırların alt çizgisi yeşil */
     }
 
     /* 📌 Tablo Başlıkları */
     .table th {
-        background-color: #69df29; /* 🌟 Card header ile aynı renk */
+        background-color: #74a11f; /* 🌟 Card header ile aynı renk */
         color: black; /* 🌟 Başlık yazıları siyah */
         font-weight: bold;
     }
 
 /* 📌 Hover Etkisi */
 .table-hover tbody tr:hover {
-    background-color: #69df29 !important; /* 🌟 Tam yeşil arka plan */
+    background-color: #74a11f !important; /* 🌟 Tam yeşil arka plan */
     color: black !important; /* 🌟 Hover sırasında metin rengi siyah */
     transition: background-color 0.3s ease; /* 🌟 Yumuşak geçiş efekti */
 }
 
 /* 📌 Tabloyu Saran Kapsayıcı */
 .table-responsive {
-    border: 3px solid #69df29; /* 🌟 Tüm tabloyu saran kapsayıcı çerçeve */
+    border: 3px solid #74a11f; /* 🌟 Tüm tabloyu saran kapsayıcı çerçeve */
     border-radius: 10px; /* 🌟 Köşeleri yuvarla */
     padding: 0; /* 🌟 Çerçevenin etrafındaki boşluğu sıfırlıyoruz */
 }
