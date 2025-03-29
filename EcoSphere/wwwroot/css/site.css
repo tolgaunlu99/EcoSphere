@@ -18,7 +18,6 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
     background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat-back.svg');
     background-size: 4%; /* Orijinal çözünürlüðü korur */
     background-repeat: repeat; /* Resmi tekrar eder */
