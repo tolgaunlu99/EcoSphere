@@ -17,7 +17,7 @@ public partial class TblUser
 
     public string? Email { get; set; }
 
-    public int? MobileNumber { get; set; }
+    public string? MobileNumber { get; set; }
 
     public DateTime? CreationDate { get; set; }
 

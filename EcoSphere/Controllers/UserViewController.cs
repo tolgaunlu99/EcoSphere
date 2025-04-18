@@ -1,7 +1,7 @@
 ﻿using EcoSphere.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Http; // Session için gerekli
 using System.Linq;
 
 namespace EcoSphere.Controllers
@@ -23,56 +23,58 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult SignIN()
         {
-            var usernames = _context.TblUsers
-                .Select(ur => new SelectListItem
-                {
-                    Value = ur.UserId.ToString(), // ID string olarak gidiyor
-                    Text = ur.Username,
-                }).ToList();
-
             var model = new UserViewModel
             {
-                UserNamed = usernames
-            };
-
-            return View(model);
-        }
-        [HttpPost]
-        public IActionResult Login(UserViewModel model)
-        {
-            // UserId boş ise hata mesajı göster
-            if (model.UserId == 0 || string.IsNullOrEmpty(model.Password))
-            {
-                ViewBag.ErrorMessage = "Please select a user and enter a password.";
-                model.UserNamed = _context.TblUsers
+                UserNamed = _context.TblUsers
                     .Select(u => new SelectListItem
                     {
                         Value = u.UserId.ToString(),
                         Text = u.Username
-                    }).ToList();
+                    }).ToList()
+            };
+
+            // Modeli SignIN view'ine doğru şekilde gönderiyoruz
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Login(UserViewModel model)
+        {
+            // Kullanıcı adı ve şifrenin boş olmadığını kontrol et
+            if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
+            {
+                ViewBag.ErrorMessage = "Please enter both username and password.";
                 return View("SignIN", model);
             }
 
+            // Kullanıcıyı veritabanında username ve password ile sorgula
             var user = _context.TblUsers
-                .FirstOrDefault(u => u.UserId == model.UserId && u.Password == model.Password);
+                .FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
 
             if (user != null)
             {
-                HttpContext.Session.SetInt32("UserID", user.UserId); // Kullanıcı ID'sini Session'a kaydet
-                return RedirectToAction("Index", "Home"); // Başarılı girişte yönlendir
+                // Başarılı giriş, session'da UserId'yi tutuyoruz
+                HttpContext.Session.SetInt32("UserID", user.UserId);
+                return RedirectToAction("Index", "Home");  // Giriş sonrası Home sayfasına yönlendir
             }
 
+            // Geçersiz giriş durumu
             ViewBag.ErrorMessage = "Invalid username or password.";
-            model.UserNamed = _context.TblUsers
-                .Select(u => new SelectListItem { Value = u.UserId.ToString(), Text = u.Username })
-                .ToList();
-
             return View("SignIN", model);
         }
+
+
+
 
         public IActionResult SignUP()
         {
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
