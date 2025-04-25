@@ -1,17 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<body>
-    <header>
-        <div class="text-center">
-            <h1 class="display-4">
-                Gözlem Haritası
-            </h1>
-            
-        </div>
-        
-        <div id="map"></div>
 
-    </header>
-</body>
+<div class="text-center">
+    <h1 class="display-4">Gözlem Haritası</h1>
+</div>
+
+<!-- Harita Alanı -->
+<div id="map" style="width: 100%; height: 500px;"></div>
+<!-- Popup -->
+<div id="popup" class="ol-popup" style="display: none;">
+    <div id="popup-content"></div>
+</div>
 

@@ -217,6 +217,23 @@ namespace EcoSphere.Controllers
                 }).ToListAsync();
             return Json(Neighbourhoods);
         }
+        [HttpGet]
+        public IActionResult GetObservationsAsJson()
+        {
+            var observations = (from m in _context.TblMaintables
+                                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                                where m.Lat != null && m.Long != null
+                                select new
+                                {
+                                    Id = m.Id,
+                                    Lat = m.Lat,
+                                    Long = m.Long,
+                                    Name = c.ScientificName
+                                }).ToList();
+
+            return Json(observations);
+        }
+
 
     }
 }
