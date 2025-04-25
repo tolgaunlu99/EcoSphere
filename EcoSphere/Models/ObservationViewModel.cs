@@ -99,18 +99,26 @@ namespace EcoSphere.Models
 
         [DisplayName("Project Name")]
         public string? ProjectName { get; set; }
+        [DisplayName("Project Name2")]
+        public string? ProjectName2 { get; set; }
 
         [DisplayName("Citation Name")]
         public string? CitationName { get; set; }
+        [DisplayName("Citation Name2")]
+        public string? CitationName2 { get; set; }
 
         [DisplayName("Reference Name")]
         public string? ReferenceName { get; set; }
+        [DisplayName("Reference Name2")]
+        public string? ReferenceName2 { get; set; }
 
         [DisplayName("Location Type")]
         public string? LocationType { get; set; }
 
         [DisplayName("Location Range")]
         public string? LocationRange { get; set; }
+        [DisplayName("Location Range2")]
+        public string? LocationRange2 { get; set; }
 
         [DisplayName("Gender Name")]
         public string? GenderName { get; set; }
