@@ -27,7 +27,7 @@ body {
 /* Harita için gerekli stil */
 #map {
     width: 100%;
-    height: 500px;
+    height: 700px;
 }
 
 /* OpenLayers popup stil */
