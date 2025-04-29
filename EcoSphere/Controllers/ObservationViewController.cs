@@ -233,6 +233,30 @@ namespace EcoSphere.Controllers
 
             return Json(observations);
         }
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var observation = (from m in _context.TblMaintables
+                               join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                               join u in _context.TblUsers on m.UserId equals u.UserId
+                               where m.Id == id
+                               select new ObservationViewModel
+                               {
+                                   Id = m.Id,
+                                   CreatureName = c.ScientificName,
+                                   UserName = u.Name,
+                                   UsersurName = u.Surname,
+                                   Lat = m.Lat,
+                                   Long = m.Long
+                               }).FirstOrDefault();
+
+            if (observation == null)
+            {
+                return NotFound();
+            }
+
+            return View(observation);
+        }
 
 
     }

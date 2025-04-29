@@ -1,0 +1,29 @@
+﻿@model EcoSphere.Models.ObservationViewModel
+
+@{
+    ViewData["Title"] = "Observation Details";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3>Observation Details</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Creature Name</dt>
+                <dd class="col-sm-9">@Model.CreatureName</dd>
+
+                <dt class="col-sm-3">User Name</dt>
+                <dd class="col-sm-9">@Model.UserName @Model.UsersurName</dd>
+
+                <dt class="col-sm-3">Latitude</dt>
+                <dd class="col-sm-9">@Model.Lat</dd>
+
+                <dt class="col-sm-3">Longitude</dt>
+                <dd class="col-sm-9">@Model.Long</dd>
+            </dl>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+</div>
