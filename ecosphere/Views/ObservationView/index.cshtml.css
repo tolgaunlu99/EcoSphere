@@ -1,0 +1,65 @@
+﻿/* Container styling */
+.obs-container {
+    background-color: #ebebeb;
+    padding: 25px;
+    border-radius: 0.5rem;
+    margin-bottom: 30px;
+
+}
+
+/* Table minimum width to force horizontal scroll */
+#observationTable {
+    min-width: 1200px;
+}
+
+/* DataTables buttons area spacing */
+.dt-buttons {
+    margin-bottom: 0.5rem;
+}
+/* Oluştur butonu (Create) */
+.btn-create {
+    background-color: #286107;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+}
+
+    /* Hover efekti */
+    .btn-create:hover {
+        background-color: #4bb20e;
+    }
+
+
+/* Ensure pagination and info text sit below scroll area */
+.dataTables_wrapper {
+    overflow: visible !important;
+}
+
+.dataTables_scrollBody {
+    overflow-x: auto !important;
+}
+
+/* Prevent cell text wrap */
+td {
+    white-space: nowrap;
+}
+.dt-button-collection {
+    max-height: none !important;
+    background-color: aqua;
+}
+/* Column visibility button colors */
+.dt-button-collection .dt-button {
+    background-color: aqua;
+    color: #fff;
+    border: none;
+}
+
+    .dt-button-collection .dt-button.active {
+        background-color: #fff; /* beyaz (visible) */
+        color: #000;
+    }
+
+    .dt-button-collection .dt-button:hover {
+        background-color: #e2e6ea;
+    }
