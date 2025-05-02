@@ -347,9 +347,12 @@ public partial class MyDbContext : DbContext
         {
             entity.ToTable("tbl_maintable");
 
+            entity.HasKey(x => x.Id);
+
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("ID");
+
             entity.Property(e => e.Activity)
                 .HasMaxLength(50)
                 .HasColumnName("activity");
