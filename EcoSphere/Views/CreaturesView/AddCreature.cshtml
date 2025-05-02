@@ -13,19 +13,19 @@
 		<h5>Create Creature</h5>
 	</div>
 	<div class="card-body">
-		@using (Html.BeginForm())
+		@using (Html.BeginForm("SubmitCreature", "CreaturesView", FormMethod.Post))
 		{
 			<!-- Upper Realm Combobox -->
 			<div class="form-group">
 				<label for="UpperRealmName">Select Upper Realm</label>
-				@Html.DropDownListFor(m => m.UpperRealmName, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control", id = "UpperRealmDropdown" })
+				@Html.DropDownListFor(m => m.UpperRealmId, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control", id = "UpperRealmDropdown" })
 			</div>
 			<br>
 
 			<!-- Kingdom Combobox -->
 			<div id="KingdomSection" class="form-group" style="display: none;">
 				<label for="KingdomName">Select Kingdom</label>
-				@Html.DropDownListFor(m => m.KingdomName, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown" })
+				@Html.DropDownListFor(m => m.KingdomId, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown" })
 			</div>
 			<br>
 
@@ -33,7 +33,7 @@
 			<div id="PhylumSection" style="display: none;">
 				<div class="form-group">
 					<label for="PhylumName">Select Phylum</label>
-					@Html.DropDownListFor(m => m.PhylumName, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown" })
+					@Html.DropDownListFor(m => m.PhylumId, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-phylum-btn" data-bs-toggle="modal" data-bs-target="#AddPhylumModal">Add New</button>
 				</div>
 			</div>
@@ -43,7 +43,7 @@
 			<div id="ClassSection" style="display: none;">
 				<div class="form-group">
 					<label for="ClassName">Select Class</label>
-					@Html.DropDownListFor(m => m.ClassName, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown" })
+					@Html.DropDownListFor(m => m.ClassId, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddClassModal">Add New</button>
 				</div>
 			</div>
@@ -53,7 +53,7 @@
 			<div id="OrderSection" style="display: none;">
 				<div class="form-group">
 					<label for="OrderName">Select Order</label>
-					@Html.DropDownListFor(m => m.OrderName, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown" })
+					@Html.DropDownListFor(m => m.OrderId, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddOrderModal">Add New</button>
 				</div>
 			</div>
@@ -63,7 +63,7 @@
 			<div id="FamilySection" style="display: none;">
 				<div class="form-group">
 					<label for="FamilyName">Select Family</label>
-					@Html.DropDownListFor(m => m.FamilyName, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown" })
+					@Html.DropDownListFor(m => m.FamilyId, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddFamilyModal">Add New</button>
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 			<div id="GenusSection" style="display: none;">
 				<div class="form-group">
 					<label for="GenusName">Select Genus</label>
-					@Html.DropDownListFor(m => m.GenusName, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown" })
+					@Html.DropDownListFor(m => m.GenusId, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddGenusModal">Add New</button>
 				</div>
 			</div>
@@ -83,7 +83,7 @@
 			<div id="SpeciesSection" style="display: none;">
 				<div class="form-group">
 					<label for="SpeciesName">Select Species</label>
-					@Html.DropDownListFor(m => m.SpeciesName, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown" })
+					@Html.DropDownListFor(m => m.SpeciesId, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddSpeciesModal">Add New</button>
 				</div>
 			</div>
@@ -93,7 +93,7 @@
 			<div id="SubspeciesSection" style="display: none;">
 				<div class="form-group">
 					<label for="SubspeciesName">Select Subspecies</label>
-					@Html.DropDownListFor(m => m.SubspeciesName, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown" })
+					@Html.DropDownListFor(m => m.SubspeciesId, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddSubSpeciesModal">Add New</button>
 				</div>
 			</div>
@@ -102,7 +102,7 @@
 			<!-- IUCN Combobox -->
 			<div id="IucnSection" class="form-group" style="display: none;">
 				<label for="IucnCode">Select IUCN</label>
-				@Html.DropDownListFor(m => m.IucnCode, Model.IucnCoded, "Select IUCN", new { @class = "form-control", id = "IucnDropdown" })
+				@Html.DropDownListFor(m => m.IucnId, Model.IucnCoded, "Select IUCN", new { @class = "form-control", id = "IucnDropdown" })
 			</div>
 			<br>
 
@@ -110,7 +110,7 @@
 			<div id="AuthorSection" style="display: none;">
 				<div class="form-group">
 					<label for="AuthorName">Select Author</label>
-					@Html.DropDownListFor(m => m.AuthorName, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown" })
+					@Html.DropDownListFor(m => m.AuthorId, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown" })
 					<button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddAuthorModal">Add New</button>
 				</div>
 			</div>
@@ -126,11 +126,12 @@
 			<!-- Scientific Name -->
 			<div id="ScientificNameSection" class="form-group" style="display: none;">
 				<label for="ScientificName">Enter Scientific Name</label>
-				@Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control" })
+				@Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control",  id = "ScientificNameInput" })
 			</div>
 			<br>
-
+			<div id="SubmitSection" class="form-group" style="display: none;">
 			<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
 		}
 	</div>
 </div>
@@ -324,9 +325,7 @@
 
 				<script>
 					document.addEventListener("DOMContentLoaded", function () {
-						// Başlangıçta tüm dropdown'lar gizli
-						hideAllSections();
-
+						
 						// Upper Realm seçildiğinde Kingdom'u göster
 							document.getElementById('UpperRealmDropdown').addEventListener('change', function () {
 							const upperRealmID = this.value;
@@ -558,6 +557,13 @@
 
 							scientificNameSection.style.display = commonName ? 'block' : 'none';
 						});
+					// Scientific Name girildiğinde Submit butonunu göster
+					document.getElementById('ScientificNameInput').addEventListener('input', function () {
+						const ScientificName = this.value;
+						const SubmitSection = document.getElementById('SubmitSection');
+
+						SubmitSection.style.display = ScientificName ? 'block' : 'none';
+					});
 
 						// Sayfa yüklendiğinde başarılı mesaj varsa, alert göster
 						window.onload = function () {
@@ -652,4 +658,4 @@
 						document.getElementById('ScientificNameSection').style.display = 'none';
 					}
 				</script>
-}
+

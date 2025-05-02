@@ -94,8 +94,8 @@ namespace EcoSphere.Controllers
 
             model.SubspeciesNamed = subspecies;
             model.IucnCoded = iucn;
-            model.AuthorNamed = authors;          
-            
+            model.AuthorNamed = authors;
+
             return View(model);
         }
         [HttpGet]
@@ -187,7 +187,7 @@ namespace EcoSphere.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 // Eğer Phylum ekleniyorsa
                 if (!string.IsNullOrEmpty(model.PhylumName2) && !string.IsNullOrEmpty(model.PhylumScientificName))
                 {
@@ -200,7 +200,6 @@ namespace EcoSphere.Controllers
 
                     _context.TblPhylums.Add(newPhylum);
                     await _context.SaveChangesAsync();
-
                     TempData["SuccessMessage"] = "Phylum added successfully.";
                 }
 
@@ -296,12 +295,40 @@ namespace EcoSphere.Controllers
                 }
 
 
+
                 return RedirectToAction("AddCreature");
             }
 
             TempData["ErrorMessage"] = "There was an error saving the data.";
             return RedirectToAction("AddCreature");
         }
+        public async Task<IActionResult> SubmitCreature(CreaturesViewModel model)
+        {
+              var NewCreature = new TblCreature
+                {
+                    UpperRealmId = model.UpperRealmId,
+                    KingdomId = model.KingdomId,
+                    PhylumId = model.PhylumId,
+                    ClassId = model.ClassId,
+                    OrderId = model.OrderId,
+                    FamilyId = model.FamilyId,
+                    GenusId = model.GenusId,
+                    SpeciesId = model.SpeciesId,
+                    SubspeciesId = model.SubspeciesId,
+                    IucnId = model.IucnId,
+                    AuthorId = model.AuthorId,
+                    CommonName = model.CommonName,
+                    ScientificName = model.ScientificName
+
+                };
+                _context.TblCreatures.Add(NewCreature);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Creature added successfully.";
+                return RedirectToAction("AddCreature");
+
+
+        }
+
 
     }
 }

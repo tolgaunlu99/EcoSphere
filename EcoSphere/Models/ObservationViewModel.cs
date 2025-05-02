@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace EcoSphere.Models
 {
     public class ObservationViewModel
     {
-        [DisplayName("ID")]
+        [BindNever]
         public int Id { get; set; }
 
         [DisplayName("Creature ID")]

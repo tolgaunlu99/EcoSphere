@@ -8,12 +8,15 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("SubmitObservation", "ObservationView", FormMethod.Post))
 {
 
+
 <div class="form-group">
+
         <label for="CreatureName">Select Creature</label>
-    @Html.DropDownListFor(m => m.CreatureName, Model.CreatureNamed, "Select Creature", new { @class = "form-control", id = "CreatureDropdown" })        
+
+    @Html.DropDownListFor(m => m.CreatureId, Model.CreatureNamed, "Select Creature", new { @class = "form-control", id = "CreatureDropdown" })        
                 <a href="/CreaturesView/AddCreature">    
     <button type="button" class="btn btn-primary" id="add-new-class-btn">Go to Creature Add</button>
         </a>
@@ -22,7 +25,7 @@
     <div id="UserSection" style="display: none;">
         <div class="form-group">
             <label for="UserNamed">Select User</label>
-            @Html.DropDownListFor(m => m.UserName, Model.Usernamed, "Select User", new { @class = "form-control", id = "UserDropdown" })
+            @Html.DropDownListFor(m => m.UserId, Model.Usernamed, "Select User", new { @class = "form-control", id = "UserDropdown" })
         </div>
     </div>
     <br>
@@ -30,49 +33,49 @@
     <div id="RegionSection" style="display: none;">
             <div class="form-group">
             <label for="RegionNamed">Select Region</label>
-            @Html.DropDownListFor(m => m.RegionName, Model.RegionNamed, "Select Region", new { @class = "form-control", id = "RegionDropdown" })
+            @Html.DropDownListFor(m => m.RegionId, Model.RegionNamed, "Select Region", new { @class = "form-control", id = "RegionDropdown" })
         </div>
     </div>
         <br>
     <div id="CitySection" style="display: none;">
         <div class="form-group">
             <label for="CityNamed">Select City</label>
-            @Html.DropDownListFor(m => m.provincename, Model.ProvinceNamed, "Select Province", new { @class = "form-control", id = "ProvinceDropdown" })
+            @Html.DropDownListFor(m => m.CityId, Model.ProvinceNamed, "Select Province", new { @class = "form-control", id = "ProvinceDropdown" })
         </div>
     </div>
     <br>
     <div id="DisctrictSection" style="display: none;">
         <div class="form-group">
             <label for="DistrictNamed">Select District</label>
-            @Html.DropDownListFor(m => m.DistrictName, Model.DistrictNamed, "Select District", new { @class = "form-control", id = "DistrictDropdown" })
+            @Html.DropDownListFor(m => m.DistrictId, Model.DistrictNamed, "Select District", new { @class = "form-control", id = "DistrictDropdown" })
         </div>
     </div>
     <br>
     <div id="LocalitySection" style="display: none;">
         <div class="form-group">
             <label for="LocalityNamed">Select Locality</label>
-            @Html.DropDownListFor(m => m.LocalityName, Model.LocalityNamed, "Select Locality", new { @class = "form-control", id = "LocalityDropdown" })
+            @Html.DropDownListFor(m => m.LocalityId, Model.LocalityNamed, "Select Locality", new { @class = "form-control", id = "LocalityDropdown" })
         </div>
     </div>
     <br>
     <div id="NeighborhoodSection" style="display: none;">
         <div class="form-group">
             <label for="NeighborhoodNamed">Select Neighborhood</label>
-	@Html.DropDownListFor(m => m.HoodName, Model.HoodNamed, "Select Neighborhood", new { @class = "form-control", id = "NeighborhoodDropdown" })
+	@Html.DropDownListFor(m => m.NeighborhoodId, Model.HoodNamed, "Select Neighborhood", new { @class = "form-control", id = "NeighborhoodDropdown" })
     </div>
     </div>
 	<br>
     <div id="MigrationstatSection" style="display: none;">
         <div class="form-group">
             <label for="MigrationstatNamed">Select Migration Status</label>
-            @Html.DropDownListFor(m => m.MigrationStatName, Model.MigrationstatNamed, "Select Migration Status", new { @class = "form-control", id = "MigrationStatDropdown" })
+            @Html.DropDownListFor(m => m.MigrationStatusId, Model.MigrationstatNamed, "Select Migration Status", new { @class = "form-control", id = "MigrationStatDropdown" })
         </div>
     </div>
     <br>
     <div id="EndemicstatSection" style="display: none;">
         <div class="form-group">
             <label for="EndemicstatNamed">Select Endemic Status</label>
-            @Html.DropDownListFor(m => m.EndemicStatName, Model.EndemicstatNamed, "Select Endemic Status", new { @class = "form-control", id = "EndemicstatDropdown" })
+            @Html.DropDownListFor(m => m.EndemicStatusId, Model.EndemicstatNamed, "Select Endemic Status", new { @class = "form-control", id = "EndemicstatDropdown" })
         </div>
     </div>
     <br>
@@ -80,7 +83,7 @@
     <div id="ProjectSection" style="display: none;">
         <div class="form-group">
             <label for="ProjectName">Select Project</label>
-            @Html.DropDownListFor(m => m.ProjectName, Model.ProjectNamed, "Select Project", new { @class = "form-control", id = "ProjectDropdown" })
+            @Html.DropDownListFor(m => m.ProjectId, Model.ProjectNamed, "Select Project", new { @class = "form-control", id = "ProjectDropdown" })
             <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddProjectModal">Add New</button>
         </div>
     </div>
@@ -89,7 +92,7 @@
     <div id="CitationSection" style="display: none;">
         <div class="form-group">
             <label for="CitationName">Select Citation</label>
-            @Html.DropDownListFor(m => m.CitationName, Model.CitationNamed, "Select Citation", new { @class = "form-control", id = "CitationDropdown" })
+            @Html.DropDownListFor(m => m.CitationId, Model.CitationNamed, "Select Citation", new { @class = "form-control", id = "CitationDropdown" })
             <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddCitationModal">Add New</button>
         </div>
     </div>
@@ -98,7 +101,7 @@
     <div id="ReferenceSection" style="display: none;">
         <div class="form-group">
             <label for="ReferenceName">Select Reference</label>
-            @Html.DropDownListFor(m => m.ReferenceName, Model.ReferenceNamed, "Select Reference", new { @class = "form-control", id = "ReferenceDropdown" })
+            @Html.DropDownListFor(m => m.ReferenceId, Model.ReferenceNamed, "Select Reference", new { @class = "form-control", id = "ReferenceDropdown" })
             <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddReferenceModal">Add New</button>
         </div>
     </div>
@@ -107,7 +110,7 @@
     <div id="LocationTypeSection" style="display: none;">
         <div class="form-group">
             <label for="LocationTypeName">Select Location Type</label>
-            @Html.DropDownListFor(m => m.LocationType, Model.LocationtypeNamed, "Select Location Type", new { @class = "form-control", id = "LocationTypeDropdown" })
+            @Html.DropDownListFor(m => m.LocationTypeId, Model.LocationtypeNamed, "Select Location Type", new { @class = "form-control", id = "LocationTypeDropdown" })
         </div>
     </div>
     <br>
@@ -115,7 +118,7 @@
     <div id="LocationRangeSection" style="display: none;">
         <div class="form-group">
             <label for="LocationRangeName">Select Location Range</label>
-            @Html.DropDownListFor(m => m.LocationRange, Model.LocationRangeNamed, "Select Location Range", new { @class = "form-control", id = "LocationRangeDropdown" })
+            @Html.DropDownListFor(m => m.LocationRangeId, Model.LocationRangeNamed, "Select Location Range", new { @class = "form-control", id = "LocationRangeDropdown" })
             <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddLocationRangeModal">Add New</button>
         </div>
     </div>
@@ -124,48 +127,50 @@
     <div id="GenderSection" style="display: none;">
         <div class="form-group">
             <label for="GenderName">Select Gender</label>
-            @Html.DropDownListFor(m => m.GenderName, Model.GenderNamed, "Select Gender", new { @class = "form-control", id = "GenderDropdown" })
+            @Html.DropDownListFor(m => m.GenderId, Model.GenderNamed, "Select Gender", new { @class = "form-control", id = "GenderDropdown" })
         </div>
     </div>
     <br>
     <div id="LongSection" style="display: none;">
         <div class="form-group">
             <label for="LongInput">Longitude</label>
-            <input type="text" id="LongInput" name="LongInput" class="form-control" required>
+            @Html.TextBoxFor(m => m.Long, new { @class = "form-control", id = "LongInput" })
         </div>
 	</div>
 	<br>
     <div id="LatSection" style="display: none;">
         <div class="form-group">
             <label for="LatInput">Latitude</label>
-            <input type="text" id="LatInput" name="LatInput" class="form-control" required>
+            @Html.TextBoxFor(m => m.Lat, new { @class = "form-control", id = "LatInput" })
         </div>
 	</div>
     <br>
     <div id="ActivitySection" style="display: none;">
         <div class="form-group">
             <label for="ActivityInput">Activity</label>
-            <input type="text" id="ActivityInput" name="ActivityInput" class="form-control" required>
+            @Html.TextBoxFor(m => m.Activity, new { @class = "form-control", id = "ActivityInput" })
         </div>
     </div>
     <br>
     <div id="SeenTimeSection" style="display: none;">
         <div class="form-group">
             <label for="SeenTimeInput">Seen Time</label>
-            <input type="text" id="SeenTimeInput" name="SeenTimeInput" class="form-control" required>
+            @Html.TextBoxFor(m => m.SeenTime, new { @class = "form-control", id = "SeenTimeInput" })
         </div>
     </div>
     <br>
     <div id="CreationDateSection" style="display: none;">
         <div class="form-group">
             <label for="CreationDateInput">Creation Date</label>
-            <input type="text" id="CreationDateInput" name="CreationDateInput" class="form-control" required>
+			@Html.TextBoxFor(m => m.CreationDate, new { @class = "form-control", id = "CreationDateInput" })
         </div>
     </div>
     <br>
+    <div id="SubmitSection" class="form-group" style="display: none;">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 
-
-
+}
 
     <!-- Modal for Project -->
     <div class="modal fade" id="AddProjectModal" tabindex="-1" aria-labelledby="AddProjectModalLabel" aria-hidden="true">
@@ -496,6 +501,12 @@
 
                             CreationDateSection.style.display = SeenTimeName ? 'block' : 'none';
                         });
+						document.getElementById('CreationDateInput').addEventListener('input', function () {
+							const CreationDateName = this.value;
+							const SubmitSection = document.getElementById('SubmitSection');
+							SubmitSection.style.display = CreationDateName ? 'block' : 'none';
+						});
+
 
 
 
@@ -516,4 +527,3 @@
             document.getElementById('NeighborhoodSection').style.display = 'none';
         }
     </script>
-}
