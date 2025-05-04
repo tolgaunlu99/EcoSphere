@@ -174,7 +174,7 @@ namespace EcoSphere.Controllers
             var observations = (from m in _context.TblMaintables
                                 join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
                                 where m.Lat != null && m.Long != null
-                                select new
+                                select new 
                                 {
                                     Id = m.Id,
                                     Lat = m.Lat,
@@ -206,6 +206,38 @@ namespace EcoSphere.Controllers
                 return NotFound();
 
             return View(observation);
+        }
+        public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
+        {
+            var NewObservation = new TblMaintable
+            {
+                CreatureId = model.CreatureId,
+                UserId = model.UserId,
+                RegionId = model.RegionId,
+                CityId = model.CityId,
+                DistrictId = model.DistrictId,
+                LocalityId = model.LocalityId,
+                NeighborhoodId = model.NeighborhoodId,
+                MigrationStatusId = model.MigrationStatusId,
+                EndemicStatusId = model.EndemicStatusId,
+                ProjectId = model.ProjectId,
+                CitationId = model.CitationId,
+                ReferenceId = model.ReferenceId,
+                LocationTypeId = model.LocationTypeId,
+                LocationRangeId = model.LocationRangeId,
+                GenderId = model.GenderId,
+                Long = model.Long,
+                Lat = model.Lat,
+                Activity = model.Activity,
+
+            };
+            System.Diagnostics.Debug.WriteLine("Id değeri: " + NewObservation.Id);
+            _context.TblMaintables.Add(NewObservation);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Observation added successfully.";
+            return RedirectToAction("AddObservation");
+
+
         }
 
         public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
