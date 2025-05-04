@@ -240,35 +240,7 @@ namespace EcoSphere.Controllers
 
         }
 
-        public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
-        {
-            var NewObservation = new TblMaintable
-            {
-                CreatureId = model.CreatureId,
-                UserId = model.UserId,
-                RegionId = model.RegionId,
-                CityId = model.CityId,
-                DistrictId = model.DistrictId,
-                LocalityId = model.LocalityId,
-                NeighborhoodId = model.NeighborhoodId,
-                MigrationStatusId = model.MigrationStatusId,
-                EndemicStatusId = model.EndemicStatusId,
-                ProjectId = model.ProjectId,
-                CitationId = model.CitationId,
-                ReferenceId = model.ReferenceId,
-                LocationTypeId = model.LocationTypeId,
-                LocationRangeId = model.LocationRangeId,
-                GenderId = model.GenderId,
-                Long = model.Long,
-                Lat = model.Lat,
-                Activity = model.Activity,
-            };
-
-            _context.TblMaintables.Add(NewObservation);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Observation added successfully.";
-            return RedirectToAction("AddObservation");
-        }
+        
 
         [HttpGet]
         public IActionResult GetProvinceGeoJson()
