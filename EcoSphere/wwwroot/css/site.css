@@ -46,3 +46,36 @@ body {
     pointer-events: none;
     z-index: 1000;
 }
+/* Ýl hover efekti */
+.province-hover {
+    stroke: green;
+    fill: rgba(0, 255, 0, 0.2); /* Arka plan yeþil olmalý */
+}
+
+/* Ýlçe hover efekti */
+.district-hover {
+    stroke: green;
+    fill: rgba(0, 255, 0, 0.2); /* Arka plan yeþil olmalý */
+}
+
+/* Ýl hover efekti - Yeþil renk */
+.oynatici-yesil:hover {
+    fill: rgba(0, 255, 0, 0.5); /* Yeþil renkte, transparan bir renk */
+    stroke: rgba(0, 255, 0, 1); /* Çerçeve rengini de yeþil yap */
+}
+
+
+/* Harita üzerindeki il ve ilçe katmanlarý için hover efekti */
+#map .ol-layer-vector {
+    pointer-events: all; /* Mouse event'leri etkinleþtir */
+}
+
+/* Ýl hover efekti - Yeþil renk */
+
+/* Eðer istersen boyutlarýný ve rengi buradan da ince ayar yapabilirsin */
+#map-loader .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+

@@ -6,10 +6,23 @@
     <h1 class="display-4">Gözlem Haritası</h1>
 </div>
 
+<!-- Loader (başlangıçta gizli) -->
+<div id="map-loader" style="
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
+        display: none;
+    ">
+    <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
 <!-- Harita Alanı -->
-<div id="map" style="width: 100%; margin-bottom:100px"></div>
+<div id="map" style="width: 100%; height: 700px; margin-bottom: 100px; position: relative;"></div>
+
 <!-- Popup -->
 <div id="popup" class="ol-popup" style="display: none;">
     <div id="popup-content"></div>
 </div>
-
