@@ -200,7 +200,13 @@ namespace EcoSphere.Controllers
 
                     _context.TblPhylums.Add(newPhylum);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Phylum added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Phylum added successfully.",
+                        phylumId = newPhylum.PhylumId,
+                        phylumName = newPhylum.PhylumName
+                    });
                 }
 
                 // Eğer Class ekleniyorsa
@@ -214,22 +220,32 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblClasses.Add(newClass);
                     await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Class added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Class added successfully.",
+                        classId = newClass.ClassId,
+                        className = newClass.ClassName
+                    });
                 }
                 // Eğer Order ekleniyorsa
                 if (!string.IsNullOrEmpty(model.OrderName2) && !string.IsNullOrEmpty(model.OrderScientificName))
                 {
-                    var newClass = new TblOrder
+                    var newOrder = new TblOrder
                     {
                         ClassId = model.ClassId,
                         OrderName = model.OrderName2,
                         ScientificName = model.OrderScientificName
                     };
-                    _context.TblOrders.Add(newClass);
+                    _context.TblOrders.Add(newOrder);
                     await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Order added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Order added successfully.",
+                        orderId = newOrder.OrderId,
+                        orderName = newOrder.OrderName
+                    });
                 }
                 // Eğer Family ekleniyorsa
                 if (!string.IsNullOrEmpty(model.FamilyName2) && !string.IsNullOrEmpty(model.FamilyScientificName))
@@ -242,7 +258,13 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblFamilies.Add(newFamily);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Family added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Family added successfully.",
+                        familyId = newFamily.FamilyId,
+                        familyName = newFamily.FamilyName
+                    });
                 }
                 // Eğer Genus ekleniyorsa
                 if (!string.IsNullOrEmpty(model.GenusName2) && !string.IsNullOrEmpty(model.GenusScientificName))
@@ -255,7 +277,13 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblGenus.Add(newGenus);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Genus added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Genus added successfully.",
+                        genusId = newGenus.GenusId,
+                        genusName = newGenus.GenusName
+                    });
                 }
                 // Eğer Species ekleniyorsa
                 if (!string.IsNullOrEmpty(model.SpeciesName2) && !string.IsNullOrEmpty(model.SpeciesScientificName))
@@ -268,7 +296,13 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblSpecies.Add(newSpecies);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Species added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Species added successfully.",
+                        speciesId = newSpecies.SpeciesId,
+                        speciesName = newSpecies.SpeciesName
+                    });
                 }
                 // Eğer Subspecies ekleniyorsa
                 if (!string.IsNullOrEmpty(model.SubspeciesName2) && !string.IsNullOrEmpty(model.SubspeciesScientificName))
@@ -280,7 +314,13 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblSubspecies.Add(newSubspecies);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Subspecies added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Subspecies added successfully.",
+                        subspeciesId = newSubspecies.SubspeciesId,
+                        subspeciesName = newSubspecies.SubspeciesName
+                    });
                 }
                 // Eğer Author ekleniyorsa
                 if (!string.IsNullOrEmpty(model.AuthorName2))
@@ -291,7 +331,13 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblSpeciesauthors.Add(newAuthor);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Author added successfully.";
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Author added successfully.",
+                        authorId = newAuthor.AuthorId,
+                        authorName = newAuthor.AuthorName
+                    });
                 }
 
 

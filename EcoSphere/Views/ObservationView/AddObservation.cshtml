@@ -1,4 +1,6 @@
 ﻿@model ObservationViewModel
+
+
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -11,8 +13,11 @@
 @using (Html.BeginForm("SubmitObservation", "ObservationView", FormMethod.Post))
 {
 
+
 <div class="form-group">
+
         <label for="CreatureName">Select Creature</label>
+
     @Html.DropDownListFor(m => m.CreatureId, Model.CreatureNamed, "Select Creature", new { @class = "form-control", id = "CreatureDropdown" })        
                 <a href="/CreaturesView/AddCreature">    
     <button type="button" class="btn btn-primary" id="add-new-class-btn">Go to Creature Add</button>

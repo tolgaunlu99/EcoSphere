@@ -3,139 +3,228 @@
         console.error("OpenLayers yüklenemedi!");
         return;
     }
+    if (!document.getElementById("map")) return;
 
-    if (document.getElementById('map')) {
-        const map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([35.2433, 38.9637]),
-                zoom: 6
-            })
-        });
-
-        fetch('/ObservationView/GetObservationsAsJson')
-            .then(response => response.json())
-            .then(data => {
-                const features = data.map(obs => {
-                    const feature = new ol.Feature({
-                        geometry: new ol.geom.Point(
-                            ol.proj.fromLonLat([
-                                parseFloat(obs.long),
-                                parseFloat(obs.lat)
-                            ])
-                        ),
-                        name: obs.name,
-                        id: obs.id   // 🔥 Id burada feature'a eklendi!
-                    });
-                    return feature;
-                });
-
-                const vectorSource = new ol.source.Vector({
-                    features: features
-                });
-
-                const clusterSource = new ol.source.Cluster({
-                    distance: 40,
-                    source: vectorSource
-                });
-
-                const styleCache = {};
-                const clusters = new ol.layer.Vector({
-                    source: clusterSource,
-                    style: function (feature) {
-                        const size = feature.get('features').length;
-                        let style = styleCache[size];
-                        if (!style) {
-                            style = new ol.style.Style({
-                                image: new ol.style.Circle({
-                                    radius: size > 1 ? 12 : 6,
-                                    fill: new ol.style.Fill({
-                                        color: size > 1 ? 'rgba(255, 153, 0, 0.6)' : 'red'
-                                    }),
-                                    stroke: new ol.style.Stroke({
-                                        color: '#fff',
-                                        width: 2
-                                    })
-                                }),
-                                text: size > 1 ? new ol.style.Text({
-                                    text: size.toString(),
-                                    fill: new ol.style.Fill({ color: '#fff' })
-                                }) : undefined
-                            });
-                            styleCache[size] = style;
-                        }
-                        return style;
-                    }
-                });
-
-                map.addLayer(clusters);
-
-                const popup = document.getElementById('popup');
-                const popupContent = document.getElementById('popup-content');
-
-                const overlay = new ol.Overlay({
-                    element: popup,
-                    positioning: 'bottom-center',
-                    stopEvent: false,
-                    offset: [0, -10]
-                });
-                map.addOverlay(overlay);
-
-                // Sadece üstüne gelince popup göster
-                map.on('pointermove', function (evt) {
-                    const feature = map.forEachFeatureAtPixel(evt.pixel, function (f) {
-                        return f;
-                    });
-
-                    if (feature && feature.get('features')) {
-                        const features = feature.get('features');
-                        if (features.length === 1) {
-                            const singleFeature = features[0];
-                            const coord = singleFeature.getGeometry().getCoordinates();
-                            popupContent.innerHTML = singleFeature.get('name');
-                            overlay.setPosition(coord);
-                            popup.style.display = 'block';
-                        } else {
-                            popup.style.display = 'none';
-                        }
-                    } else {
-                        popup.style.display = 'none';
-                    }
-                });
-
-                // Tıklayınca: Eğer cluster ise yakınlaştır, değilse detay sayfasına yönlendir
-                map.on('click', function (evt) {
-                    const feature = map.forEachFeatureAtPixel(evt.pixel, function (f) {
-                        return f;
-                    });
-
-                    if (feature && feature.get('features')) {
-                        const features = feature.get('features');
-                        if (features.length > 1) {
-                            // Birden fazla feature varsa zoom in yap
-                            const extent = ol.extent.createEmpty();
-                            features.forEach(function (f) {
-                                ol.extent.extend(extent, f.getGeometry().getExtent());
-                            });
-                            map.getView().fit(extent, { duration: 500, maxZoom: 16 });
-                        } else if (features.length === 1) {
-                            const singleFeature = features[0];
-                            const id = singleFeature.get('id'); // Buradan id alınıyor
-                            if (id) {
-                                window.location.href = '/ObservationView/Details/' + id;
-                            }
-                        }
-                    }
-                });
-
-            })
-            .catch(error => {
-                console.error('Gözlem verileri alınamadı:', error);
-            });
+    // ── Loader kontrol fonksiyonları ──────────────────────────
+    function showLoader() {
+        const l = document.getElementById("map-loader");
+        if (l) l.style.display = "block";
     }
+    function hideLoader() {
+        const l = document.getElementById("map-loader");
+        if (l) l.style.display = "none";
+    }
+
+    // ── Harita ve overlay ─────────────────────────────────────
+    const map = new ol.Map({
+        target: "map",
+        layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([35.2433, 38.9637]),
+            zoom: 6
+        })
+    });
+    const popup = document.getElementById("popup"),
+        popupContent = document.getElementById("popup-content"),
+        overlay = new ol.Overlay({
+            element: popup,
+            positioning: "bottom-center",
+            stopEvent: false,
+            offset: [0, -10]
+        });
+    map.addOverlay(overlay);
+
+    // ── Stil tanımları ───────────────────────────────────────
+    const defaultProvinceStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
+    });
+    const hoverProvinceStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
+    });
+    const defaultDistrictStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
+    });
+    const hoverDistrictStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
+    });
+
+    // ── İlçe katmanı (başlangıçta gizli) ──────────────────────
+    const ilceLayer = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+        style: defaultDistrictStyle,
+        visible: false
+    });
+    ilceLayer.setZIndex(10);
+    map.addLayer(ilceLayer);
+
+    // ── Marker katmanı ─────────────────────────────────────────
+    const markerLayer = new ol.layer.Vector({
+        source: new ol.source.Vector(),
+        style: new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({ color: "red" }),
+                stroke: new ol.style.Stroke({ color: "#fff", width: 2 })
+            })
+        })
+    });
+    markerLayer.setZIndex(15);
+    map.addLayer(markerLayer);
+
+    // ── İl katmanı ve etkileşim ───────────────────────────────
+    fetch("/data/TR_iller.geojson")
+        .then(res => res.json())
+        .then(data => {
+            const format = new ol.format.GeoJSON();
+            const provinceFeatures = format.readFeatures(data, {
+                featureProjection: map.getView().getProjection()
+            });
+
+            const provinceLayer = new ol.layer.Vector({
+                source: new ol.source.Vector({ features: provinceFeatures }),
+                style: defaultProvinceStyle
+            });
+            provinceLayer.setZIndex(5);
+            map.addLayer(provinceLayer);
+
+            // Hover mantığı
+            let prevHover = { feature: null, layer: null };
+            map.on("pointermove", function (evt) {
+                let hit = false;
+                map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+                    if (layer === provinceLayer || layer === ilceLayer) {
+                        hit = true;
+                        if (prevHover.feature && prevHover.feature !== feature) {
+                            prevHover.feature.setStyle(
+                                prevHover.layer === provinceLayer
+                                    ? defaultProvinceStyle
+                                    : defaultDistrictStyle
+                            );
+                        }
+                        feature.setStyle(
+                            layer === provinceLayer
+                                ? hoverProvinceStyle
+                                : hoverDistrictStyle
+                        );
+                        prevHover = { feature, layer };
+                        return true;
+                    }
+                });
+                if (!hit && prevHover.feature) {
+                    prevHover.feature.setStyle(
+                        prevHover.layer === provinceLayer
+                            ? defaultProvinceStyle
+                            : defaultDistrictStyle
+                    );
+                    prevHover = { feature: null, layer: null };
+                }
+
+                // Popup göster/gizle
+                let found = false;
+                map.forEachFeatureAtPixel(evt.pixel, feature => {
+                    const p = feature.getProperties();
+                    if (p.name || p.Ilce_Adi || p.Il_Adi) {
+                        popupContent.innerHTML = p.name || p.Ilce_Adi || p.Il_Adi;
+                        overlay.setPosition(
+                            p.name
+                                ? feature.getGeometry().getCoordinates()
+                                : evt.coordinate
+                        );
+                        popup.style.display = "block";
+                        found = true;
+                        return true;
+                    }
+                });
+                if (!found) popup.style.display = "none";
+            });
+
+            // Tıklama mantığı
+            map.on("singleclick", function (evt) {
+                map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+                    const provinceName = feature.get("Il_Adi"),
+                        districtName = feature.get("Ilce_Adi"),
+                        basePath = window.location.pathname;
+
+                    // ── İl seçildi
+                    if (provinceName && layer === provinceLayer) {
+                        history.pushState(null, "", `${basePath}?province=${encodeURIComponent(provinceName)}`);
+                        showLoader();
+                        markerLayer.getSource().clear();
+                        map.getView().fit(feature.getGeometry().getExtent(), { duration: 1000 });
+
+                        // İlçeleri yükle
+                        fetch("/data/ilceler.geojson")
+                            .then(r => r.json())
+                            .then(ilceData => {
+                                const ilceFeats = format.readFeatures(ilceData, {
+                                    featureProjection: map.getView().getProjection()
+                                });
+                                const filtered = ilceFeats.filter(f => f.get("Il_Adi") === provinceName);
+                                ilceLayer.getSource().clear();
+                                ilceLayer.getSource().addFeatures(filtered);
+                                ilceLayer.setVisible(true);
+                            });
+
+                        // Marker’ları getir
+                        fetch(`/ObservationView/GetObservationsByProvince?province=${encodeURIComponent(provinceName)}`)
+                            .then(r => r.json())
+                            .then(obs => {
+                                const feats = obs.map(o => {
+                                    const ft = new ol.Feature({
+                                        geometry: new ol.geom.Point(
+                                            ol.proj.fromLonLat([+o.long, +o.lat])
+                                        )
+                                    });
+                                    ft.set("name", o.name);
+                                    ft.set("id", o.id);
+                                    return ft;
+                                });
+                                markerLayer.getSource().addFeatures(feats);
+                            })
+                            .finally(() => hideLoader());
+
+                        return true;
+                    }
+
+                    // ── İlçe seçildi
+                    if (districtName && layer === ilceLayer) {
+                        history.pushState(null, "", `${basePath}?district=${encodeURIComponent(districtName)}`);
+                        showLoader();
+                        markerLayer.getSource().clear();
+                        map.getView().fit(feature.getGeometry().getExtent(), { duration: 1000 });
+
+                        fetch(`/ObservationView/GetObservationsByDistrict?district=${encodeURIComponent(districtName)}`)
+                            .then(r => r.json())
+                            .then(obs => {
+                                const feats = obs.map(o => {
+                                    const ft = new ol.Feature({
+                                        geometry: new ol.geom.Point(
+                                            ol.proj.fromLonLat([+o.long, +o.lat])
+                                        )
+                                    });
+                                    ft.set("name", o.name);
+                                    ft.set("id", o.id);
+                                    return ft;
+                                });
+                                markerLayer.getSource().addFeatures(feats);
+                            })
+                            .finally(() => hideLoader());
+
+                        return true;
+                    }
+                });
+            });
+
+            // Marker’a tıklanınca detay sayfası
+            map.on("click", function (evt) {
+                const feat = map.forEachFeatureAtPixel(evt.pixel, f => f);
+                if (feat && feat.get("id")) {
+                    window.location.href = `/ObservationView/Details/${feat.get("id")}`;
+                }
+            });
+        });
 });
