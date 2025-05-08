@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EcoSphere</title>
+    <title>@ViewData["Title"] EcoSphere</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.1.0/ol.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- DataTables & Obs-Table CSS -->
-    <link rel="stylesheet" href="~/css/obs-table.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
     
 </head>
@@ -42,7 +42,7 @@
                         <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a> </li>
 
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link " data-toggle="dropdown">Services</a>
+                            <a href="#" class="nav-link " data-bs-toggle="dropdown">Services</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Observation</a>
                                 <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Creatures</a>
@@ -52,7 +52,7 @@
                         <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">About Us</a> </li>
 
                         <li class="nav-item">
-                            <a href="@Url.Action("SignIN", "UserView")" class="nav-link">
+                            <a href="@Url.Action("Index", "UserView")" class="nav-link">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
                         </li>

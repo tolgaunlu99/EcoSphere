@@ -1,1 +1,26 @@
-﻿
+﻿button.satellite-toggle {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+button.satellite-toggle:hover {
+    background: linear-gradient(135deg, #1a3360, #23497e);
+    transform: scale(1.05);
+    cursor: pointer;
+}
+ button.satellite-toggle i {
+    font-size: 16px;
+}
