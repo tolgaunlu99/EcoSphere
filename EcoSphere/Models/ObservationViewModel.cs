@@ -175,8 +175,8 @@ namespace EcoSphere.Models
         [DisplayName("Gender")]
         public IEnumerable<SelectListItem> GenderNamed { get; set; } = new List<SelectListItem>();
 
-
-
-
+        // Haritadan gelen veriler
+        public string HiddenProvinceName { get; set; }
+        public string HiddenDistrictName { get; set; }
     }
 }

@@ -1,529 +1,203 @@
-﻿@model ObservationViewModel
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+﻿@model EcoSphere.Models.ObservationViewModel
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-@using (Html.BeginForm("SubmitObservation", "ObservationView", FormMethod.Post))
-{
-
-
-<div class="form-group">
-
-        <label for="CreatureName">Select Creature</label>
-
-    @Html.DropDownListFor(m => m.CreatureId, Model.CreatureNamed, "Select Creature", new { @class = "form-control", id = "CreatureDropdown" })        
-                <a href="/CreaturesView/AddCreature">    
-    <button type="button" class="btn btn-primary" id="add-new-class-btn">Go to Creature Add</button>
-        </a>
-    </div>
-    <br>
-    <div id="UserSection" style="display: none;">
-        <div class="form-group">
-            <label for="UserNamed">Select User</label>
-            @Html.DropDownListFor(m => m.UserId, Model.Usernamed, "Select User", new { @class = "form-control", id = "UserDropdown" })
-        </div>
-    </div>
-    <br>
-
-    <div id="RegionSection" style="display: none;">
-            <div class="form-group">
-            <label for="RegionNamed">Select Region</label>
-            @Html.DropDownListFor(m => m.RegionId, Model.RegionNamed, "Select Region", new { @class = "form-control", id = "RegionDropdown" })
-        </div>
-    </div>
-        <br>
-    <div id="CitySection" style="display: none;">
-        <div class="form-group">
-            <label for="CityNamed">Select City</label>
-            @Html.DropDownListFor(m => m.CityId, Model.ProvinceNamed, "Select Province", new { @class = "form-control", id = "ProvinceDropdown" })
-        </div>
-    </div>
-    <br>
-    <div id="DisctrictSection" style="display: none;">
-        <div class="form-group">
-            <label for="DistrictNamed">Select District</label>
-            @Html.DropDownListFor(m => m.DistrictId, Model.DistrictNamed, "Select District", new { @class = "form-control", id = "DistrictDropdown" })
-        </div>
-    </div>
-    <br>
-    <div id="LocalitySection" style="display: none;">
-        <div class="form-group">
-            <label for="LocalityNamed">Select Locality</label>
-            @Html.DropDownListFor(m => m.LocalityId, Model.LocalityNamed, "Select Locality", new { @class = "form-control", id = "LocalityDropdown" })
-        </div>
-    </div>
-    <br>
-    <div id="NeighborhoodSection" style="display: none;">
-        <div class="form-group">
-            <label for="NeighborhoodNamed">Select Neighborhood</label>
-	@Html.DropDownListFor(m => m.NeighborhoodId, Model.HoodNamed, "Select Neighborhood", new { @class = "form-control", id = "NeighborhoodDropdown" })
-    </div>
-    </div>
-	<br>
-    <div id="MigrationstatSection" style="display: none;">
-        <div class="form-group">
-            <label for="MigrationstatNamed">Select Migration Status</label>
-            @Html.DropDownListFor(m => m.MigrationStatusId, Model.MigrationstatNamed, "Select Migration Status", new { @class = "form-control", id = "MigrationStatDropdown" })
-        </div>
-    </div>
-    <br>
-    <div id="EndemicstatSection" style="display: none;">
-        <div class="form-group">
-            <label for="EndemicstatNamed">Select Endemic Status</label>
-            @Html.DropDownListFor(m => m.EndemicStatusId, Model.EndemicstatNamed, "Select Endemic Status", new { @class = "form-control", id = "EndemicstatDropdown" })
-        </div>
-    </div>
-    <br>
-    <!-- Project Combobox -->
-    <div id="ProjectSection" style="display: none;">
-        <div class="form-group">
-            <label for="ProjectName">Select Project</label>
-            @Html.DropDownListFor(m => m.ProjectId, Model.ProjectNamed, "Select Project", new { @class = "form-control", id = "ProjectDropdown" })
-            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddProjectModal">Add New</button>
-        </div>
-    </div>
-    <br>
-    <!-- Citation Combobox -->
-    <div id="CitationSection" style="display: none;">
-        <div class="form-group">
-            <label for="CitationName">Select Citation</label>
-            @Html.DropDownListFor(m => m.CitationId, Model.CitationNamed, "Select Citation", new { @class = "form-control", id = "CitationDropdown" })
-            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddCitationModal">Add New</button>
-        </div>
-    </div>
-    <br>
-    <!-- Reference Combobox -->
-    <div id="ReferenceSection" style="display: none;">
-        <div class="form-group">
-            <label for="ReferenceName">Select Reference</label>
-            @Html.DropDownListFor(m => m.ReferenceId, Model.ReferenceNamed, "Select Reference", new { @class = "form-control", id = "ReferenceDropdown" })
-            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddReferenceModal">Add New</button>
-        </div>
-    </div>
-    <br>
-	<!-- Location Type Combobox -->
-    <div id="LocationTypeSection" style="display: none;">
-        <div class="form-group">
-            <label for="LocationTypeName">Select Location Type</label>
-            @Html.DropDownListFor(m => m.LocationTypeId, Model.LocationtypeNamed, "Select Location Type", new { @class = "form-control", id = "LocationTypeDropdown" })
-        </div>
-    </div>
-    <br>
-	<!-- Location Range Combobox -->
-    <div id="LocationRangeSection" style="display: none;">
-        <div class="form-group">
-            <label for="LocationRangeName">Select Location Range</label>
-            @Html.DropDownListFor(m => m.LocationRangeId, Model.LocationRangeNamed, "Select Location Range", new { @class = "form-control", id = "LocationRangeDropdown" })
-            <button type="button" class="btn btn-primary" id="add-new-class-btn" data-bs-toggle="modal" data-bs-target="#AddLocationRangeModal">Add New</button>
-        </div>
-    </div>
-    <br>
-    <!-- Gender Combobox -->
-    <div id="GenderSection" style="display: none;">
-        <div class="form-group">
-            <label for="GenderName">Select Gender</label>
-            @Html.DropDownListFor(m => m.GenderId, Model.GenderNamed, "Select Gender", new { @class = "form-control", id = "GenderDropdown" })
-        </div>
-    </div>
-    <br>
-    <div id="LongSection" style="display: none;">
-        <div class="form-group">
-            <label for="LongInput">Longitude</label>
-            @Html.TextBoxFor(m => m.Long, new { @class = "form-control", id = "LongInput" })
-        </div>
-	</div>
-	<br>
-    <div id="LatSection" style="display: none;">
-        <div class="form-group">
-            <label for="LatInput">Latitude</label>
-            @Html.TextBoxFor(m => m.Lat, new { @class = "form-control", id = "LatInput" })
-        </div>
-	</div>
-    <br>
-    <div id="ActivitySection" style="display: none;">
-        <div class="form-group">
-            <label for="ActivityInput">Activity</label>
-            @Html.TextBoxFor(m => m.Activity, new { @class = "form-control", id = "ActivityInput" })
-        </div>
-    </div>
-    <br>
-    <div id="SeenTimeSection" style="display: none;">
-        <div class="form-group">
-            <label for="SeenTimeInput">Seen Time</label>
-            @Html.TextBoxFor(m => m.SeenTime, new { @class = "form-control", id = "SeenTimeInput" })
-        </div>
-    </div>
-    <br>
-    <div id="CreationDateSection" style="display: none;">
-        <div class="form-group">
-            <label for="CreationDateInput">Creation Date</label>
-			@Html.TextBoxFor(m => m.CreationDate, new { @class = "form-control", id = "CreationDateInput" })
-        </div>
-    </div>
-    <br>
-    <div id="SubmitSection" class="form-group" style="display: none;">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-
+@{
+    ViewData["Title"] = "Create Observation";
 }
 
-    <!-- Modal for Project -->
-    <div class="modal fade" id="AddProjectModal" tabindex="-1" aria-labelledby="AddProjectModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddProjectModalLabel">Add New Project</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="AddProjectForm" method="post" action="/ObservationView/AddObservation">
-                    <div class="modal-body">
-                        <label for="ProjectName2">Project Name:</label>
-                        <input type="text" id="ProjectName2" name="ProjectName2" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for Citation -->
-    <div class="modal fade" id="AddCitationModal" tabindex="-1" aria-labelledby="AddCitationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddCitationModalLabel">Add New Citation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="AddCitationForm" method="post" action="/ObservationView/AddObservation">
-                    <div class="modal-body">
-                        <label for="CitationName2">Citation Name:</label>
-                        <input type="text" id="CitationName2" name="CitationName2" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for Reference -->
-    <div class="modal fade" id="AddReferenceModal" tabindex="-1" aria-labelledby="AddReferenceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddReferenceModalLabel">Add New Reference</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="AddReferenceForm" method="post" action="/ObservationView/AddObservation">
-                    <div class="modal-body">
-                        <label for="ReferenceName2">Reference Name:</label>
-                        <input type="text" id="ReferenceName2" name="ReferenceName2" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for Location Range -->
-    <div class="modal fade" id="AddLocationRangeModal" tabindex="-1" aria-labelledby="AddLocationRangeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="AddLocationRangeModalLabel">Add New Location Range</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="AddLocationRangeForm" method="post" action="/ObservationView/AddObservation">
-                    <div class="modal-body">
-                        <label for="LocationRange2">Location Range:</label>
-                        <input type="text" id="LocationRange2" name="LocationRange2" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
+<h2>Yeni Gözlem Ekle</h2>
 
+<!-- Koordinat Seç Butonu -->
+<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#coordinateModal">
+    Koordinat Seç
+</button>
 
+<!-- Form Başlangıcı -->
+<form asp-action="SubmitObservation" method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="CreatureId"></label>
+            <select asp-for="CreatureId" class="form-control" asp-items="Model.CreatureNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="UserId"></label>
+            <select asp-for="UserId" class="form-control" asp-items="Model.Usernamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="GenderId"></label>
+            <select asp-for="GenderId" class="form-control" asp-items="Model.GenderNamed"></select>
+        </div>
+    </div>
 
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label asp-for="MigrationStatusId"></label>
+            <select asp-for="MigrationStatusId" class="form-control" asp-items="Model.MigrationstatNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="EndemicStatusId"></label>
+            <select asp-for="EndemicStatusId" class="form-control" asp-items="Model.EndemicstatNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="ProjectId"></label>
+            <select asp-for="ProjectId" class="form-control" asp-items="Model.ProjectNamed"></select>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label asp-for="CitationId"></label>
+            <select asp-for="CitationId" class="form-control" asp-items="Model.CitationNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="ReferenceId"></label>
+            <select asp-for="ReferenceId" class="form-control" asp-items="Model.ReferenceNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="LocationTypeId"></label>
+            <select asp-for="LocationTypeId" class="form-control" asp-items="Model.LocationtypeNamed"></select>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label asp-for="LocationRangeId"></label>
+            <select asp-for="LocationRangeId" class="form-control" asp-items="Model.LocationRangeNamed"></select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Activity"></label>
+            <input asp-for="Activity" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="SeenTime"></label>
+            <input asp-for="SeenTime" class="form-control" type="datetime-local" />
+        </div>
+    </div>
+
+    <!-- Gizli alanlar (Koordinat ve İl/İlçe) -->
+    <input type="hidden" id="LongInput" name="Long" />
+    <input type="hidden" id="LatInput" name="Lat" />
+    <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
+    <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </div>
+</form>
+
+<!-- Koordinat Modal Penceresi -->
+<div class="modal fade" id="coordinateModal" tabindex="-1" aria-labelledby="coordinateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Koordinat Seçimi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <div id="coordinateMap" style="width: 100%; height: 400px;"></div>
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Longitude</label>
+                        <input type="text" id="selectedLongitude" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Latitude</label>
+                        <input type="text" id="selectedLatitude" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Province</label>
+                        <input type="text" id="selectedProvince" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label>District</label>
+                        <input type="text" id="selectedDistrict" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmCoordinatesBtn" class="btn btn-primary" data-bs-dismiss="modal">
+                    Seçimi Onayla
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
     <script>
+        let coordinateMap, coordMarkerLayer, provinceFeatures = [], districtFeatures = [];
+
         document.addEventListener("DOMContentLoaded", function () {
-            // Başlangıçta tüm dropdown'lar gizli
-            hideAllSections();
+            if (!document.getElementById("coordinateMap")) return;
 
-            document.getElementById('CreatureDropdown').addEventListener('change', function () {
-                const creatureID = this.value;
-                const UserSection = document.getElementById('UserSection');
-                if (creatureID) {
-                            UserSection.style.display = 'block';
-                            document.getElementById('SelectedCreatureID').value = creatureID;
-                        } else {
-                            UserSection.style.display = 'none';
-                        }
+            const format = new ol.format.GeoJSON();
+
+            coordinateMap = new ol.Map({
+                target: 'coordinateMap',
+                layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+                view: new ol.View({ center: ol.proj.fromLonLat([35.2433, 38.9637]), zoom: 6 })
             });
-            document.getElementById('UserDropdown').addEventListener('change', function () {
-                const userID = this.value;
-                const RegionSection = document.getElementById('RegionSection');
-                if (userID) {
-                            RegionSection.style.display = 'block';
-                            document.getElementById('SelectedUserID').value = userID;
-                        } else {
-                            RegionSection.style.display = 'none';
-                        }
+
+            coordMarkerLayer = new ol.layer.Vector({ source: new ol.source.Vector() });
+            coordinateMap.addLayer(coordMarkerLayer);
+
+            Promise.all([
+                fetch("/data/TR_iller.geojson").then(res => res.json()),
+                fetch("/data/ilceler.geojson").then(res => res.json())
+            ]).then(([provinceData, districtData]) => {
+                provinceFeatures = format.readFeatures(provinceData, {
+                    featureProjection: coordinateMap.getView().getProjection()
+                });
+                districtFeatures = format.readFeatures(districtData, {
+                    featureProjection: coordinateMap.getView().getProjection()
+                });
             });
-            document.getElementById('RegionDropdown').addEventListener('change', function () {
-                            const RegionID = this.value;
-                            const CitySection = document.getElementById('CitySection');
-                            const ProvinceDropdown = document.getElementById('ProvinceDropdown');
 
-                            CitySection.style.display = RegionID ? 'block' : 'none';
+            coordinateMap.on("click", function (evt) {
+                const coord = ol.proj.toLonLat(evt.coordinate);
+                const lon = coord[0].toFixed(6);
+                const lat = coord[1].toFixed(6);
 
-                if (RegionID) {
-                    fetch(`/ObservationView/GetCitysByRegion?RegionID=${RegionID}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Önce Kingdom dropdown'ını temizle
-                            ProvinceDropdown.innerHTML = '<option value="">Select City</option>';
+                document.getElementById("selectedLongitude").value = lon;
+                document.getElementById("selectedLatitude").value = lat;
 
-                            // Gelen veriyi dropdown'a ekle
-                            data.forEach(province => {
-                                const option = document.createElement('option');
-                                option.value = province.value;
-                                option.textContent = province.text;
-                                ProvinceDropdown.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching Cities:', error));
-                } else {
-                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
-                    ProvinceDropdown.innerHTML = '<option value="">Select Province</option>';
+                coordMarkerLayer.getSource().clear();
+                const point = new ol.Feature(new ol.geom.Point(evt.coordinate));
+                coordMarkerLayer.getSource().addFeature(point);
+
+                let foundProvince = "", foundDistrict = "";
+
+                for (let p of provinceFeatures) {
+                    if (p.getGeometry().intersectsCoordinate(evt.coordinate)) {
+                        foundProvince = p.get("Il_Adi") || p.get("name");
+                        break;
+                    }
+                }
+
+                for (let d of districtFeatures) {
+                    if (d.getGeometry().intersectsCoordinate(evt.coordinate)) {
+                        foundDistrict = d.get("Ilce_Adi") || d.get("name");
+                        break;
+                    }
+                }
+
+                document.getElementById("selectedProvince").value = foundProvince;
+                document.getElementById("selectedDistrict").value = foundDistrict;
+            });
+
+            document.getElementById("confirmCoordinatesBtn").addEventListener("click", function () {
+                const lon = document.getElementById("selectedLongitude").value;
+                const lat = document.getElementById("selectedLatitude").value;
+                const province = document.getElementById("selectedProvince").value;
+                const district = document.getElementById("selectedDistrict").value;
+
+                if (lon && lat) {
+                    document.getElementById("LongInput").value = lon;
+                    document.getElementById("LatInput").value = lat;
+                    document.getElementById("HiddenProvinceName").value = province;
+                    document.getElementById("HiddenDistrictName").value = district;
                 }
             });
-            document.getElementById('ProvinceDropdown').addEventListener('change', function () {
-                            const CityID = this.value;
-                            const DisctrictSection = document.getElementById('DisctrictSection');
-                            const DistrictDropdown = document.getElementById('DistrictDropdown');
-
-                            DisctrictSection.style.display = CityID ? 'block' : 'none';
-
-                if (CityID) {
-                    fetch(`/ObservationView/GetDistrictsByCity?CityID=${CityID}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Önce Kingdom dropdown'ını temizle
-                            DistrictDropdown.innerHTML = '<option value="">Select District</option>';
-
-                            // Gelen veriyi dropdown'a ekle
-                            data.forEach(district => {
-                                const option = document.createElement('option');
-                                option.value = district.value;
-                                option.textContent = district.text;
-                                DistrictDropdown.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching Districts:', error));
-                } else {
-                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
-                    DistrictDropdown.innerHTML = '<option value="">Select District</option>';
-                }
-            });
-            document.getElementById('DistrictDropdown').addEventListener('change', function () {
-                            const DistrictID = this.value;
-                            const LocalitySection = document.getElementById('LocalitySection');
-                            const LocalityDropdown = document.getElementById('LocalityDropdown');
-
-                            LocalitySection.style.display = DistrictID ? 'block' : 'none';
-
-                if (DistrictID) {
-                    fetch(`/ObservationView/GetLocalitiesByDistrict?DistrictID=${DistrictID}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            LocalityDropdown.innerHTML = '<option value="">Select Locality</option>';
-
-                            // Gelen veriyi dropdown'a ekle
-                            data.forEach(locality => {
-                                const option = document.createElement('option');
-                                option.value = locality.value;
-                                option.textContent = locality.text;
-                                LocalityDropdown.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching Localities:', error));
-                } else {
-                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
-                    LocalityDropdown.innerHTML = '<option value="">Select Locality</option>';
-                }
-            });
-            document.getElementById('LocalityDropdown').addEventListener('change', function () {
-                            const LocalityID = this.value;
-                            const NeighborhoodSection = document.getElementById('NeighborhoodSection');
-                            const NeighborhoodDropdown = document.getElementById('NeighborhoodDropdown');
-
-                            NeighborhoodSection.style.display = LocalityID ? 'block' : 'none';
-
-                if (LocalityID) {
-                    fetch(`/ObservationView/GetNeighbourhoodsByLocality?LocalityID=${LocalityID}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            NeighborhoodDropdown.innerHTML = '<option value="">Select Hood</option>';
-
-                            // Gelen veriyi dropdown'a ekle
-                            data.forEach(hood => {
-                                const option = document.createElement('option');
-                                option.value = hood.value;
-                                option.textContent = hood.text;
-                                NeighborhoodDropdown.appendChild(option);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching Hoods:', error));
-                } else {
-                    // Upper Realm seçilmezse Kingdom dropdown'ını temizle
-                    NeighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
-                }
-            });
-            document.getElementById('NeighborhoodDropdown').addEventListener('change', function () {
-                const HoodID = this.value;
-                const MigrationstatSection = document.getElementById('MigrationstatSection');
-                if (HoodID) {
-                            MigrationstatSection.style.display = 'block';
-                            document.getElementById('SelectedHoodID').value = HoodID;
-                        } else {
-                            MigrationstatSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('MigrationStatDropdown').addEventListener('change', function () {
-                const MigrationstatID = this.value;
-                const EndemicstatSection = document.getElementById('EndemicstatSection');
-                if (MigrationstatID) {
-                            EndemicstatSection.style.display = 'block';
-                            document.getElementById('SelectedMigrationstatID').value = MigrationstatID;
-                        } else {
-                            EndemicstatSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('EndemicstatDropdown').addEventListener('change', function () {
-                const EndemicstatID = this.value;
-                const ProjectSection = document.getElementById('ProjectSection');
-                if (EndemicstatID) {
-                            ProjectSection.style.display = 'block';
-                            document.getElementById('SelectedEndemicstatID').value = EndemicstatID;
-                        } else {
-                            ProjectSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('ProjectDropdown').addEventListener('change', function () {
-                const ProjectID = this.value;
-                const CitationSection = document.getElementById('CitationSection');
-                if (ProjectID) {
-                            CitationSection.style.display = 'block';
-                            document.getElementById('SelectedProjectID').value = ProjectID;
-                        } else {
-                            CitationSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('CitationDropdown').addEventListener('change', function () {
-                const CitationID = this.value;
-                const ReferenceSection = document.getElementById('ReferenceSection');
-                if (CitationID) {
-                            ReferenceSection.style.display = 'block';
-                            document.getElementById('SelectedCitationID').value = CitationID;
-                        } else {
-                            ReferenceSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('ReferenceDropdown').addEventListener('change', function () {
-                const ReferenceID = this.value;
-                const LocationTypeSection = document.getElementById('LocationTypeSection');
-                if (ReferenceID) {
-                            LocationTypeSection.style.display = 'block';
-                            document.getElementById('SelectedReferenceID').value = ReferenceID;
-                        } else {
-                            LocationTypeSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('LocationTypeDropdown').addEventListener('change', function () {
-                const LocationTypeID = this.value;
-                const LocationRangeSection = document.getElementById('LocationRangeSection');
-                if (LocationTypeID) {
-                            LocationRangeSection.style.display = 'block';
-                            document.getElementById('SelectedLocationTypeID').value = LocationTypeID;
-                        } else {
-                            LocationRangeSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('LocationRangeDropdown').addEventListener('change', function () {
-                const LocationRangeID = this.value;
-                const GenderSection = document.getElementById('GenderSection');
-                if (LocationRangeID) {
-                            GenderSection.style.display = 'block';
-                            document.getElementById('SelectedLocationRangeID').value = LocationRangeID;
-                        } else {
-                            GenderSection.style.display = 'none';
-                        }
-            });
-            document.getElementById('GenderDropdown').addEventListener('change', function () {
-                            const GenderID = this.value;
-                            const LongSection = document.getElementById('LongSection');
-
-                            LongSection.style.display = GenderID ? 'block' : 'none';
-                        });
-            document.getElementById('LongInput').addEventListener('input', function () {
-                            const LongName = this.value;
-                            const LatSection = document.getElementById('LatSection');
-
-                            LatSection.style.display = LongName ? 'block' : 'none';
-                        });
-            document.getElementById('LatInput').addEventListener('input', function () {
-                            const LatName = this.value;
-                            const ActivitySection = document.getElementById('ActivitySection');
-
-                            ActivitySection.style.display = LatName ? 'block' : 'none';
-                        });
-            document.getElementById('ActivityInput').addEventListener('input', function () {
-                            const ActivityName = this.value;
-                            const SeenTimeSection = document.getElementById('SeenTimeSection');
-
-                            SeenTimeSection.style.display = ActivityName ? 'block' : 'none';
-                        });
-            document.getElementById('SeenTimeInput').addEventListener('input', function () {
-                            const SeenTimeName = this.value;
-                            const CreationDateSection = document.getElementById('CreationDateSection');
-
-                            CreationDateSection.style.display = SeenTimeName ? 'block' : 'none';
-                        });
-						document.getElementById('CreationDateInput').addEventListener('input', function () {
-							const CreationDateName = this.value;
-							const SubmitSection = document.getElementById('SubmitSection');
-							SubmitSection.style.display = CreationDateName ? 'block' : 'none';
-						});
-
-
-
-
-            window.onload = function () {
-                            const successMessage2 = '@TempData["SuccessMessage2"]';
-                            if (successMessage2) {
-                                alert(successMessage2);
-                            }
-                        };
-        }); 
-
-        function hideAllSections() {
-            document.getElementById('UserSection').style.display = 'none';
-            document.getElementById('RegionSection').style.display = 'none';
-            document.getElementById('CitySection').style.display = 'none';
-            document.getElementById('DisctrictSection').style.display = 'none';
-            document.getElementById('LocalitySection').style.display = 'none';
-            document.getElementById('NeighborhoodSection').style.display = 'none';
-        }
+        });
     </script>
+}
