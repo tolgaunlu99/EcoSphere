@@ -324,6 +324,260 @@
 				
 
 				<script>
+								// Seçilen Upper Realm'e bağlı Kingdomları getir
+				 $('#AddPhylumForm').on('submit', function (e) {
+				e.preventDefault();
+
+				$.ajax({
+					url: '/CreaturesView/AddCreature',
+					type: 'POST',
+					data: $(this).serialize(),
+					success: function (response) {
+				if (response.success) {
+					alert(response.message);
+
+					// Yeni phylum'ı dropdown'a ekle
+					$('#PhylumDropdown').append(
+						$('<option>', {
+							value: response.phylumId,
+							text: response.phylumName,
+							selected: false
+						})
+					);
+
+					// Modal'ı kapat
+					$('#AddPhylumModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+			 $('#AddClassForm').on('submit', function (e) {
+				e.preventDefault();
+
+				$.ajax({
+					url: '/CreaturesView/AddCreature',
+					type: 'POST',
+					data: $(this).serialize(),
+					success: function (response) {
+				if (response.success) {
+					alert(response.message);
+
+					// Yeni phylum'ı dropdown'a ekle
+					$('#ClassDropdown').append(
+						$('<option>', {
+							value: response.classID,
+							text: response.className,
+							selected: false
+						})
+					);
+
+					// Modal'ı kapat
+					$('#AddClassModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddOrderForm').on('submit', function (e) {
+				e.preventDefault();
+
+				$.ajax({
+					url: '/CreaturesView/AddCreature',
+					type: 'POST',
+					data: $(this).serialize(),
+					success: function (response) {
+				if (response.success) {
+					alert(response.message);
+
+					// Yeni phylum'ı dropdown'a ekle
+					$('#OrderDropdown').append(
+						$('<option>', {
+							value: response.orderId,
+							text: response.orderName,
+							selected: false
+						})
+					);
+
+					// Modal'ı kapat
+					$('#AddOrderModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddFamilyForm').on('submit', function (e) {
+				e.preventDefault();
+
+				$.ajax({
+					url: '/CreaturesView/AddCreature',
+					type: 'POST',
+					data: $(this).serialize(),
+					success: function (response) {
+				if (response.success) {
+					alert(response.message);
+
+					// Yeni phylum'ı dropdown'a ekle
+					$('#FamilyDropdown').append(
+						$('<option>', {
+							value: response.familyID,
+							text: response.familyName,
+							selected: false
+						})
+					);
+
+					// Modal'ı kapat
+					$('#AddFamilyModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddGenusForm').on('submit', function (e) {
+		e.preventDefault();
+		$.ajax({
+			url: '/CreaturesView/AddCreature',
+			type: 'POST',
+			data: $(this).serialize(),
+			success: function (response) {
+				if (response.success) {
+					alert(response.message);
+					// Yeni phylum'ı dropdown'a ekle
+					$('#GenusDropdown').append(
+						$('<option>', {
+							value: response.genusId,
+							text: response.genusName,
+							selected: false
+						})
+					);
+					// Modal'ı kapat
+					$('#AddGenusModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddSpeciesForm').on('submit', function (e) {
+		e.preventDefault();
+		$.ajax({
+			url: '/CreaturesView/AddCreature',
+			type: 'POST',
+			data: $(this).serialize(),
+			success: function (response) {
+				if (response.success) {
+					alert(response.message);
+					// Yeni phylum'ı dropdown'a ekle
+					$('#SpeciesDropdown').append(
+						$('<option>', {
+							value: response.speciesID,
+							text: response.speciesName,
+							selected: false
+						})
+					);
+					// Modal'ı kapat
+					$('#AddSpeciesModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddSubSpeciesForm').on('submit', function (e) {
+		e.preventDefault();
+		$.ajax({
+			url: '/CreaturesView/AddCreature',
+			type: 'POST',
+			data: $(this).serialize(),
+			success: function (response) {
+				if (response.success) {
+					alert(response.message);
+					// Yeni phylum'ı dropdown'a ekle
+					$('#SubspeciesDropdown').append(
+						$('<option>', {
+							value: response.subspeciesID,
+							text: response.subspeciesName,
+							selected: false
+						})
+					);
+					// Modal'ı kapat
+					$('#AddSubSpeciesModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+	$('#AddAuthorForm').on('submit', function (e) {
+		e.preventDefault();
+		$.ajax({
+			url: '/CreaturesView/AddCreature',
+			type: 'POST',
+			data: $(this).serialize(),
+			success: function (response) {
+				if (response.success) {
+					alert(response.message);
+					// Yeni phylum'ı dropdown'a ekle
+					$('#AuthorDropdown').append(
+						$('<option>', {
+							value: response.authorID,
+							text: response.authorName,
+							selected: false
+						})
+					);
+					// Modal'ı kapat
+					$('#AddAuthorModal').modal('hide');
+					$('body').removeClass('modal-open');
+					$('.modal-backdrop').remove();
+				} else {
+					alert(response.message);
+				}
+			},
+			error: function () {
+				alert('Unexpected error occurred.');
+			}
+		});
+	});
+
 					document.addEventListener("DOMContentLoaded", function () {
 						
 						// Upper Realm seçildiğinde Kingdom'u göster
@@ -335,7 +589,7 @@
 							// Eğer bir Upper Realm seçilmişse Kingdom bölümü göster, değilse gizle
 							kingdomSection.style.display = upperRealmID ? 'block' : 'none';
 
-							// Seçilen Upper Realm'e bağlı Kingdomları getir
+				
 				if (upperRealmID) {
 					fetch(`/CreaturesView/GetKingdomsByUpperRealm?upperRealmId=${upperRealmID}`)
 						.then(response => response.json())
