@@ -11,16 +11,12 @@ body {
         margin-bottom: 56px;
     }
 
-        body.sticky-footer .content-wrapper {
-            min-height: calc(100vh - 56px - 56px);
-        }
-
     body.fixed-nav {
         padding-top: 56px;
     }
 
 .content-wrapper {
-    min-height: calc(100vh - 56px);
+    height: calc(100vh - 0px);
     padding-top: 1rem;
 }
 
@@ -271,8 +267,6 @@ body.sidenav-toggled #mainNav.fixed-top #sidenavToggler i {
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: 'FlipH';
 }
 
 #mainNav.static-top .sidenav-toggler {
@@ -290,8 +284,6 @@ body.sidenav-toggled #mainNav.static-top #sidenavToggler i {
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: 'FlipH';
 }
 
 .content-wrapper {
