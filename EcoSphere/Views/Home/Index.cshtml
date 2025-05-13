@@ -5,7 +5,10 @@
 <div class="text-center">
     <h1 class="display-4">Gözlem Haritası</h1>
 </div>
-
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success" id="success-alert">@ViewBag.SuccessMessage</div>
+}
 <!-- Loader (başlangıçta gizli) -->
 <div id="map-loader" style="
         position: absolute;
@@ -26,3 +29,21 @@
 <div id="popup" class="ol-popup" style="display: none;">
     <div id="popup-content"></div>
 </div>
+<script>
+    setTimeout(function () {
+            const successAlert = document.getElementById("success-alert");
+            const errorAlert = document.getElementById("error-alert");
+
+            if (successAlert) {
+                successAlert.style.transition = "opacity 0.5s ease";
+                successAlert.style.opacity = 0;
+                setTimeout(() => successAlert.remove(), 500); // DOM'dan tamamen sil
+            }
+
+            if (errorAlert) {
+                errorAlert.style.transition = "opacity 0.5s ease";
+                errorAlert.style.opacity = 0;
+                setTimeout(() => errorAlert.remove(), 500);
+            }
+        }, 3000); // 3 saniye sonra başlat
+</script>

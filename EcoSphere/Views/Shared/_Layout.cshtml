@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,11 +16,13 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
 
-    
+
 </head>
 <body>
 
-
+    @{
+        int userRoleId = ViewBag.UserRoleId;
+    }
     <header class="header-area overlay">
         <nav class="navbar navbar-expand-md navbar-dark">
             <div class="container">
@@ -29,8 +32,8 @@
                 </div>
 
                 <button class="navbar-toggler collapsed" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#main-nav"
-                        aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                data-bs-toggle="collapse" data-bs-target="#main-nav"
+                aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="menu-icon-bar"></span>
                     <span class="menu-icon-bar"></span>
                     <span class="menu-icon-bar"></span>
@@ -41,21 +44,42 @@
                         <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a> </li>
 
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link " data-bs-toggle="dropdown">Services</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Observation</a>
-                                <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Creatures</a>
-                            </div>
-                        </li>
+
+                            @if (userRoleId == 1 || userRoleId == 2) // Admin ve Expert
+                            {
+                                <a href="#" class="nav-link " data-bs-toggle="dropdown">Services</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Observation</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Species</a>
+                                </div>
+                            }
+                            @if (userRoleId == 3 ) // Observer
+                            {
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "ObservationView")">Observation</a> </li>
+                            }
+                        
 
                         <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">About Us</a> </li>
-
+                        @if (userRoleId==1)
+                        {
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">Admin Panel</a> </li>
+                        }
+                        
+                        @if (userRoleId > 0)
+                        {
+                            <li class="nav-item">
+                                <a href="@Url.Action("Logout", "UserView")" class="nav-link">
+                                    Sign Out
+                                </a>
+                                </li>
+                        }
+                        else { 
                         <li class="nav-item">
                             <a href="@Url.Action("Index", "UserView")" class="nav-link">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
                         </li>
-
+                        }
                     </ul>
                 </div>
 

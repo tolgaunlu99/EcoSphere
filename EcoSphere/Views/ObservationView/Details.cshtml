@@ -22,6 +22,18 @@
 
                 <dt class="col-sm-3">Longitude</dt>
                 <dd class="col-sm-9">@Model.Long</dd>
+
+                <dt class="col-sm-3">Image</dt>
+                <dd class="col-sm-9">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="~/uploads/@Model.ImagePath" alt="Observation Image" class="img-thumbnail" style="max-width: 300px; height: auto;" />
+                    }
+                    else
+                    {
+                        <span>No image available</span>
+                    }
+                </dd>
             </dl>
             <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
         </div>

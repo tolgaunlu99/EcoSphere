@@ -73,12 +73,9 @@
                             <td>@obs.SeenTime</td>
                             <td>@obs.CreationDate</td>
                             <td style="text-align:center;">
-                                <a asp-action="Edit" asp-route-id="@obs.Id" class="btn btn-sm btn-primary dt-edit me-1">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@obs.Id" class="btn btn-sm btn-danger dt-delete">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
+                                <button type="button" data-id="@obs.Id" class="btn btn-sm btn-danger dt-delete">
+                                    <span class="glyphicon glyphicon-remove"></span> Sil
+                                </button>
                             </td>
                         </tr>
                     }
@@ -115,40 +112,60 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
     <script>
-        $(document).ready(function() {
-          var table = $('#observationTable').DataTable({
-            language: { lengthMenu: 'Show _MENU_' },
-            dom: '<"table-header d-flex justify-content-between mb-3"<"dt-buttons btn-group"B><"table-controls d-flex align-items-center"<"me-2"l><"table-search"f>>>rtip',
-            scrollX: true,
-            paging: true,
-            autoWidth: false,
-            columnDefs: [{ orderable: false, targets: -1 }],
-            buttons: [
-              {
-                extend: 'colvis',
-                text: 'Columns',
-                collectionLayout: 'fixed two-column' // veya 'three-column'
-              },
-              'copyHtml5',
-              'csvHtml5',
-              'excelHtml5',
-              'pdfHtml5',
-              'print'
-            ]
-          });
+        $(document).ready(function () {
+            var table = $('#observationTable').DataTable({
+                language: { lengthMenu: 'Show _MENU_' },
+                dom: '<"table-header d-flex justify-content-between mb-3"<"dt-buttons btn-group"B><"table-controls d-flex align-items-center"<"me-2"l><"table-search"f>>>rtip',
+                scrollX: true,
+                paging: true,
+                autoWidth: false,
+                columnDefs: [{ orderable: false, targets: -1 }],
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        text: 'Columns',
+                        collectionLayout: 'fixed two-column'
+                    },
+                    'copyHtml5',
+                    'csvHtml5',
+                    'excelHtml5',
+                    'pdfHtml5',
+                    'print'
+                ]
+            });
 
-          // Edit/Delete handlers
-          $('#observationTable').on('click', '.dt-delete', function(e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            if (confirm('Are you sure you want to delete this observation?')) {
-              window.location = url;
-            }
-          });
-          $('#observationTable').on('click', '.dt-edit', function(e) {
-            e.preventDefault();
-            window.location = $(this).attr('href');
-          });
+            // Delete handler - sadece AJAX ile çalışacak şekilde
+            $('#observationTable').on('click', '.dt-delete', function (e) {
+                e.preventDefault(); // yönlendirmeyi engelle
+                var button = $(this);
+                var id = button.data('id');
+
+                if (confirm("Bu gözlemi silmek istediğinize emin misiniz?")) {
+                    $.ajax({
+                        url: '/ObservationView/Delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                var row = button.closest('tr');
+                                table.row(row).remove().draw();
+                                alert("Gözlem başarıyla silindi.");
+                            } else {
+                                alert("Silme işlemi başarısız: " + response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("Bir hata oluştu.");
+                        }
+                    });
+                }
+            });
+
+            // Edit handler (isteğe bağlı)
+            $('#observationTable').on('click', '.dt-edit', function (e) {
+                e.preventDefault();
+                window.location = $(this).attr('href');
+            });
         });
     </script>
 }

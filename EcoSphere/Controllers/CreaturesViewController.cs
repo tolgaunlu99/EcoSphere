@@ -20,44 +20,75 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var creaturesWithNames = from c in _context.TblCreatures
-                                     join ur in _context.TblUpperrealms on c.UpperRealmId equals ur.RealmId
-                                     join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
-                                     join p in _context.TblPhylums on c.PhylumId equals p.PhylumId
-                                     join cl in _context.TblClasses on c.ClassId equals cl.ClassId
-                                     join o in _context.TblOrders on c.OrderId equals o.OrderId
-                                     join f in _context.TblFamilies on c.FamilyId equals f.FamilyId
-                                     join g in _context.TblGenus on c.GenusId equals g.GenusId
-                                     join s in _context.TblSpecies on c.SpeciesId equals s.SpeciesId
-                                     join ss in _context.TblSubspecies on c.SubspeciesId equals ss.SubspeciesId
-                                     join i in _context.TblIucns on c.IucnId equals i.IucnId
-                                     join a in _context.TblSpeciesauthors on c.AuthorId equals a.AuthorId
-                                     select new CreaturesViewModel
-                                     {
-                                         CreatureId = c.CreatureId,
-                                         UpperRealmName = ur.RealmName,
-                                         KingdomName = k.KingdomName,
-                                         PhylumName = p.PhylumName,
-                                         ClassName = cl.ClassName,
-                                         OrderName = o.OrderName,
-                                         FamilyName = f.FamilyName,
-                                         GenusName = g.GenusName,
-                                         SpeciesName = s.SpeciesName,
-                                         SubspeciesName = ss.SubspeciesName,
-                                         IucnCode = i.IucnCode,
-                                         AuthorName = a.AuthorName,
-                                         ScientificName = c.ScientificName,
-                                         CommonName = c.CommonName
-                                     };
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
+            int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            var viewModel = await creaturesWithNames.ToListAsync();
-            return View(viewModel);
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2)) // 1=Admin, 2=Expert
+            {
+                return RedirectToAction("AccessDenied", "UserView");
+            }
+                
+                var creaturesWithNames = from c in _context.TblCreatures
+                                         join ur in _context.TblUpperrealms on c.UpperRealmId equals ur.RealmId
+                                         join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
+                                         join p in _context.TblPhylums on c.PhylumId equals p.PhylumId
+                                         join cl in _context.TblClasses on c.ClassId equals cl.ClassId
+                                         join o in _context.TblOrders on c.OrderId equals o.OrderId
+                                         join f in _context.TblFamilies on c.FamilyId equals f.FamilyId
+                                         join g in _context.TblGenus on c.GenusId equals g.GenusId
+                                         join s in _context.TblSpecies on c.SpeciesId equals s.SpeciesId
+                                         join ss in _context.TblSubspecies on c.SubspeciesId equals ss.SubspeciesId
+                                         join i in _context.TblIucns on c.IucnId equals i.IucnId
+                                         join a in _context.TblSpeciesauthors on c.AuthorId equals a.AuthorId
+                                         select new CreaturesViewModel
+                                         {
+                                             CreatureId = c.CreatureId,
+                                             UpperRealmName = ur.RealmName,
+                                             KingdomName = k.KingdomName,
+                                             PhylumName = p.PhylumName,
+                                             ClassName = cl.ClassName,
+                                             OrderName = o.OrderName,
+                                             FamilyName = f.FamilyName,
+                                             GenusName = g.GenusName,
+                                             SpeciesName = s.SpeciesName,
+                                             SubspeciesName = ss.SubspeciesName,
+                                             IucnCode = i.IucnCode,
+                                             AuthorName = a.AuthorName,
+                                             ScientificName = c.ScientificName,
+                                             CommonName = c.CommonName
+                                         };
+
+                var viewModel = await creaturesWithNames.ToListAsync();
+                return View(viewModel);
+            }
+        
+        private int GetCurrentUserRoleId()
+        {
+            var userId = HttpContext.Session.GetInt32("UserID");
+
+            if (userId.HasValue)
+            {
+                var userRole = _context.TblUserRoles
+                                       .FirstOrDefault(ur => ur.UserId == userId.Value);
+                return userRole?.RoleId ?? 0;  // Eğer kullanıcı yoksa, misafir için 0 döndür
+            }
+
+            return 0;  // Misafir rolü
         }
 
 
         [HttpGet]
         public IActionResult AddCreature()
         {
+            int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
+
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2)) // 1=Admin, 2=Expert
+            {
+                return RedirectToAction("AccessDenied", "UserView");
+            }
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
             var upperRealms = _context.TblUpperrealms
                 .Select(ur => new SelectListItem
                 {
@@ -185,6 +216,7 @@ namespace EcoSphere.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCreature(CreaturesViewModel model)
         {
+            
             if (ModelState.IsValid)
             {
 

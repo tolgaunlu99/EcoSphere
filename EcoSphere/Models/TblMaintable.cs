@@ -8,9 +8,6 @@ namespace EcoSphere.Models;
 
 public partial class TblMaintable
 {
-    //[Key]
-    //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    //[Column("ID")]  // veritabanındaki gerçek sütun adı
     public int Id { get; set; }
 
     public int? CreatureId { get; set; }
@@ -48,6 +45,7 @@ public partial class TblMaintable
     public string? Lat { get; set; }
 
     public string? Activity { get; set; }
+    public string? ImagePath { get; set; }
 
     public DateTime? SeenTime { get; set; }
 

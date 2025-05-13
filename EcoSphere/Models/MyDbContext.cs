@@ -352,7 +352,9 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("ID");
-
+            entity.Property(e => e.ImagePath)
+               .HasMaxLength(255)
+               .HasColumnName("ImagePath");
             entity.Property(e => e.Activity)
                 .HasMaxLength(50)
                 .HasColumnName("activity");
@@ -684,12 +686,12 @@ public partial class MyDbContext : DbContext
         modelBuilder.Entity<TblUserRole>(entity =>
         {
             entity.HasKey(e => e.UserRoleId);
+            entity.Property(e => e.UserRoleId)
+             .ValueGeneratedOnAdd()
+             .HasColumnName("User_Role_ID");
 
             entity.ToTable("tbl_user_roles");
 
-            entity.Property(e => e.UserRoleId)
-                .ValueGeneratedNever()
-                .HasColumnName("User_Role_ID");
             entity.Property(e => e.CreationDate)
                 .HasColumnType("datetime")
                 .HasColumnName("creation_date");

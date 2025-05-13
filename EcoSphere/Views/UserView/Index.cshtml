@@ -1,67 +1,93 @@
-﻿<!DOCTYPE html>
+﻿@model EcoSphere.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Login/Signup";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login/Signup Form</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 9999;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+        }
+
+        .alert-danger {
+            background-color: #dc3545;
+        }
+
+        .input-box input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+    </style>
 </head>
-
 <body>
-
     <div id="auth-container">
-        <!-- LOGIN -->
+        <!-- LOGIN FORM -->
         <div class="form-box login">
-            <form action="#">
+            <form id="login-form">
+                <input type="hidden" name="formAction" value="login" />
                 <h1>Login</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" name="Username" placeholder="Username" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" placeholder="Password" required>
-                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" name="Password" placeholder="Password" required />
                 </div>
-                <div class="forgot-link"><a href="#">Forgot Password?</a></div>
+                <div class="forgot-link"><a href='UserView/ForgotPassword'>Forgot Password?</a></div>
                 <button type="submit" class="btn">Login</button>
-                <p>or login with social platforms</p>
-                <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google'></i></a>
-                    <a href="#"><i class='bx bxl-facebook'></i></a>
-                    <a href="#"><i class='bx bxl-github'></i></a>
-                    <a href="#"><i class='bx bxl-linkedin'></i></a>
-                </div>
             </form>
         </div>
 
-        <!-- REGISTER -->
+        <!-- REGISTER FORM -->
         <div class="form-box register">
-            <form action="#">
+            <form id="register-form">
+                <input type="hidden" name="formAction" value="signup" />
                 <h1>Registration</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" name="Name" placeholder="Name" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="email" placeholder="Email" required>
+                    <input type="text" name="Surname" placeholder="Surname" required />
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" name="Username" placeholder="Username" required />
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" name="Email" placeholder="Email" required />
                     <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" placeholder="Password" required>
+                    <input type="password" name="Password" placeholder="Password" required />
                     <i class='bx bxs-lock-alt'></i>
                 </div>
                 <button type="submit" class="btn">Register</button>
-                <p>or register with social platforms</p>
-                <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google'></i></a>
-                    <a href="#"><i class='bx bxl-facebook'></i></a>
-                    <a href="#"><i class='bx bxl-github'></i></a>
-                    <a href="#"><i class='bx bxl-linkedin'></i></a>
-                </div>
             </form>
         </div>
 
-        <!-- TOGGLE PANELLER -->
+        <!-- TOGGLE PANEL -->
         <div class="toggle-box">
             <div class="toggle-panel toggle-left">
                 <h1>Hello, Welcome!</h1>
@@ -77,19 +103,55 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const container   = document.getElementById('auth-container');
-          const registerBtn = document.querySelector('.register-btn');
-          const loginBtn    = document.querySelector('.login-btn');
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('auth-container');
+            const registerBtn = document.querySelector('.register-btn');
+            const loginBtn = document.querySelector('.login-btn');
 
-          registerBtn.addEventListener('click', () => {
-            container.classList.add('active');
-          });
-          loginBtn.addEventListener('click', () => {
-            container.classList.remove('active');
-          });
+            registerBtn.addEventListener('click', () => {
+                container.classList.add('active');
+            });
+            loginBtn.addEventListener('click', () => {
+                container.classList.remove('active');
+            });
+
+            function showToast(message, type) {
+                const alert = document.createElement("div");
+                alert.className = "alert " + (type === "success" ? "alert-success" : "alert-danger");
+                alert.textContent = message;
+                document.body.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.transition = "opacity 0.5s ease";
+                    alert.style.opacity = 0;
+                    setTimeout(() => alert.remove(), 500);
+                }, 3000);
+            }
+
+            $('#login-form').on('submit', function (e) {
+                e.preventDefault();
+                $.post('@Url.Action("Index", "UserView")', $(this).serialize(), function (res) {
+                    if (res.success) {
+                        showToast(res.message, "success");
+                        setTimeout(() => window.location.href = res.redirectUrl, 1500);
+                    } else {
+                        showToast(res.message, "error");
+                    }
+                });
+            });
+
+            $('#register-form').on('submit', function (e) {
+                e.preventDefault();
+                $.post('@Url.Action("Index", "UserView")', $(this).serialize(), function (res) {
+                    if (res.success) {
+                        showToast(res.message, "success");
+                        $('#register-form')[0].reset();
+                    } else {
+                        showToast(res.message, "error");
+                    }
+                });
+            });
         });
     </script>
-
 </body>
 </html>

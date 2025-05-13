@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Create Observation";
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
 
 <h2>Yeni Gözlem Ekle</h2>
 
@@ -12,57 +18,85 @@
 </button>
 
 <!-- Form Başlangıcı -->
-<form asp-action="SubmitObservation" method="post">
+<form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
+    <div class="row mb-3">
+        <!-- Resim Önizleme Sol Tarafta -->
+        <div class="col-md-2 text-center">
+            <img id="imagePreview" src="#" alt="Önizleme" style="display:none; width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; padding: 4px;" />
+        </div>
+
+        <!-- File Input Sağ Tarafta -->
+        <div class="col-md-4">
+            <label for="ImageFile">Gözlem Görseli</label>
+            <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-4">
             <label asp-for="CreatureId"></label>
-            <select asp-for="CreatureId" class="form-control" asp-items="Model.CreatureNamed"></select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="UserId"></label>
-            <select asp-for="UserId" class="form-control" asp-items="Model.Usernamed"></select>
+            <select asp-for="CreatureId" class="form-control" asp-items="Model.CreatureNamed">
+                <option value="">-- Select Creature --</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label asp-for="GenderId"></label>
-            <select asp-for="GenderId" class="form-control" asp-items="Model.GenderNamed"></select>
+            <select asp-for="GenderId" class="form-control" asp-items="Model.GenderNamed">
+                <option value="">-- Select Gender --</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="MigrationStatusId"></label>
+            <select asp-for="MigrationStatusId" class="form-control" asp-items="Model.MigrationstatNamed">
+                <option value="">-- Select Migration Status --</option>
+            </select>
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-md-4">
-            <label asp-for="MigrationStatusId"></label>
-            <select asp-for="MigrationStatusId" class="form-control" asp-items="Model.MigrationstatNamed"></select>
-        </div>
-        <div class="col-md-4">
             <label asp-for="EndemicStatusId"></label>
-            <select asp-for="EndemicStatusId" class="form-control" asp-items="Model.EndemicstatNamed"></select>
+            <select asp-for="EndemicStatusId" class="form-control" asp-items="Model.EndemicstatNamed">
+                <option value="">-- Select Endemic Status --</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label asp-for="ProjectId"></label>
-            <select asp-for="ProjectId" class="form-control" asp-items="Model.ProjectNamed"></select>
+            <select asp-for="ProjectId" class="form-control" asp-items="Model.ProjectNamed">
+                <option value="">-- Select Project --</option>
+            </select>
+            <span asp-validation-for="ProjectId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="CitationId"></label>
+            <select asp-for="CitationId" class="form-control" asp-items="Model.CitationNamed">
+                <option value="">-- Select Citation --</option>
+            </select>
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-md-4">
-            <label asp-for="CitationId"></label>
-            <select asp-for="CitationId" class="form-control" asp-items="Model.CitationNamed"></select>
-        </div>
-        <div class="col-md-4">
             <label asp-for="ReferenceId"></label>
-            <select asp-for="ReferenceId" class="form-control" asp-items="Model.ReferenceNamed"></select>
+            <select asp-for="ReferenceId" class="form-control" asp-items="Model.ReferenceNamed">
+                <option value="">-- Select Reference --</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label asp-for="LocationTypeId"></label>
-            <select asp-for="LocationTypeId" class="form-control" asp-items="Model.LocationtypeNamed"></select>
+            <select asp-for="LocationTypeId" class="form-control" asp-items="Model.LocationtypeNamed">
+                <option value="">-- Select Location Type --</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="LocationRangeId"></label>
+            <select asp-for="LocationRangeId" class="form-control" asp-items="Model.LocationRangeNamed">
+                <option value="">-- Select Location Range --</option>
+            </select>
         </div>
     </div>
 
     <div class="row mt-3">
-        <div class="col-md-4">
-            <label asp-for="LocationRangeId"></label>
-            <select asp-for="LocationRangeId" class="form-control" asp-items="Model.LocationRangeNamed"></select>
-        </div>
         <div class="col-md-4">
             <label asp-for="Activity"></label>
             <input asp-for="Activity" class="form-control" />
@@ -72,6 +106,7 @@
             <input asp-for="SeenTime" class="form-control" type="datetime-local" />
         </div>
     </div>
+    
 
     <!-- Gizli alanlar (Koordinat ve İl/İlçe) -->
     <input type="hidden" id="LongInput" name="Long" />
@@ -199,5 +234,20 @@
                 }
             });
         });
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById("imagePreview");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 }

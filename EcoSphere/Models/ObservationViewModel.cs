@@ -61,6 +61,12 @@ namespace EcoSphere.Models
 
         [DisplayName("Activiy")]
         public string? Activity { get; set; }
+        
+        [DisplayName("Image File")]
+        public IFormFile? ImageFile { get; set; }
+
+        [DisplayName("Image Path")]
+        public string? ImagePath { get; set; }
 
         [DisplayName("Seen Time")]
         public DateTime? SeenTime { get; set; }

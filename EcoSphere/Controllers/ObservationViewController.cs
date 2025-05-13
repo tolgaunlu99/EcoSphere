@@ -20,6 +20,14 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchTerm = "")
         {
+            int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
+
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId !=3)) // 1=Admin, 2=Expert
+            {
+                return RedirectToAction("AccessDenied", "UserView");
+            }
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
             var observationsWithNames =
                 from m in _context.TblMaintables
                 join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
@@ -82,18 +90,55 @@ namespace EcoSphere.Controllers
             var viewModel = await observationsWithNames.ToListAsync();
             return View(viewModel);
         }
+        private int GetCurrentUserRoleId()
+        {
+            var userId = HttpContext.Session.GetInt32("UserID");
+
+            if (userId.HasValue)
+            {
+                var userRole = _context.TblUserRoles
+                                       .FirstOrDefault(ur => ur.UserId == userId.Value);
+                return userRole?.RoleId ?? 0;  // Eğer kullanıcı yoksa, misafir için 0 döndür
+            }
+
+            return 0;  // Misafir rolü
+        }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
         {
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
+
             if (!ModelState.IsValid)
             {
                 model.CreatureNamed = _context.TblCreatures.Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName }).ToList();
                 model.Usernamed = _context.TblUsers.Select(x => new SelectListItem { Value = x.UserId.ToString(), Text = x.Name }).ToList();
                 model.RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList();
                 return View("AddObservation", model);
+            }
+
+            string? savedFileName = null;
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                // Benzersiz dosya adı oluştur
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                savedFileName = uniqueFileName; // Veritabanına sadece dosya adını kaydedeceğiz
             }
 
             var province = await _context.TblProvinces.FirstOrDefaultAsync(p => p.ProvinceName == model.HiddenProvinceName);
@@ -105,10 +150,13 @@ namespace EcoSphere.Controllers
                 return View("AddObservation", model);
             }
 
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;
+
             var newObs = new TblMaintable
             {
                 CreatureId = model.CreatureId,
-                UserId = model.UserId,
+                UserId = userId,
                 CityId = province.ProvinceId,
                 DistrictId = district.DistrictId,
                 Long = model.Long,
@@ -126,23 +174,41 @@ namespace EcoSphere.Controllers
                 ReferenceId = model.ReferenceId,
                 LocationTypeId = model.LocationTypeId,
                 LocationRangeId = model.LocationRangeId,
-                GenderId = model.GenderId
+                GenderId = model.GenderId,
+                ImagePath = savedFileName // sadece dosya adı (örneğin: abc123.jpg)
             };
 
             _context.TblMaintables.Add(newObs);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Observation added successfully.";
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = username + " adlı kullanıcı " + newObs.Id + " ID'li gözlemi ekledi!",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(action);
+            _context.SaveChanges();
+
             return RedirectToAction("AddObservation");
         }
 
         [HttpGet]
         public IActionResult AddObservation()
         {
+            int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
+
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3)) // 1=Admin, 2=Expert , 3=Observer
+            {
+                return RedirectToAction("AccessDenied", "UserView");
+            }
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
             var model = new ObservationViewModel
             {
                 CreatureNamed = _context.TblCreatures.Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName }).ToList(),
-                Usernamed = _context.TblUsers.Select(x => new SelectListItem { Value = x.UserId.ToString(), Text = x.Name }).ToList(),
                 RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList(),
                 MigrationstatNamed = _context.TblMigrationstatuses.Select(x => new SelectListItem { Value = x.MigrationStatusId.ToString(), Text = x.MigrationStatusName }).ToList(),
                 EndemicstatNamed = _context.TblEndemicstatuses.Select(x => new SelectListItem { Value = x.EndemicStatusId.ToString(), Text = x.EndemicStatus }).ToList(),
@@ -156,48 +222,72 @@ namespace EcoSphere.Controllers
 
             return View(model);
         }
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetCitysByRegion(int RegionID)
+        [HttpPost]
+        public JsonResult Delete(int id)
         {
-            var cities = await _context.TblProvinces
-                .Where(k => k.RegionId == RegionID)
-                .Select(x => new SelectListItem(x.ProvinceName, x.ProvinceId.ToString()))
-                .ToListAsync();
-            return Json(cities);
+            var obs = _context.TblMaintables.FirstOrDefault(o => o.Id == id);
+            if (obs == null)
+            {
+                return Json(new { success = false, message = "Kayıt bulunamadı." });
+            }
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;          
+
+            _context.TblMaintables.Remove(obs);
+            _context.SaveChanges();
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = id + "'li Kayıt " + username + " tarafından Silindi",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(action);
+            _context.SaveChanges();
+
+            return Json(new { success = true });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDistrictsByCity(int CityID)
-        {
-            var districts = await _context.TblDistricts
-                .Where(k => k.ProvinceId == CityID)
-                .Select(x => new SelectListItem(x.DistrictName, x.DistrictId.ToString()))
-                .ToListAsync();
-            return Json(districts);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetLocalitiesByDistrict(int DistrictID)
-        {
-            var localities = await _context.TblLocalities
-                .Where(k => k.DistrictId == DistrictID)
-                .Select(x => new SelectListItem(x.LocalityName, x.LocalityId.ToString()))
-                .ToListAsync();
-            return Json(localities);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetCitysByRegion(int RegionID)
+        //{
+        //    var cities = await _context.TblProvinces
+        //        .Where(k => k.RegionId == RegionID)
+        //        .Select(x => new SelectListItem(x.ProvinceName, x.ProvinceId.ToString()))
+        //        .ToListAsync();
+        //    return Json(cities);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetNeighbourhoodsByLocality(int LocalityID)
-        {
-            var hoods = await _context.TblNeighbourhoods
-                .Where(k => k.LocalityId == LocalityID)
-                .Select(x => new SelectListItem(x.HoodName, x.NeighbourhoodId.ToString()))
-                .ToListAsync();
-            return Json(hoods);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetDistrictsByCity(int CityID)
+        //{
+        //    var districts = await _context.TblDistricts
+        //        .Where(k => k.ProvinceId == CityID)
+        //        .Select(x => new SelectListItem(x.DistrictName, x.DistrictId.ToString()))
+        //        .ToListAsync();
+        //    return Json(districts);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetLocalitiesByDistrict(int DistrictID)
+        //{
+        //    var localities = await _context.TblLocalities
+        //        .Where(k => k.DistrictId == DistrictID)
+        //        .Select(x => new SelectListItem(x.LocalityName, x.LocalityId.ToString()))
+        //        .ToListAsync();
+        //    return Json(localities);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetNeighbourhoodsByLocality(int LocalityID)
+        //{
+        //    var hoods = await _context.TblNeighbourhoods
+        //        .Where(k => k.LocalityId == LocalityID)
+        //        .Select(x => new SelectListItem(x.HoodName, x.NeighbourhoodId.ToString()))
+        //        .ToListAsync();
+        //    return Json(hoods);
+        //}
 
         [HttpGet]
         public IActionResult GetObservationsByProvince(string province)
@@ -241,8 +331,12 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
+
             var obs = (from m in _context.TblMaintables
                        join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                       join u in _context.TblUsers on m.UserId equals u.UserId
                        where m.Id == id
                        select new ObservationViewModel
                        {
@@ -251,14 +345,16 @@ namespace EcoSphere.Controllers
                            Long = m.Long,
                            Lat = m.Lat,
                            SeenTime = m.SeenTime,
-                           CreationDate = m.CreationDate
-                           // ihtiyacın olan diğer alanları da ekleyebilirsin
+                           CreationDate = m.CreationDate,
+                           ImagePath = m.ImagePath, // yalnızca dosya adı olmalı, örn: "abc.jpg"
+                           UserName = u.Name,
+                           UsersurName = u.Surname
                        }).FirstOrDefault();
 
             if (obs == null)
                 return NotFound();
 
-            return View(obs);  // Views/ObservationView/Details.cshtml olacak
+            return View(obs);
         }
 
 
