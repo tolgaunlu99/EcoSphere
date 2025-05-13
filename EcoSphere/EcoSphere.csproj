@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <None Remove="Views\CreaturesView\_Layout.cshtml.css" />
-    <None Remove="Views\ObservationView\AddObservation.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>

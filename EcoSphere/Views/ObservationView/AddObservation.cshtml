@@ -160,22 +160,86 @@
 
 @section Scripts {
     <script>
-        let coordinateMap, coordMarkerLayer, provinceFeatures = [], districtFeatures = [];
+        let coordinateMap, coordMarkerLayer, provinceFeatures = [], districtFeatures = [], countryBorderFeature = null;
 
         document.addEventListener("DOMContentLoaded", function () {
             if (!document.getElementById("coordinateMap")) return;
 
             const format = new ol.format.GeoJSON();
 
+            const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
+            const satelliteLayer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+                    attributions: '© Google'
+                })
+            });
+
             coordinateMap = new ol.Map({
                 target: 'coordinateMap',
-                layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+                layers: [osmLayer],
                 view: new ol.View({ center: ol.proj.fromLonLat([35.2433, 38.9637]), zoom: 6 })
             });
 
             coordMarkerLayer = new ol.layer.Vector({ source: new ol.source.Vector() });
             coordinateMap.addLayer(coordMarkerLayer);
 
+            // Toggle uydu görünümü butonu
+            const layerToggleBtn = document.createElement("button");
+            layerToggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
+            layerToggleBtn.className = "satellite-toggle";
+            layerToggleBtn.style.position = "absolute";
+            layerToggleBtn.style.top = "10px";
+            layerToggleBtn.style.right = "10px";
+            layerToggleBtn.style.zIndex = "1000";
+            layerToggleBtn.style.backgroundColor = "white";
+            layerToggleBtn.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.3)";
+            layerToggleBtn.style.fontSize = "0.9rem";
+            layerToggleBtn.style.border = "none";
+            layerToggleBtn.style.padding = "6px 10px";
+            layerToggleBtn.style.borderRadius = "6px";
+            document.getElementById("coordinateMap").appendChild(layerToggleBtn);
+
+            let isSatellite = false;
+            layerToggleBtn.addEventListener("click", function () {
+                if (isSatellite) {
+                    coordinateMap.removeLayer(satelliteLayer);
+                    coordinateMap.addLayer(osmLayer);
+                    layerToggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
+                } else {
+                    coordinateMap.removeLayer(osmLayer);
+                    coordinateMap.addLayer(satelliteLayer);
+                    layerToggleBtn.innerHTML = `<i class="fas fa-map"></i> Harita Görünümü`;
+                }
+                isSatellite = !isSatellite;
+            });
+
+            // Türkiye sınırı yükle
+            
+
+
+            fetch("/data/TR_ulke_siniri.geojson")
+        .then(res => res.json())
+        .then(countryData => {
+            const features = format.readFeatures(countryData, {
+                featureProjection: coordinateMap.getView().getProjection()
+            });
+
+            const geometries = features.map(f => f.getGeometry());
+            if (geometries.length > 1) {
+                // Eğer birden fazla geometri varsa birleşim yapılabilir
+                // OpenLayers'ta union desteği yoksa, ilk geometriyi kullan
+                countryBorderGeometry = new ol.geom.MultiPolygon(
+                    geometries.map(g => g.getCoordinates())
+                );
+            } else {
+                countryBorderGeometry = geometries[0];
+            }
+        });
+
+
+
+            // İl ve ilçe sınırları yükle
             Promise.all([
                 fetch("/data/TR_iller.geojson").then(res => res.json()),
                 fetch("/data/ilceler.geojson").then(res => res.json())
@@ -189,6 +253,18 @@
             });
 
             coordinateMap.on("click", function (evt) {
+                // Türkiye sınırı kontrolü
+                        if (!countryBorderGeometry) {
+            alert("Türkiye sınırları henüz yüklenmedi.");
+            return;
+        }
+
+        if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
+            alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
+            return;
+        }
+
+
                 const coord = ol.proj.toLonLat(evt.coordinate);
                 const lon = coord[0].toFixed(6);
                 const lat = coord[1].toFixed(6);

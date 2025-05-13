@@ -1,0 +1,15 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "font-awesome@6.4.0",
+      "destination": "wwwroot/lib/font-awesome"
+    },
+    {
+      "provider": "unpkg",
+      "library": "startbootstrap-sb-admin@7.0.7",
+      "destination": "wwwroot/lib/sb-admin"
+    }
+  ]
+}
