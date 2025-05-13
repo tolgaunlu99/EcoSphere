@@ -33,4 +33,15 @@ public class AdminController : Controller
 
         return 0;  // Misafir rolü
     }
+    public IActionResult UserManagement()
+    {
+        var roleID = GetCurrentUserRoleId();
+        ViewBag.UserRoleId = roleID;
+        int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
+        if (UserroleId == null || UserroleId != 1)  // 1=Admin
+        {
+            return RedirectToAction("AccessDenied", "UserView");
+        }
+        return View();
+    }
 }
