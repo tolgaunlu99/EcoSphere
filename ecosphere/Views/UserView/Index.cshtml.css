@@ -1,0 +1,277 @@
+﻿/* auth-form.css */
+
+/* Reset ve temel ayarlar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Body arkaplanı ve ortalama */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+}
+
+/* Form wrapper scope’u */
+#auth-container {
+    position: relative;
+    width: 850px;
+    height: 550px;
+    background: #fff;
+    margin: 20px auto;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+    /* Başlık ve paragraf stilleri */
+    #auth-container h1 {
+        font-size: 36px;
+        margin: -10px 0;
+    }
+
+    #auth-container p {
+        font-size: 14.5px;
+        margin: 15px 0;
+    }
+
+    /* Formların genel stili */
+    #auth-container form {
+        width: 100%;
+    }
+
+/* Form kutuları (login/register) */
+.form-box {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+    transition: .6s ease-in-out 1.2s, visibility 0s 1s;
+}
+
+/* Başlangıçta login göster, register soldan tamamen gizle */
+    .form-box.login {
+        left: 0;
+        transform: translateX(100%); /* Ekranın sol yarısında */
+        pointer-events: all;
+    }
+
+    .form-box.register {
+        left: 50%;
+        transform: translateX(0); /* Sağ yarıya kaydır ve dışarı taşı */
+        opacity: 0;
+        pointer-events: none;
+    }
+
+/* ACTIVE durumunda; login sola çıkar, register ortaya gelsin */
+#auth-container.active .form-box.login {
+    transform: translateX(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#auth-container.active .form-box.register {
+    transform: translateX(-100%);
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Input kutuları */
+.input-box {
+    position: relative;
+    margin: 30px 0;
+}
+
+    .input-box input {
+        width: 100%;
+        padding: 13px 50px 13px 20px;
+        background: #eee;
+        border: none;
+        outline: none;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .input-box i {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+    }
+
+/* Unutulan parola linki */
+.forgot-link {
+    margin: -15px 0 15px;
+}
+
+    .forgot-link a {
+        font-size: 14.5px;
+        color: #333;
+    }
+
+/* Buton stili */
+.btn {
+    width: 100%;
+    height: 48px;
+    background: #286107;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Sosyal ikonlar */
+.social-icons {
+    display: flex;
+    justify-content: center;
+}
+
+    .social-icons a {
+        padding: 10px;
+        margin: 0 8px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        font-size: 24px;
+        color: #333;
+    }
+
+/* Toggle panel arka planı */
+.toggle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+    .toggle-box::before {
+        content: '';
+        position: absolute;
+        left: -250%;
+        width: 300%;
+        height: 100%;
+        background: #286107;
+        border-radius: 150px;
+        z-index: 2;
+        transition: 1.8s ease-in-out;
+    }
+
+#auth-container.active .toggle-box::before {
+    left: 50%;
+}
+
+/* Sol/Sağ paneller */
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    z-index: 2;
+    transition: .6s ease-in-out;
+}
+
+    .toggle-panel.toggle-left {
+        left: 0;
+        transition-delay: 1.2s;
+    }
+
+#auth-container.active .toggle-panel.toggle-left {
+    left: -50%;
+    transition-delay: .6s;
+}
+
+.toggle-panel.toggle-right {
+    right: -50%;
+    transition-delay: .6s;
+}
+
+#auth-container.active .toggle-panel.toggle-right {
+    right: 0;
+    transition-delay: 1.2s;
+}
+
+.toggle-panel .btn {
+    width: 160px;
+    height: 46px;
+    background: transparent;
+    border: 2px solid #fff;
+    box-shadow: none;
+}
+
+/* Responsive breakpoint’ler */
+@media screen and (max-width: 650px) {
+    #auth-container {
+        height: calc(100vh - 40px);
+    }
+
+    .form-box {
+        bottom: 0;
+        width: 100%;
+        height: 70%;
+    }
+
+    .toggle-box::before {
+        left: 0;
+        top: -270%;
+        width: 100%;
+        height: 300%;
+        border-radius: 20vw;
+    }
+
+    #auth-container.active .toggle-box::before {
+        left: 0;
+        top: 70%;
+    }
+
+    #auth-container.active .toggle-panel.toggle-left {
+        left: 0;
+        top: -30%;
+    }
+
+    .toggle-panel {
+        width: 100%;
+        height: 30%;
+    }
+
+        .toggle-panel.toggle-left {
+            top: 0;
+        }
+
+        .toggle-panel.toggle-right {
+            right: 0;
+            bottom: -30%;
+        }
+
+    #auth-container.active .toggle-panel.toggle-right {
+        bottom: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .form-box {
+        padding: 20px;
+    }
+
+    .toggle-panel h1 {
+        font-size: 30px;
+    }
+}

@@ -3,6 +3,88 @@
         console.error("OpenLayers yüklenemedi!");
         return;
     }
+
+    // ── Form dropdown bağlılıkları ─────────────────────────────
+    const regionDropdown = document.getElementById('RegionDropdown');
+    const provinceDropdown = document.getElementById('ProvinceDropdown');
+    const districtDropdown = document.getElementById('DistrictDropdown');
+    const localityDropdown = document.getElementById('LocalityDropdown');
+    const neighborhoodDropdown = document.getElementById('NeighborhoodDropdown');
+
+    if (regionDropdown && provinceDropdown) {
+        regionDropdown.addEventListener('change', function () {
+            const regionID = this.value;
+            fetch(`/ObservationView/GetCitysByRegion?RegionID=${regionID}`)
+                .then(res => res.json())
+                .then(data => {
+                    provinceDropdown.innerHTML = '<option value="">Select City</option>';
+                    data.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.value;
+                        opt.textContent = p.text;
+                        provinceDropdown.appendChild(opt);
+                    });
+                    if (districtDropdown) districtDropdown.innerHTML = '<option value="">Select District</option>';
+                    if (localityDropdown) localityDropdown.innerHTML = '<option value="">Select Locality</option>';
+                    if (neighborhoodDropdown) neighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
+                });
+        });
+    }
+
+    if (provinceDropdown && districtDropdown) {
+        provinceDropdown.addEventListener('change', function () {
+            const cityID = this.value;
+            fetch(`/ObservationView/GetDistrictsByCity?CityID=${cityID}`)
+                .then(res => res.json())
+                .then(data => {
+                    districtDropdown.innerHTML = '<option value="">Select District</option>';
+                    data.forEach(d => {
+                        const opt = document.createElement('option');
+                        opt.value = d.value;
+                        opt.textContent = d.text;
+                        districtDropdown.appendChild(opt);
+                    });
+                    if (localityDropdown) localityDropdown.innerHTML = '<option value="">Select Locality</option>';
+                    if (neighborhoodDropdown) neighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
+                });
+        });
+    }
+
+    if (districtDropdown && localityDropdown) {
+        districtDropdown.addEventListener('change', function () {
+            const districtID = this.value;
+            fetch(`/ObservationView/GetLocalitiesByDistrict?DistrictID=${districtID}`)
+                .then(res => res.json())
+                .then(data => {
+                    localityDropdown.innerHTML = '<option value="">Select Locality</option>';
+                    data.forEach(l => {
+                        const opt = document.createElement('option');
+                        opt.value = l.value;
+                        opt.textContent = l.text;
+                        localityDropdown.appendChild(opt);
+                    });
+                    if (neighborhoodDropdown) neighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
+                });
+        });
+    }
+
+    if (localityDropdown && neighborhoodDropdown) {
+        localityDropdown.addEventListener('change', function () {
+            const localityID = this.value;
+            fetch(`/ObservationView/GetNeighbourhoodsByLocality?LocalityID=${localityID}`)
+                .then(res => res.json())
+                .then(data => {
+                    neighborhoodDropdown.innerHTML = '<option value="">Select Neighborhood</option>';
+                    data.forEach(n => {
+                        const opt = document.createElement('option');
+                        opt.value = n.value;
+                        opt.textContent = n.text;
+                        neighborhoodDropdown.appendChild(opt);
+                    });
+                });
+        });
+    }
+
     if (!document.getElementById("map")) return;
 
     // ── Loader kontrol fonksiyonları ──────────────────────────

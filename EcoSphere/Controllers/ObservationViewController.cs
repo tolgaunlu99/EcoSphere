@@ -20,47 +20,56 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchTerm = "")
         {
-            var observationsWithNames = from m in _context.TblMaintables
-                                        join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                                        join u in _context.TblUsers on m.UserId equals u.UserId
-                                        join r in _context.TblRegions on m.RegionId equals r.RegionId
-                                        join p in _context.TblProvinces on m.CityId equals p.ProvinceId
-                                        join d in _context.TblDistricts on m.DistrictId equals d.DistrictId
-                                        join l in _context.TblLocalities on m.LocalityId equals l.LocalityId
-                                        join n in _context.TblNeighbourhoods on m.NeighborhoodId equals n.NeighbourhoodId
-                                        join ms in _context.TblMigrationstatuses on m.MigrationStatusId equals ms.MigrationStatusId
-                                        join es in _context.TblEndemicstatuses on m.EndemicStatusId equals es.EndemicStatusId
-                                        join pr in _context.TblProjects on m.ProjectId equals pr.ProjectId
-                                        join ci in _context.TblCitations on m.CitationId equals ci.CitationId
-                                        join re in _context.TblReferences on m.ReferenceId equals re.ReferenceId
-                                        join lt in _context.TblLocationtypes on m.LocationTypeId equals lt.LocationTypeId
-                                        join lr in _context.TblLocationranges on m.LocationRangeId equals lr.LocationRangeId
-                                        join g in _context.TblGenders on m.GenderId equals g.GenderId
-                                        select new ObservationViewModel
-                                        {
-                                            Id = m.Id,
-                                            CreatureName = c.ScientificName,
-                                            UserName = u.Name,
-                                            UsersurName = u.Surname,
-                                            RegionName = r.RegionName,
-                                            provincename = p.ProvinceName,
-                                            DistrictName = d.DistrictName,
-                                            LocalityName = l.LocalityName,
-                                            HoodName = n.HoodName,
-                                            MigrationStatName = ms.MigrationStatusName,
-                                            EndemicStatName = es.EndemicStatus,
-                                            ProjectName = pr.ProjectName,
-                                            CitationName = ci.CitationName,
-                                            ReferenceName = re.ReferenceName,
-                                            LocationType = lt.LocationType,
-                                            LocationRange = lr.LocationRangeValue,
-                                            GenderName = g.GenderName,
-                                            Long = m.Long,
-                                            Lat = m.Lat,
-                                            Activity = m.Activity,
-                                            SeenTime = m.SeenTime,
-                                            CreationDate = m.CreationDate
-                                        };
+            var observationsWithNames =
+                from m in _context.TblMaintables
+                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                join u in _context.TblUsers on m.UserId equals u.UserId
+                join p in _context.TblProvinces on m.CityId equals p.ProvinceId
+                join d in _context.TblDistricts on m.DistrictId equals d.DistrictId
+                join ms in _context.TblMigrationstatuses on m.MigrationStatusId equals ms.MigrationStatusId
+                join es in _context.TblEndemicstatuses on m.EndemicStatusId equals es.EndemicStatusId
+                join pr in _context.TblProjects on m.ProjectId equals pr.ProjectId
+                join ci in _context.TblCitations on m.CitationId equals ci.CitationId
+                join re in _context.TblReferences on m.ReferenceId equals re.ReferenceId
+                join lt in _context.TblLocationtypes on m.LocationTypeId equals lt.LocationTypeId
+                join lr in _context.TblLocationranges on m.LocationRangeId equals lr.LocationRangeId
+                join g in _context.TblGenders on m.GenderId equals g.GenderId
+
+                // LEFT JOIN yapılan kısımlar
+                join r in _context.TblRegions on m.RegionId equals r.RegionId into regionGroup
+                from r in regionGroup.DefaultIfEmpty()
+
+                join l in _context.TblLocalities on m.LocalityId equals l.LocalityId into localityGroup
+                from l in localityGroup.DefaultIfEmpty()
+
+                join n in _context.TblNeighbourhoods on m.NeighborhoodId equals n.NeighbourhoodId into hoodGroup
+                from n in hoodGroup.DefaultIfEmpty()
+
+                select new ObservationViewModel
+                {
+                    Id = m.Id,
+                    CreatureName = c.ScientificName,
+                    UserName = u.Name,
+                    UsersurName = u.Surname,
+                    RegionName = r != null ? r.RegionName : "",
+                    provincename = p.ProvinceName,
+                    DistrictName = d.DistrictName,
+                    LocalityName = l != null ? l.LocalityName : "",
+                    HoodName = n != null ? n.HoodName : "",
+                    MigrationStatName = ms.MigrationStatusName,
+                    EndemicStatName = es.EndemicStatus,
+                    ProjectName = pr.ProjectName,
+                    CitationName = ci.CitationName,
+                    ReferenceName = re.ReferenceName,
+                    LocationType = lt.LocationType,
+                    LocationRange = lr.LocationRangeValue,
+                    GenderName = g.GenderName,
+                    Long = m.Long,
+                    Lat = m.Lat,
+                    Activity = m.Activity,
+                    SeenTime = m.SeenTime,
+                    CreationDate = m.CreationDate
+                };
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -74,90 +83,6 @@ namespace EcoSphere.Controllers
             return View(viewModel);
         }
 
-        public IActionResult AddObservation()
-        {
-            var model = new ObservationViewModel
-            {
-                CreatureNamed = _context.TblCreatures
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.CreatureId.ToString(),
-                        Text = x.ScientificName
-                    }).ToList(),
-
-                Usernamed = _context.TblUsers
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.UserId.ToString(),
-                        Text = x.Name
-                    }).ToList(),
-
-                RegionNamed = _context.TblRegions
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.RegionId.ToString(),
-                        Text = x.RegionName
-                    }).ToList(),
-
-                MigrationstatNamed = _context.TblMigrationstatuses
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.MigrationStatusId.ToString(),
-                        Text = x.MigrationStatusName
-                    }).ToList(),
-
-                EndemicstatNamed = _context.TblEndemicstatuses
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.EndemicStatusId.ToString(),
-                        Text = x.EndemicStatus
-                    }).ToList(),
-
-                ProjectNamed = _context.TblProjects
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.ProjectId.ToString(),
-                        Text = x.ProjectName
-                    }).ToList(),
-
-                CitationNamed = _context.TblCitations
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.CitationId.ToString(),
-                        Text = x.CitationName
-                    }).ToList(),
-
-                ReferenceNamed = _context.TblReferences
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.ReferenceId.ToString(),
-                        Text = x.ReferenceName
-                    }).ToList(),
-
-                LocationtypeNamed = _context.TblLocationtypes
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.LocationTypeId.ToString(),
-                        Text = x.LocationType
-                    }).ToList(),
-
-                LocationRangeNamed = _context.TblLocationranges
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.LocationRangeId.ToString(),
-                        Text = x.LocationRangeValue
-                    }).ToList(),
-
-                GenderNamed = _context.TblGenders
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.GenderId.ToString(),
-                        Text = x.GenderName
-                    }).ToList()
-            };
-
-            return View(model);
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -165,18 +90,18 @@ namespace EcoSphere.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Dropdown list’lerin tekrar dolması için:
-                model.CreatureNamed = _context.TblCreatures
-                    .Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName })
-                    .ToList();
-                model.Usernamed = _context.TblUsers
-                    .Select(x => new SelectListItem { Value = x.UserId.ToString(), Text = x.Name })
-                    .ToList();
-                model.RegionNamed = _context.TblRegions
-                    .Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName })
-                    .ToList();
-                // ... diğer dropdown’lar da aynı şekilde yeniden doldurulsun ...
+                model.CreatureNamed = _context.TblCreatures.Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName }).ToList();
+                model.Usernamed = _context.TblUsers.Select(x => new SelectListItem { Value = x.UserId.ToString(), Text = x.Name }).ToList();
+                model.RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList();
+                return View("AddObservation", model);
+            }
 
+            var province = await _context.TblProvinces.FirstOrDefaultAsync(p => p.ProvinceName == model.HiddenProvinceName);
+            var district = await _context.TblDistricts.FirstOrDefaultAsync(d => d.DistrictName == model.HiddenDistrictName);
+
+            if (province == null || district == null)
+            {
+                ModelState.AddModelError("", "Seçilen koordinat için il veya ilçe bulunamadı.");
                 return View("AddObservation", model);
             }
 
@@ -184,11 +109,16 @@ namespace EcoSphere.Controllers
             {
                 CreatureId = model.CreatureId,
                 UserId = model.UserId,
-                RegionId = model.RegionId,
-                CityId = model.CityId,
-                DistrictId = model.DistrictId,
-                LocalityId = model.LocalityId,
-                NeighborhoodId = model.NeighborhoodId,
+                CityId = province.ProvinceId,
+                DistrictId = district.DistrictId,
+                Long = model.Long,
+                Lat = model.Lat,
+                Activity = model.Activity,
+                SeenTime = model.SeenTime,
+                CreationDate = DateTime.UtcNow,
+                RegionId = null,
+                LocalityId = null,
+                NeighborhoodId = null,
                 MigrationStatusId = model.MigrationStatusId,
                 EndemicStatusId = model.EndemicStatusId,
                 ProjectId = model.ProjectId,
@@ -196,21 +126,36 @@ namespace EcoSphere.Controllers
                 ReferenceId = model.ReferenceId,
                 LocationTypeId = model.LocationTypeId,
                 LocationRangeId = model.LocationRangeId,
-                GenderId = model.GenderId,
-                Long = model.Long,
-                Lat = model.Lat,
-                Activity = model.Activity,
-                SeenTime = model.SeenTime,
-                CreationDate = DateTime.UtcNow
+                GenderId = model.GenderId
             };
 
             _context.TblMaintables.Add(newObs);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Observation added successfully.";
-            return RedirectToAction(nameof(AddObservation));
+            return RedirectToAction("AddObservation");
         }
 
+        [HttpGet]
+        public IActionResult AddObservation()
+        {
+            var model = new ObservationViewModel
+            {
+                CreatureNamed = _context.TblCreatures.Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName }).ToList(),
+                Usernamed = _context.TblUsers.Select(x => new SelectListItem { Value = x.UserId.ToString(), Text = x.Name }).ToList(),
+                RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList(),
+                MigrationstatNamed = _context.TblMigrationstatuses.Select(x => new SelectListItem { Value = x.MigrationStatusId.ToString(), Text = x.MigrationStatusName }).ToList(),
+                EndemicstatNamed = _context.TblEndemicstatuses.Select(x => new SelectListItem { Value = x.EndemicStatusId.ToString(), Text = x.EndemicStatus }).ToList(),
+                ProjectNamed = _context.TblProjects.Select(x => new SelectListItem { Value = x.ProjectId.ToString(), Text = x.ProjectName }).ToList(),
+                CitationNamed = _context.TblCitations.Select(x => new SelectListItem { Value = x.CitationId.ToString(), Text = x.CitationName }).ToList(),
+                ReferenceNamed = _context.TblReferences.Select(x => new SelectListItem { Value = x.ReferenceId.ToString(), Text = x.ReferenceName }).ToList(),
+                LocationtypeNamed = _context.TblLocationtypes.Select(x => new SelectListItem { Value = x.LocationTypeId.ToString(), Text = x.LocationType }).ToList(),
+                LocationRangeNamed = _context.TblLocationranges.Select(x => new SelectListItem { Value = x.LocationRangeId.ToString(), Text = x.LocationRangeValue }).ToList(),
+                GenderNamed = _context.TblGenders.Select(x => new SelectListItem { Value = x.GenderId.ToString(), Text = x.GenderName }).ToList()
+            };
+
+            return View(model);
+        }
 
 
 
