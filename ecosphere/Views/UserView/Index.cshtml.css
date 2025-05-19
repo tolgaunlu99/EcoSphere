@@ -1,4 +1,4 @@
-﻿/* auth-form.css */
+﻿
 
 /* Reset ve temel ayarlar */
 * {
@@ -22,7 +22,7 @@ body {
     position: relative;
     width: 850px;
     height: 550px;
-    background: #fff;
+    background: #0C2605;
     margin: 20px auto;
     border-radius: 30px;
     box-shadow: 0 0 30px rgba(0, 0, 0, .2);
@@ -51,10 +51,10 @@ body {
     right: 0;
     width: 50%;
     height: 100%;
-    background: #fff;
+    background: #0C2605;
     display: flex;
     align-items: center;
-    color: #333;
+    color: #fff;
     text-align: center;
     padding: 40px;
     z-index: 1;
@@ -92,18 +92,25 @@ body {
 .input-box {
     position: relative;
     margin: 30px 0;
+    color: #fff;
 }
 
     .input-box input {
         width: 100%;
         padding: 13px 50px 13px 20px;
-        background: #eee;
+        background: #548C1C;
         border: none;
         outline: none;
         border-radius: 8px;
         font-size: 16px;
-        color: #333;
+        color: #fff;
+        
     }
+
+        .input-box input::placeholder {
+            color: #fff;
+            opacity: 0.5;
+        }
 
     .input-box i {
         position: absolute;
@@ -120,14 +127,14 @@ body {
 
     .forgot-link a {
         font-size: 14.5px;
-        color: #333;
+        color: #fff;
     }
 
 /* Buton stili */
 .btn {
     width: 100%;
     height: 48px;
-    background: #286107;
+    background: #2E590E;
     border: none;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
@@ -137,26 +144,12 @@ body {
     font-weight: 600;
 }
 
-/* Sosyal ikonlar */
-.social-icons {
-    display: flex;
-    justify-content: center;
-}
-
-    .social-icons a {
-        padding: 10px;
-        margin: 0 8px;
-        border: 2px solid #ccc;
-        border-radius: 8px;
-        font-size: 24px;
-        color: #333;
-    }
-
 /* Toggle panel arka planı */
 .toggle-box {
     position: absolute;
     width: 100%;
     height: 100%;
+
 }
 
     .toggle-box::before {
@@ -165,7 +158,7 @@ body {
         left: -250%;
         width: 300%;
         height: 100%;
-        background: #286107;
+        background: #2E590E;
         border-radius: 150px;
         z-index: 2;
         transition: 1.8s ease-in-out;
