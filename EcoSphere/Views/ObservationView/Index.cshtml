@@ -5,17 +5,7 @@
 
 <div class="container obs-container mt-4">
     <h3>@ViewData["Title"]</h3>
-    <hr />
-
-    <!-- External Search Form (optional)
-    <form method="get" action="/ObservationView/Index" class="mb-3">
-        <div class="input-group">
-            <input type="text" id="searchTerm" name="searchTerm" value="@ViewData["SearchTerm"]" class="form-control" placeholder="Enter province or creature name..." />
-            <button type="submit" class="btn btn-outline-primary">Filter</button>
-            <button type="button" onclick="clearSearch()" class="btn btn-outline-secondary">Clear</button>
-        </div>
-    </form> 
-    -->
+    <hr />  
 
     <a href="/ObservationView/AddObservation" class="btn btn-create mb-3">Create Observation</a>
 
@@ -126,17 +116,63 @@
                         text: 'Columns',
                         collectionLayout: 'fixed two-column'
                     },
-                    'copyHtml5',
-                    'csvHtml5',
-                    'excelHtml5',
-                    'pdfHtml5',
-                    'print'
+                    {
+                        extend: 'copyHtml5',
+                        action: function (e, dt, button, config) {
+                            logExport('copy');
+                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        action: function (e, dt, button, config) {
+                            logExport('csv');
+                            $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        action: function (e, dt, button, config) {
+                            logExport('excel');
+                            $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        action: function (e, dt, button, config) {
+                            logExport('pdf');
+                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        action: function (e, dt, button, config) {
+                            logExport('print');
+                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
+                        }
+                    }
                 ]
             });
 
-            // Delete handler - sadece AJAX ile çalışacak şekilde
+            function logExport(type) {
+                $.ajax({
+                    url: '/ObservationView/LogUserExport',
+                    type: 'POST',
+                    data: { exportType: type, sourceTable: 'Observation' },
+                    success: function (res) {
+                        if (!res.success) {
+                            console.error("Export log kaydedilirken hata:", res.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Export log kaydedilirken hata:", error);
+                    }
+                });
+            }
+
+            // Delete handler
             $('#observationTable').on('click', '.dt-delete', function (e) {
-                e.preventDefault(); // yönlendirmeyi engelle
+                e.preventDefault();
                 var button = $(this);
                 var id = button.data('id');
 
@@ -159,12 +195,6 @@
                         }
                     });
                 }
-            });
-
-            // Edit handler (isteğe bağlı)
-            $('#observationTable').on('click', '.dt-edit', function (e) {
-                e.preventDefault();
-                window.location = $(this).attr('href');
             });
         });
     </script>

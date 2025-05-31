@@ -24,71 +24,100 @@ namespace EcoSphere.Controllers
             ViewBag.UserRoleId = roleID;
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2)) // 1=Admin, 2=Expert
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2))
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
-                
-                var creaturesWithNames = from c in _context.TblCreatures
-                                         join ur in _context.TblUpperrealms on c.UpperRealmId equals ur.RealmId
-                                         join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
-                                         join p in _context.TblPhylums on c.PhylumId equals p.PhylumId
-                                         join cl in _context.TblClasses on c.ClassId equals cl.ClassId
-                                         join o in _context.TblOrders on c.OrderId equals o.OrderId
-                                         join f in _context.TblFamilies on c.FamilyId equals f.FamilyId
-                                         join g in _context.TblGenus on c.GenusId equals g.GenusId
-                                         join s in _context.TblSpecies on c.SpeciesId equals s.SpeciesId
-                                         join ss in _context.TblSubspecies on c.SubspeciesId equals ss.SubspeciesId
-                                         join i in _context.TblIucns on c.IucnId equals i.IucnId
-                                         join a in _context.TblSpeciesauthors on c.AuthorId equals a.AuthorId
-                                         select new CreaturesViewModel
-                                         {
-                                             CreatureId = c.CreatureId,
-                                             UpperRealmName = ur.RealmName,
-                                             KingdomName = k.KingdomName,
-                                             PhylumName = p.PhylumName,
-                                             ClassName = cl.ClassName,
-                                             OrderName = o.OrderName,
-                                             FamilyName = f.FamilyName,
-                                             GenusName = g.GenusName,
-                                             SpeciesName = s.SpeciesName,
-                                             SubspeciesName = ss.SubspeciesName,
-                                             IucnCode = i.IucnCode,
-                                             AuthorName = a.AuthorName,
-                                             ScientificName = c.ScientificName,
-                                             CommonName = c.CommonName
-                                         };
 
-                var viewModel = await creaturesWithNames.ToListAsync();
-                return View(viewModel);
+            var creaturesWithNames = from c in _context.TblCreatures
+                                     join ur in _context.TblUpperrealms on c.UpperRealmId equals ur.RealmId
+                                     join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
+                                     join p in _context.TblPhylums on c.PhylumId equals p.PhylumId
+                                     join cl in _context.TblClasses on c.ClassId equals cl.ClassId
+                                     join o in _context.TblOrders on c.OrderId equals o.OrderId
+                                     join f in _context.TblFamilies on c.FamilyId equals f.FamilyId
+                                     join g in _context.TblGenus on c.GenusId equals g.GenusId
+                                     join s in _context.TblSpecies on c.SpeciesId equals s.SpeciesId
+                                     join ss in _context.TblSubspecies on c.SubspeciesId equals ss.SubspeciesId
+                                     join i in _context.TblIucns on c.IucnId equals i.IucnId
+                                     join a in _context.TblSpeciesauthors on c.AuthorId equals a.AuthorId
+                                     select new CreaturesViewModel
+                                     {
+                                         CreatureId = c.CreatureId,
+                                         UpperRealmName = ur.RealmName,
+                                         KingdomName = k.KingdomName,
+                                         PhylumName = p.PhylumName,
+                                         ClassName = cl.ClassName,
+                                         OrderName = o.OrderName,
+                                         FamilyName = f.FamilyName,
+                                         GenusName = g.GenusName,
+                                         SpeciesName = s.SpeciesName,
+                                         SubspeciesName = ss.SubspeciesName,
+                                         IucnCode = i.IucnCode,
+                                         AuthorName = a.AuthorName,
+                                         ScientificName = c.ScientificName,
+                                         CommonName = c.CommonName
+                                     };
+
+            var viewModel = await creaturesWithNames.ToListAsync();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult LogUserExport(string exportType, string sourceTable)
+        {
+            try
+            {
+                var userId = HttpContext.Session.GetInt32("UserID");
+                if (userId == null)
+                {
+                    return Json(new { success = false, message = "UserID session bilgisi bulunamadı." });
+                }
+
+                var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
+
+                var userAction = new TblUseraction
+                {
+                    UserId = userId,
+                    Action = $"{username} '{sourceTable}' tablosunu '{exportType}' formatında indirdi.",
+                    ActionTime = DateTime.Now
+                };
+
+                _context.TblUseractions.Add(userAction);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
             }
-        
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         private int GetCurrentUserRoleId()
         {
             var userId = HttpContext.Session.GetInt32("UserID");
-
             if (userId.HasValue)
             {
-                var userRole = _context.TblUserRoles
-                                       .FirstOrDefault(ur => ur.UserId == userId.Value);
-                return userRole?.RoleId ?? 0;  // Eğer kullanıcı yoksa, misafir için 0 döndür
+                var userRole = _context.TblUserRoles.FirstOrDefault(ur => ur.UserId == userId.Value);
+                return userRole?.RoleId ?? 0;
             }
-
-            return 0;  // Misafir rolü
+            return 0;
         }
-
 
         [HttpGet]
         public IActionResult AddCreature()
         {
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2)) // 1=Admin, 2=Expert
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2))
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
+
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
+
             var upperRealms = _context.TblUpperrealms
                 .Select(ur => new SelectListItem
                 {
@@ -99,7 +128,7 @@ namespace EcoSphere.Controllers
             var model = new CreaturesViewModel
             {
                 UpperRealmNamed = upperRealms,
-                KingdomNamed = new List<SelectListItem>() // Başlangıçta boş liste
+                KingdomNamed = new List<SelectListItem>()
             };
 
             var subspecies = _context.TblSubspecies
@@ -129,89 +158,43 @@ namespace EcoSphere.Controllers
 
             return View(model);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetKingdomsByUpperRealm(int upperRealmId)
-        {
-            var kingdoms = await _context.TblKingdoms
-                .Where(k => k.RealmId == upperRealmId)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.KingdomId.ToString(),
-                    Text = k.KingdomName
-                }).ToListAsync();
 
-            return Json(kingdoms);
-        }
-        public async Task<IActionResult> GetPhylumsByKingdom(int KingdomID)
-        {
-            var phylums = await _context.TblPhylums
-                .Where(k => k.KingdomId == KingdomID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.PhylumId.ToString(),
-                    Text = k.PhylumName
-                }).ToListAsync();
+        // --- Kalan GetXByY metotları (değişmedi, aynen kullanılabilir) ---
 
-            return Json(phylums);
-        }
-        public async Task<IActionResult> GetClassByPhylum(int PhylumID)
-        {
-            var classes = await _context.TblClasses
-                .Where(k => k.PhylumId == PhylumID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.ClassId.ToString(),
-                    Text = k.ClassName
-                }).ToListAsync();
+        public async Task<IActionResult> GetKingdomsByUpperRealm(int upperRealmId) =>
+            Json(await _context.TblKingdoms.Where(k => k.RealmId == upperRealmId)
+                .Select(k => new SelectListItem { Value = k.KingdomId.ToString(), Text = k.KingdomName })
+                .ToListAsync());
 
-            return Json(classes);
-        }
-        public async Task<IActionResult> GetOrderByClass(int ClassID)
-        {
-            var order = await _context.TblOrders
-                .Where(k => k.ClassId == ClassID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.OrderId.ToString(),
-                    Text = k.OrderName
-                }).ToListAsync();
+        public async Task<IActionResult> GetPhylumsByKingdom(int kingdomId) =>
+            Json(await _context.TblPhylums.Where(k => k.KingdomId == kingdomId)
+                .Select(k => new SelectListItem { Value = k.PhylumId.ToString(), Text = k.PhylumName })
+                .ToListAsync());
 
-            return Json(order);
-        }
-        public async Task<IActionResult> GetFamilyByOrder(int OrderID)
-        {
-            var family = await _context.TblFamilies
-                .Where(k => k.OrderId == OrderID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.FamilyId.ToString(),
-                    Text = k.FamilyName
-                }).ToListAsync();
+        public async Task<IActionResult> GetClassByPhylum(int phylumId) =>
+            Json(await _context.TblClasses.Where(k => k.PhylumId == phylumId)
+                .Select(k => new SelectListItem { Value = k.ClassId.ToString(), Text = k.ClassName })
+                .ToListAsync());
 
-            return Json(family);
-        }
-        public async Task<IActionResult> GetGenusByFamily(int FamilyID)
-        {
-            var genus = await _context.TblGenus
-                .Where(k => k.FamilyId == FamilyID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.GenusId.ToString(),
-                    Text = k.GenusName
-                }).ToListAsync();
-            return Json(genus);
-        }
-        public async Task<IActionResult> GetSpeciesByGenus(int GenusID)
-        {
-            var species = await _context.TblSpecies
-                .Where(k => k.GenusId == GenusID)
-                .Select(k => new SelectListItem
-                {
-                    Value = k.SpeciesId.ToString(),
-                    Text = k.SpeciesName
-                }).ToListAsync();
-            return Json(species);
-        }
+        public async Task<IActionResult> GetOrderByClass(int classId) =>
+            Json(await _context.TblOrders.Where(k => k.ClassId == classId)
+                .Select(k => new SelectListItem { Value = k.OrderId.ToString(), Text = k.OrderName })
+                .ToListAsync());
+
+        public async Task<IActionResult> GetFamilyByOrder(int orderId) =>
+            Json(await _context.TblFamilies.Where(k => k.OrderId == orderId)
+                .Select(k => new SelectListItem { Value = k.FamilyId.ToString(), Text = k.FamilyName })
+                .ToListAsync());
+
+        public async Task<IActionResult> GetGenusByFamily(int familyId) =>
+            Json(await _context.TblGenus.Where(k => k.FamilyId == familyId)
+                .Select(k => new SelectListItem { Value = k.GenusId.ToString(), Text = k.GenusName })
+                .ToListAsync());
+
+        public async Task<IActionResult> GetSpeciesByGenus(int genusId) =>
+            Json(await _context.TblSpecies.Where(k => k.GenusId == genusId)
+                .Select(k => new SelectListItem { Value = k.SpeciesId.ToString(), Text = k.SpeciesName })
+                .ToListAsync());
 
         [HttpPost]
         public async Task<IActionResult> AddCreature(CreaturesViewModel model)

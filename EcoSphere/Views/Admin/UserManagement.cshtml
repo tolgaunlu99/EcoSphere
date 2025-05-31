@@ -1,3 +1,245 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+@model List<EcoSphere.Models.UserManagementViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
+}
+
+<div class="container-fluid obs-container mt-5">
+    <h3>@ViewData["Title"]</h3>
+    <hr />
+
+    <div class="table-responsive">
+        <table id="userTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+            <thead class="table-active">
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Creation Date</th>
+                    <th>Updated Date</th>
+                    <th class="noExport">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var user in Model)
+                    {
+                        <tr data-id="@user.UserId" data-role="@user.RoleName">
+                            <td>@user.UserId</td>
+                            <td>@user.Name</td>
+                            <td>@user.Surname</td>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>@user.RoleName</td>
+                            <td>@user.CreationDate</td>
+                            <td>@user.UpdatedDate</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary me-1 edit-user" data-id="@user.UserId" data-current-role="@user.RoleName">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-user" data-id="@user.UserId">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9">
+                            <div class="text-center py-2">No Users Available</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#userTable').DataTable({
+                dom: 'Bfrtip',
+                scrollX: true,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        text: 'Columns',
+                        collectionLayout: 'fixed two-column'
+                    },
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: { columns: ':not(.noExport)' },
+                        action: function (e, dt, button, config) {
+                            logExport('copy');
+                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: { columns: ':not(.noExport)' },
+                        action: function (e, dt, button, config) {
+                            logExport('csv');
+                            $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: { columns: ':not(.noExport)' },
+                        action: function (e, dt, button, config) {
+                            logExport('excel');
+                            $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: { columns: ':not(.noExport)' },
+                        action: function (e, dt, button, config) {
+                            logExport('pdf');
+                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: { columns: ':not(.noExport)' },
+                        action: function (e, dt, button, config) {
+                            logExport('print');
+                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
+                        }
+                    }
+                ]
+            });
+
+                    function logExport(type) {
+            $.ajax({
+                url: '@Url.Action("LogUserExport", "Admin")',
+                type: 'POST',
+                data: { exportType: type, sourceTable: 'UserManagement' },
+                success: function (res) {
+                    if (!res.success) {
+                        console.error("Export log kaydedilirken hata:", res.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Export log kaydedilirken hata:", error);
+                }
+            });
+        }
+
+            // Delete butonu
+            $(document).on('click', '.delete-user', function () {
+                var button = $(this);
+                var userId = button.data('id');
+
+                Swal.fire({
+                    title: 'Kullanıcıyı Sil?',
+                    text: "Bu kullanıcıyı silmek istediğinize emin misiniz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("DeleteUser", "Admin")',
+                            type: 'POST',
+                            data: { id: userId },
+                            success: function (result) {
+                                if (result.success) {
+                                    table.row(button.closest('tr')).remove().draw();
+                                    Swal.fire('Silindi!', result.message, 'success');
+                                } else {
+                                    Swal.fire('Hata!', result.message, 'error');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire('Hata!', "Bir hata oluştu: " + error, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Edit butonu
+            $(document).on('click', '.edit-user', function () {
+                var button = $(this);
+                var userId = button.data('id');
+                var currentRole = button.closest('tr').find('td:nth-child(6)').text().trim();
+
+                $.ajax({
+                    url: '@Url.Action("GetRoles", "Admin")',
+                    type: 'GET',
+                    success: function (roles) {
+                        let options = "";
+                        roles.forEach(role => {
+                            const isSelected = (role.roleName === currentRole) ? 'selected' : '';
+                            options += `<option value="${role.roleId}" ${isSelected}>${role.roleName}</option>`;
+                        });
+
+                        Swal.fire({
+                            title: 'Kullanıcı Rolünü Güncelle',
+                            html:
+                                `<label for="roleSelect">Rol Seç:</label>
+                                <select id="roleSelect" class="swal2-input">
+                                    ${options}
+                                </select>`,
+                            showCancelButton: true,
+                            confirmButtonText: 'Güncelle',
+                            cancelButtonText: 'İptal',
+                            preConfirm: () => {
+                                return $('#roleSelect').val();
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                let selectedRoleId = result.value;
+                                $.ajax({
+                                    url: '@Url.Action("UpdateUserRole", "Admin")',
+                                    type: 'POST',
+                                    data: { userId: userId, roleId: selectedRoleId },
+                                    success: function (res) {
+                                        if (res.success) {
+                                            Swal.fire('Başarılı!', res.message, 'success');
+                                            button.closest('tr').find('td:nth-child(6)').text(res.newRoleName);
+                                        } else {
+                                            Swal.fire('Hata!', res.message, 'error');
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire('Hata!', "Bir hata oluştu: " + error, 'error');
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Hata!', "Roller yüklenemedi: " + error, 'error');
+                    }
+                });
+            });
+        });
+    </script>
+}

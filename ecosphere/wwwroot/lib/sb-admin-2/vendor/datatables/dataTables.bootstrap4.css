@@ -154,9 +154,9 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
 
 @media screen and (max-width: 767px) {
   div.dataTables_wrapper div.dataTables_length,
-div.dataTables_wrapper div.dataTables_filter,
-div.dataTables_wrapper div.dataTables_info,
-div.dataTables_wrapper div.dataTables_paginate {
+  div.dataTables_wrapper div.dataTables_filter,
+  div.dataTables_wrapper div.dataTables_info,
+  div.dataTables_wrapper div.dataTables_paginate {
     text-align: center;
   }
   div.dataTables_wrapper div.dataTables_paginate ul.pagination {
@@ -185,8 +185,7 @@ table.table-bordered.dataTable th,
 table.table-bordered.dataTable td {
   border-left-width: 0;
 }
-table.table-bordered.dataTable th:last-child, table.table-bordered.dataTable th:last-child,
-table.table-bordered.dataTable td:last-child,
+table.table-bordered.dataTable th:last-child,
 table.table-bordered.dataTable td:last-child {
   border-right-width: 1px;
 }
@@ -207,4 +206,23 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:first
 }
 div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-child {
   padding-right: 0;
+}
+
+/* Custom DataTables dark theme */
+table.dataTable thead {
+  background-color: #2b3e50 !important;
+  color: white !important;
+}
+table.dataTable tbody tr {
+  background-color: #212529 !important;
+  color: white !important;
+}
+table.dataTable tbody tr:nth-child(even) {
+  background-color: #2a2d2e !important;
+}
+table.dataTable tbody tr:hover {
+  background-color: #343a40 !important;
+}
+table.dataTable td, table.dataTable th {
+  border-color: #3e444a !important;
 }

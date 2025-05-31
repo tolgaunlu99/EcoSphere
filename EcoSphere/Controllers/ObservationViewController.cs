@@ -90,6 +90,36 @@ namespace EcoSphere.Controllers
             var viewModel = await observationsWithNames.ToListAsync();
             return View(viewModel);
         }
+        [HttpPost]
+        public IActionResult LogUserExport(string exportType, string sourceTable)
+        {
+            try
+            {
+                var userId = HttpContext.Session.GetInt32("UserID");
+                if (userId == null)
+                {
+                    return Json(new { success = false, message = "UserID session bilgisi bulunamadı." });
+                }
+
+                var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
+
+                var userAction = new TblUseraction
+                {
+                    UserId = userId,
+                    Action = $"{username} '{sourceTable}' tablosunu '{exportType}' formatında indirdi.",
+                    ActionTime = DateTime.Now
+                };
+
+                _context.TblUseractions.Add(userAction);
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
         private int GetCurrentUserRoleId()
         {
             var userId = HttpContext.Session.GetInt32("UserID");
@@ -247,47 +277,6 @@ namespace EcoSphere.Controllers
 
             return Json(new { success = true });
         }
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetCitysByRegion(int RegionID)
-        //{
-        //    var cities = await _context.TblProvinces
-        //        .Where(k => k.RegionId == RegionID)
-        //        .Select(x => new SelectListItem(x.ProvinceName, x.ProvinceId.ToString()))
-        //        .ToListAsync();
-        //    return Json(cities);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetDistrictsByCity(int CityID)
-        //{
-        //    var districts = await _context.TblDistricts
-        //        .Where(k => k.ProvinceId == CityID)
-        //        .Select(x => new SelectListItem(x.DistrictName, x.DistrictId.ToString()))
-        //        .ToListAsync();
-        //    return Json(districts);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetLocalitiesByDistrict(int DistrictID)
-        //{
-        //    var localities = await _context.TblLocalities
-        //        .Where(k => k.DistrictId == DistrictID)
-        //        .Select(x => new SelectListItem(x.LocalityName, x.LocalityId.ToString()))
-        //        .ToListAsync();
-        //    return Json(localities);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetNeighbourhoodsByLocality(int LocalityID)
-        //{
-        //    var hoods = await _context.TblNeighbourhoods
-        //        .Where(k => k.LocalityId == LocalityID)
-        //        .Select(x => new SelectListItem(x.HoodName, x.NeighbourhoodId.ToString()))
-        //        .ToListAsync();
-        //    return Json(hoods);
-        //}
 
         [HttpGet]
         public IActionResult GetObservationsByProvince(string province)
