@@ -1,49 +1,83 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSphere | Ana Sayfa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+            color: #333;
+        }
 
-<div class="text-center">
-    <h1 class="display-4">Gözlem Haritası</h1>
-</div>
-@if (ViewBag.SuccessMessage != null)
-{
-    <div class="alert alert-success" id="success-alert">@ViewBag.SuccessMessage</div>
-}
-<!-- Loader (başlangıçta gizli) -->
-<div id="map-loader" style="
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 999;
-        display: none;
-    ">
-    <div class="spinner-border text-success" role="status">
-        <span class="visually-hidden">Loading...</span>
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+            .hero h1 {
+                font-size: 3rem;
+                color: #2e7d32;
+                margin-bottom: 20px;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+                max-width: 600px;
+                line-height: 1.6;
+                color: #555;
+            }
+
+            .hero .btn {
+                margin-top: 30px;
+                display: inline-block;
+                padding: 12px 24px;
+                background: #2e7d32;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 25px;
+                font-weight: 600;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                transition: background 0.3s, transform 0.3s;
+            }
+
+                .hero .btn:hover {
+                    background: #1b5e20;
+                    transform: translateY(-2px);
+                }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: url('https://www.svgrepo.com/show/475724/wave.svg') repeat-x;
+            background-size: contain;
+            animation: wave 10s linear infinite;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>EcoSphere Projesi</h1>
+        <p>Doğanın korunması ve sürdürülebilirlik için teknolojiyi bir araya getiriyoruz. EcoSphere, çevresel farkındalığı artırmayı ve yeşil gelecek için çözümler sunmayı hedefler.</p>
+        <a href="#" class="btn">Projeyi Keşfet</a>
     </div>
-</div>
-
-<!-- Harita Alanı -->
-<div id="map" style="width: 100%; height: 700px; margin-bottom: 100px; position: relative;"></div>
-
-<!-- Popup -->
-<div id="popup" class="ol-popup" style="display: none;">
-    <div id="popup-content"></div>
-</div>
-<script>
-    setTimeout(function () {
-            const successAlert = document.getElementById("success-alert");
-            const errorAlert = document.getElementById("error-alert");
-
-            if (successAlert) {
-                successAlert.style.transition = "opacity 0.5s ease";
-                successAlert.style.opacity = 0;
-                setTimeout(() => successAlert.remove(), 500); // DOM'dan tamamen sil
-            }
-
-            if (errorAlert) {
-                errorAlert.style.transition = "opacity 0.5s ease";
-                errorAlert.style.opacity = 0;
-                setTimeout(() => errorAlert.remove(), 500);
-            }
-        }, 3000); // 3 saniye sonra başlat
-</script>
+    <div class="wave"></div>
+</body>
+</html>

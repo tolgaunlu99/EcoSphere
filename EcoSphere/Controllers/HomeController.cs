@@ -37,6 +37,16 @@ public class HomeController : Controller
 
         return 0;  // Misafir rolü
     }
+    public IActionResult Explore()
+    {
+        var roleID = GetCurrentUserRoleId();
+        ViewBag.UserRoleId = roleID;
+        if (TempData["SuccessMessage"] != null)
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+        }
+        return View();
+    }
 
     public IActionResult Privacy()
     {

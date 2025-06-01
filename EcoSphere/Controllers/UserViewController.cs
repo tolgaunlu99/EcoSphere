@@ -105,7 +105,7 @@ namespace EcoSphere.Controllers
                 var userRole= new TblUserRole
                 {
                     UserId = createdUserID,
-                    RoleId = 3,
+                    RoleId = 4,
                     Status="available",
                     CreationDate = DateTime.Now,
                     UpdatedDate = DateTime.Now
