@@ -1,48 +1,72 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model EcoSphere.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Explore Page";
 }
-<div class="text-center">
-    <h1 class="display-4">Gözlem Haritası</h1>
-</div>
-@if (ViewBag.SuccessMessage != null)
-{
-    <div class="alert alert-success" id="success-alert">@ViewBag.SuccessMessage</div>
-}
-<!-- Loader (başlangıçta gizli) -->
-<div id="map-loader" style="
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 999;
-        display: none;
-    ">
-    <div class="spinner-border text-success" role="status">
-        <span class="visually-hidden">Loading...</span>
+<style>
+    .summary-cards {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .summary-card {
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+        .summary-card .card-body {
+            padding: 20px;
+        }
+</style>
+<h1>Gözlem Haritası</h1>
+<div class="summary-cards">
+    <div class="summary-card bg-success text-white">
+        <div class="card-body text-center">
+            <div class="text-uppercase mb-1">Toplam Species</div>
+            <div class="h5 mb-0 font-weight-bold">@Model.TotalCreatures</div>
+        </div>
+    </div>
+    <div class="summary-card bg-info text-white">
+        <div class="card-body text-center">
+            <div class="text-uppercase mb-1">Toplam Observations</div>
+            <div class="h5 mb-0 font-weight-bold">@Model.TotalObservations</div>
+        </div>
     </div>
 </div>
 
-<!-- Harita Alanı -->
-<div id="map" style="width: 100%; height: 700px; margin-bottom: 100px; position: relative;"></div>
+    <!-- Harita -->
+    <div id="map" style="width: 100%; height: 700px; margin-bottom: 50px; position: relative;"></div>
+
 
 <!-- Popup -->
 <div id="popup" class="ol-popup" style="display: none;">
     <div id="popup-content"></div>
 </div>
+
 <script>
     setTimeout(function () {
-            const successAlert = document.getElementById("success-alert");
-            const errorAlert = document.getElementById("error-alert");
+        const successAlert = document.getElementById("success-alert");
+        const errorAlert = document.getElementById("error-alert");
 
-            if (successAlert) {
-                successAlert.style.transition = "opacity 0.5s ease";
-                successAlert.style.opacity = 0;
-                setTimeout(() => successAlert.remove(), 500); // DOM'dan tamamen sil
-            }
+        if (successAlert) {
+            successAlert.style.transition = "opacity 0.5s ease";
+            successAlert.style.opacity = 0;
+            setTimeout(() => successAlert.remove(), 500);
+        }
 
-            if (errorAlert) {
-                errorAlert.style.transition = "opacity 0.5s ease";
-                errorAlert.style.opacity = 0;
-                setTimeout(() => errorAlert.remove(), 500);
-            }
-        }, 3000); // 3 saniye sonra başlat
+        if (errorAlert) {
+            errorAlert.style.transition = "opacity 0.5s ease";
+            errorAlert.style.opacity = 0;
+            setTimeout(() => errorAlert.remove(), 500);
+        }
+    }, 3000);
 </script>

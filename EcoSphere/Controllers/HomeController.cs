@@ -22,6 +22,7 @@ public class HomeController : Controller
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
         }
+
         return View();
     }
     private int GetCurrentUserRoleId()
@@ -35,6 +36,7 @@ public class HomeController : Controller
             return userRole?.RoleId ?? 0;  // Eðer kullanýcý yoksa, misafir için 0 döndür
         }
 
+
         return 0;  // Misafir rolü
     }
     public IActionResult Explore()
@@ -45,7 +47,15 @@ public class HomeController : Controller
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
         }
-        return View();
+        var totalCreatures = _context.TblCreatures.Count();
+        var totalObservations = _context.TblMaintables.Count();
+        var model = new DashboardViewModel
+        {
+            TotalCreatures = totalCreatures,
+            TotalObservations = totalObservations
+        };
+
+        return View(model);
     }
 
     public IActionResult Privacy()
