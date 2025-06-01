@@ -24,6 +24,10 @@ body {
     background-position: center;
     background-color: #0C2605;
 }
+.navbar-transparent {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
 
 /* Harita için gerekli stil */
 #map {
@@ -47,6 +51,7 @@ body {
     pointer-events: none;
     z-index: 1000;
 }
+
 /* Ýl hover efekti */
 .province-hover {
     stroke: green;
