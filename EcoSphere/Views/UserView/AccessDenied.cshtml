@@ -1,19 +1,150 @@
-﻿<!DOCTYPE html>
-<html>	
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
 <head>
-	<title>Access Denied</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] 403</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EcoSphere.styles.css" asp-append-version="true" />
+
 </head>
 <body>
-	<div class="w3-display-middle">
-		<h1 class="w3-jumbo w3-animate-top w3-center"><code>Access Denied</code></h1>
-		<hr class="w3-border-white w3-animate-left" style="margin:auto;width:50%">
-		<h3 class="w3-center w3-animate-right">You dont have permission to view this site.</h3>
-		<h3 class="w3-center w3-animate-zoom">🚫🚫🚫🚫</h3>
-		<h6 class="w3-center w3-animate-zoom">error code:403 forbidden</h6>
-	</div>
+<div class="page">
+    <div class="content-container">
+        <div class="error-container">
+            <h2 class="error-number">4</h2>
+
+            <div id="ghost-grid" class="ghost-container">
+                <svg viewBox="0 0 14 14" class="ghost-svg">
+                    <defs>
+                        <rect id="pixel-dot-rect" x="0.175" y="0.175" width="0.7" height="0.7" rx="0.2" />
+                        <pattern id="pixel-dot-pattern" viewBox="0 0 1 1" width="1" height="1" patternUnits="userSpaceOnUse">
+                            <use fill="#00C776" href="#pixel-dot-rect" />
+                        </pattern>
+                        <mask id="pixel-dot-mask">
+                            <rect fill="white" width="14" height="14" />
+                            <path transform="translate(0 0.5)" fill="none" stroke="black"
+                                  d="M 0 0 h5M 9 0h5 M 0 1h3 M 11 1h3 M 0 2h2 M 12 2h2M 0 3h1 M 13 3h1M 0 4h1 M 13 4h1 M 0 5h1 M 13 5h1 M 4 12h1 M 9 12h1 M 0 13h1 M 3 13h3 M8 13h3 M 13 13h1" />
+                        </mask>
+                    </defs>
+                    <rect mask="url(#pixel-dot-mask)" fill="url(#pixel-dot-pattern)" width="14" height="14" />
+                    <g class="eye">
+                        <g transform="translate(2 3)">
+                            <path transform="translate(0 0.5)" fill="none" stroke="white"
+                                  d="M 1 0 h2 M 0 1h4 M 0 2h4 M 0 3h4 M 1 4h2" />
+                            <g fill="black" class="dot">
+                                <use transform="translate(1 1)" href="#pixel-dot-rect" />
+                                <use transform="translate(2 1)" href="#pixel-dot-rect" />
+                                <use transform="translate(1 2)" href="#pixel-dot-rect" />
+                                <use transform="translate(2 2)" href="#pixel-dot-rect" />
+                            </g>
+                        </g>
+                    </g>
+                    <g class="eye">
+                        <g transform="translate(8 3)">
+                            <path transform="translate(0 0.5)" fill="none" stroke="white"
+                                  d="M 1 0 h2 M 0 1h4 M 0 2h4 M 0 3h4 M 1 4h2" />
+                            <g fill="black" class="dot">
+                                <use transform="translate(1 1)" href="#pixel-dot-rect" />
+                                <use transform="translate(2 1)" href="#pixel-dot-rect" />
+                                <use transform="translate(1 2)" href="#pixel-dot-rect" />
+                                <use transform="translate(2 2)" href="#pixel-dot-rect" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <h2 class="error-number">3</h2>
+        </div>
+
+        <p class="error-message" id="typer">
+            <span class="typed-text"></span>
+            <span class="caret"></span>
+        </p>
+
+            <a href="/Home/Index" class="btn button-primary">RETURN</a>
+
+    </div>
+</div>
+<script>
+
+    function updateEyeDirection(event) {
+        const ghost = document.getElementById('ghost-grid');
+        if (!ghost) return;
+
+        const ghostRect = ghost.getBoundingClientRect();
+        const centerX = ghostRect.left + ghostRect.width / 2;
+        const centerY = ghostRect.top + ghostRect.height / 2;
+
+        const dx = event.clientX - centerX;
+        const dy = event.clientY - centerY;
+
+        const maxOffset = 1;
+        const normX = Math.max(-maxOffset, Math.min(maxOffset, dx / 25));
+        const normY = Math.max(-maxOffset, Math.min(maxOffset, dy / 25));
+
+        ghost.style.setProperty('--x', normX.toFixed(2));
+        ghost.style.setProperty('--y', normY.toFixed(2));
+    }
+
+    function initTyper() {
+        const typer = document.querySelector('#typer .typed-text');
+        const text = "Forbidden";
+        let displayedText = '';
+        let currentIndex = 0;
+        let isTyping = true;
+        let intervalId = null;
+
+        function type() {
+            if (currentIndex < text.length) {
+                displayedText = text.slice(0, currentIndex + 1);
+                typer.textContent = displayedText;
+                currentIndex++;
+            } else {
+                clearInterval(intervalId);
+                setTimeout(() => {
+                    isTyping = false;
+                    startErasing();
+                }, 2000);
+            }
+        }
+
+        function erase() {
+            if (displayedText.length > 0) {
+                displayedText = displayedText.slice(0, -1);
+                typer.textContent = displayedText;
+            } else {
+                clearInterval(intervalId);
+                setTimeout(() => {
+                    isTyping = true;
+                    currentIndex = 0;
+                    startTyping();
+                }, 70);
+            }
+        }
+
+        function startTyping() {
+            intervalId = setInterval(type, 70);
+        }
+
+        function startErasing() {
+            intervalId = setInterval(erase, 50);
+        }
+
+        setTimeout(startTyping, 70);
+    }
+
+    window.addEventListener('mousemove', updateEyeDirection);
+    initTyper();
+</script>
+
+<script src="~/js/navbar.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
 </body>
 </html>
