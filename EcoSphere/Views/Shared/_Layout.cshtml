@@ -28,8 +28,11 @@
         <nav class="navbar navbar-expand-md @(ViewData["NavbarClass"] ?? "navbar-default")">
             <div class="container container-nav">
                 <div class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img img src="~/images/DkmLogo.png" alt="EcoSphere Logo" width="50" height="40" class="me-2">
 
+                    <a asp-controller="Home" asp-action="Index">
+                        <img img src="~/images/DkmLogo.png" href="" alt="EcoSphere Logo" width="50" height="40" class="me-2">
+                    </a>
+                    
                 </div>
 
                 <button class="navbar-toggler collapsed" type="button"

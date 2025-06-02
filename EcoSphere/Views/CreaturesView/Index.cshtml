@@ -3,6 +3,7 @@
     ViewData["Title"] = "Creatures Details";
 }
 
+
 <div class="container obs-container mt-4">
     <h3>@ViewData["Title"]</h3>
     <hr />
@@ -70,14 +71,9 @@
     </div>
 </div>
 
-@section Styles {
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css" />
-}
-
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
@@ -102,14 +98,6 @@
                         collectionLayout: 'fixed two-column'
                     },
                     {
-                        extend: 'copyHtml5',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('copy');
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
                         extend: 'csvHtml5',
                         exportOptions: { columns: ':not(.noExport)' },
                         action: function (e, dt, button, config) {
@@ -123,22 +111,6 @@
                         action: function (e, dt, button, config) {
                             logExport('excel');
                             $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('pdf');
-                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('print');
-                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
                         }
                     }
                 ]

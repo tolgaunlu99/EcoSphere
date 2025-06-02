@@ -117,13 +117,6 @@
                         collectionLayout: 'fixed two-column'
                     },
                     {
-                        extend: 'copyHtml5',
-                        action: function (e, dt, button, config) {
-                            logExport('copy');
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
                         extend: 'csvHtml5',
                         action: function (e, dt, button, config) {
                             logExport('csv');
@@ -136,21 +129,7 @@
                             logExport('excel');
                             $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
                         }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        action: function (e, dt, button, config) {
-                            logExport('pdf');
-                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        action: function (e, dt, button, config) {
-                            logExport('print');
-                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
-                        }
-                    }
+                    } 
                 ]
             });
 
