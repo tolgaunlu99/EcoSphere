@@ -22,7 +22,7 @@ namespace EcoSphere.Controllers
         {
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId !=3)) // 1=Admin, 2=Expert
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3)) // 1=Admin, 2=Expert
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
@@ -261,7 +261,7 @@ namespace EcoSphere.Controllers
                 return Json(new { success = false, message = "Kayıt bulunamadı." });
             }
             var userId = HttpContext.Session.GetInt32("UserID");
-            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;          
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;
 
             _context.TblMaintables.Remove(obs);
             _context.SaveChanges();
@@ -291,11 +291,14 @@ namespace EcoSphere.Controllers
                                     Lat = m.Lat,
                                     Long = m.Long,
                                     Name = c.ScientificName,
-                                    SeenTime = m.SeenTime  // <<< burayı ekledik
-                                }).ToList();
+                                    Kingdom = c.Kingdom!.KingdomName,    // ★ Kingdom alanını ekledik
+                                    SeenTime = m.SeenTime
+                                })
+                           .ToList();
 
             return Json(observations);
         }
+
 
         [HttpGet]
         public IActionResult GetObservationsByDistrict(string district)
@@ -310,8 +313,10 @@ namespace EcoSphere.Controllers
                                     Lat = m.Lat,
                                     Long = m.Long,
                                     Name = c.ScientificName,
-                                    SeenTime = m.SeenTime  // <<< burayı da
-                                }).ToList();
+                                    Kingdom = c.Kingdom!.KingdomName,   // ★ Kingdom alanını ekledik
+                                    SeenTime = m.SeenTime
+                                })
+                           .ToList();
 
             return Json(observations);
         }
@@ -345,6 +350,7 @@ namespace EcoSphere.Controllers
 
             return View(obs);
         }
+        
 
 
 

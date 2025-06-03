@@ -19,6 +19,19 @@
 
 <!-- Form Başlangıcı -->
 <form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
+
+
+
+    <input type="hidden" id="LatInput" name="Lat" />
+    <input type="hidden" id="LongInput" name="Long" />
+    <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
+    <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
+
+
+    
+
+    <!-- diğer form alanların burada devam ediyor -->
+
     <div class="row mb-3">
         <!-- Resim Önizleme Sol Tarafta -->
         <div class="col-md-2 text-center">
@@ -108,11 +121,8 @@
     </div>
     
 
-    <!-- Gizli alanlar (Koordinat ve İl/İlçe) -->
-    <input type="hidden" id="LongInput" name="Long" />
-    <input type="hidden" id="LatInput" name="Lat" />
-    <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
-    <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
+    
+
 
     <div class="mt-4">
         <button type="submit" class="btn btn-primary">Kaydet</button>
@@ -253,17 +263,16 @@
             });
 
             coordinateMap.on("click", function (evt) {
-                // Türkiye sınırı kontrolü
-                        if (!countryBorderGeometry) {
-            alert("Türkiye sınırları henüz yüklenmedi.");
-            return;
-        }
+            // Türkiye sınırı kontrolü
+                if (!countryBorderGeometry) {
+                    alert("Türkiye sınırları henüz yüklenmedi.");
+                    return;
+            }
 
-        if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
-            alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
-            return;
-        }
-
+                if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
+                    alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
+                    return;
+            }
 
                 const coord = ol.proj.toLonLat(evt.coordinate);
                 const lon = coord[0].toFixed(6);
@@ -282,33 +291,52 @@
                     if (p.getGeometry().intersectsCoordinate(evt.coordinate)) {
                         foundProvince = p.get("Il_Adi") || p.get("name");
                         break;
-                    }
                 }
+            }
 
                 for (let d of districtFeatures) {
                     if (d.getGeometry().intersectsCoordinate(evt.coordinate)) {
                         foundDistrict = d.get("Ilce_Adi") || d.get("name");
                         break;
-                    }
                 }
+            }
 
-                document.getElementById("selectedProvince").value = foundProvince;
-                document.getElementById("selectedDistrict").value = foundDistrict;
-            });
+            // ⚠️ İl veya ilçe bulunamazsa uyar
+            if (!foundProvince || !foundDistrict) {
+                alert("Seçilen konumdan il veya ilçe bulunamadı. Lütfen Türkiye sınırları içinde geçerli bir alan seçin.");
+            }
 
-            document.getElementById("confirmCoordinatesBtn").addEventListener("click", function () {
-                const lon = document.getElementById("selectedLongitude").value;
-                const lat = document.getElementById("selectedLatitude").value;
-                const province = document.getElementById("selectedProvince").value;
-                const district = document.getElementById("selectedDistrict").value;
+            document.getElementById("selectedProvince").value = foundProvince;
+            document.getElementById("selectedDistrict").value = foundDistrict;
+        });
 
-                if (lon && lat) {
-                    document.getElementById("LongInput").value = lon;
-                    document.getElementById("LatInput").value = lat;
-                    document.getElementById("HiddenProvinceName").value = province;
-                    document.getElementById("HiddenDistrictName").value = district;
-                }
-            });
+        document.getElementById("confirmCoordinatesBtn").addEventListener("click", function () {
+            const modalElement = document.getElementById("coordinateModal");
+                // Bootstrap modal'ı düzgün kapat
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            // aria-hidden hatasına karşı: güvenli kaldırma
+            if (modalElement.hasAttribute("aria-hidden")) {
+                modalElement.removeAttribute("aria-hidden");
+            }
+
+            const lon = document.getElementById("selectedLongitude").value;
+            const lat = document.getElementById("selectedLatitude").value;
+            const province = document.getElementById("selectedProvince").value;
+            const district = document.getElementById("selectedDistrict").value;
+
+            if (lon && lat) {
+                document.getElementById("LongInput").value = lon;
+                document.getElementById("LatInput").value = lat;
+                document.getElementById("HiddenProvinceName").value = province;
+                   document.getElementById("HiddenDistrictName").value = district;
+            }
+        });
+
+
         });
         function previewImage(event) {
             const input = event.target;

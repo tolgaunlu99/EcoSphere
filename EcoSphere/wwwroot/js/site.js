@@ -106,6 +106,53 @@
             zoom: 6
         })
     });
+
+    // ── Uydu ve OSM katmanları ──────────────────────────────
+    const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
+    const satelliteLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+            attributions: '© Google'
+        })
+    });
+
+    // İlk katmanı OSM olarak ayarla
+    map.getLayers().setAt(0, osmLayer);
+
+    // ── Toggle butonu oluştur ───────────────────────────────
+    const toggleBtn = document.createElement("button");
+    toggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
+    toggleBtn.className = "satellite-toggle";
+
+    Object.assign(toggleBtn.style, {
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        zIndex: "1000",
+        backgroundColor: "white",
+        border: "none",
+        padding: "6px 10px",
+        borderRadius: "6px",
+        boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+        fontSize: "0.9rem",
+        cursor: "pointer"
+    });
+
+    document.getElementById("map").appendChild(toggleBtn);
+
+    // ── Butona tıklayınca katman değiştir ───────────────────
+    let isSatellite = false;
+    toggleBtn.addEventListener("click", function () {
+        if (isSatellite) {
+            map.getLayers().setAt(0, osmLayer);
+            toggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
+        } else {
+            map.getLayers().setAt(0, satelliteLayer);
+            toggleBtn.innerHTML = `<i class="fas fa-map"></i> Harita Görünümü`;
+        }
+        isSatellite = !isSatellite;
+    });
+
     const popup = document.getElementById("popup"),
         popupContent = document.getElementById("popup-content"),
         overlay = new ol.Overlay({
@@ -251,7 +298,7 @@
                                 ilceLayer.setVisible(true);
                             });
 
-                        // Marker’ları getir
+                        // Marker’ları getir ve renk ata
                         fetch(`/ObservationView/GetObservationsByProvince?province=${encodeURIComponent(provinceName)}`)
                             .then(r => r.json())
                             .then(obs => {
@@ -261,8 +308,24 @@
                                             ol.proj.fromLonLat([+o.long, +o.lat])
                                         )
                                     });
+
                                     ft.set("name", o.name);
                                     ft.set("id", o.id);
+
+                                    // ► Kingdom’a göre renk atama
+                                    const markerColor =
+                                        o.kingdom === "Animal" ? "red" :
+                                            o.kingdom === "Plant" ? "purple" :
+                                                "gray";
+
+                                    ft.setStyle(new ol.style.Style({
+                                        image: new ol.style.Circle({
+                                            radius: 6,
+                                            fill: new ol.style.Fill({ color: markerColor }),
+                                            stroke: new ol.style.Stroke({ color: "#fff", width: 2 })
+                                        })
+                                    }));
+
                                     return ft;
                                 });
                                 markerLayer.getSource().addFeatures(feats);
@@ -288,8 +351,24 @@
                                             ol.proj.fromLonLat([+o.long, +o.lat])
                                         )
                                     });
+
                                     ft.set("name", o.name);
                                     ft.set("id", o.id);
+
+                                    // ► Burada da aynı renk atama
+                                    const markerColor =
+                                        o.kingdom === "Animal" ? "red" :
+                                            o.kingdom === "Plant" ? "purple" :
+                                                "gray";
+
+                                    ft.setStyle(new ol.style.Style({
+                                        image: new ol.style.Circle({
+                                            radius: 6,
+                                            fill: new ol.style.Fill({ color: markerColor }),
+                                            stroke: new ol.style.Stroke({ color: "#fff", width: 2 })
+                                        })
+                                    }));
+
                                     return ft;
                                 });
                                 markerLayer.getSource().addFeatures(feats);
@@ -300,6 +379,7 @@
                     }
                 });
             });
+
 
             // Marker’a tıklanınca detay sayfası
             map.on("click", function (evt) {
