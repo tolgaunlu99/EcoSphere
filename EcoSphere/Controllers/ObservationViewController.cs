@@ -283,6 +283,7 @@ namespace EcoSphere.Controllers
         {
             var observations = (from m in _context.TblMaintables
                                 join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                                join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
                                 join p in _context.TblProvinces on m.CityId equals p.ProvinceId
                                 where m.Lat != null && m.Long != null && p.ProvinceName == province
                                 select new
@@ -291,11 +292,13 @@ namespace EcoSphere.Controllers
                                     Lat = m.Lat,
                                     Long = m.Long,
                                     Name = c.ScientificName,
-                                    SeenTime = m.SeenTime  // <<< burayı ekledik
+                                    SeenTime = m.SeenTime,
+                                    KingdomName = k.KingdomName
                                 }).ToList();
 
             return Json(observations);
         }
+
 
         [HttpGet]
         public IActionResult GetObservationsByDistrict(string district)
@@ -345,6 +348,26 @@ namespace EcoSphere.Controllers
 
             return View(obs);
         }
+        [HttpGet]
+        public JsonResult GetAllObservations()
+        {
+            var observations = _context.TblMaintables
+                .Include(o => o.Creature)
+                    .ThenInclude(c => c.Kingdom)
+                .Where(o => o.Lat != null && o.Long != null)
+                .Select(x => new
+                {
+                    ObservationId = x.Id,
+                    CreatureName = x.Creature.ScientificName,
+                    Lat = x.Lat,
+                    Long = x.Long,
+                    KingdomName = x.Creature.Kingdom.KingdomName
+                })
+                .ToList();
+
+            return Json(observations);
+        }
+
 
 
 

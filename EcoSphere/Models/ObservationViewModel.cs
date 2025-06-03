@@ -184,5 +184,8 @@ namespace EcoSphere.Models
         // Haritadan gelen veriler
         public string HiddenProvinceName { get; set; }
         public string HiddenDistrictName { get; set; }
+
+        public string KingdomName { get; set; }  // Animal veya Plant
+
     }
 }
