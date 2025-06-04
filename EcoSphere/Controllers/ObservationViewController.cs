@@ -283,6 +283,7 @@ namespace EcoSphere.Controllers
         {
             var observations = (from m in _context.TblMaintables
                                 join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
+                                join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
                                 join p in _context.TblProvinces on m.CityId equals p.ProvinceId
                                 where m.Lat != null && m.Long != null && p.ProvinceName == province
                                 select new

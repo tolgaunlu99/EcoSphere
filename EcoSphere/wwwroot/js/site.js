@@ -330,6 +330,7 @@
                                 });
                                 markerLayer.getSource().addFeatures(feats);
                             })
+
                             .finally(() => hideLoader());
 
                         return true;
