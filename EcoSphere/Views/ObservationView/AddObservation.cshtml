@@ -377,15 +377,15 @@
                     if (p.getGeometry().intersectsCoordinate(evt.coordinate)) {
                         foundProvince = p.get("Il_Adi") || p.get("name");
                         break;
-                    }
                 }
+            }
 
                 for (let d of districtFeatures) {
                     if (d.getGeometry().intersectsCoordinate(evt.coordinate)) {
                         foundDistrict = d.get("Ilce_Adi") || d.get("name");
                         break;
-                    }
                 }
+            }
 
                 // Update hidden inputs
                 document.getElementById("LongInput").value = lon;

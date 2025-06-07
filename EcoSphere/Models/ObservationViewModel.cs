@@ -1,3 +1,4 @@
+﻿
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -61,7 +62,7 @@ namespace EcoSphere.Models
 
         [DisplayName("Activiy")]
         public string? Activity { get; set; }
-        
+
         [DisplayName("Image File")]
         public IFormFile? ImageFile { get; set; }
 
@@ -184,5 +185,8 @@ namespace EcoSphere.Models
         // Haritadan gelen veriler
         public string HiddenProvinceName { get; set; }
         public string HiddenDistrictName { get; set; }
+
+        
+
     }
 }
