@@ -3,164 +3,270 @@
 @{
     ViewData["Title"] = "Create Observation";
 }
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
 
-<h2>Yeni Gözlem Ekle</h2>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni Gözlem Ekle</title>
 
-<!-- Koordinat Seç Butonu -->
-<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#coordinateModal">
-    Koordinat Seç
-</button>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/ol3/6.14.1/ol.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<!-- Form Başlangıcı -->
-<form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
-    <div class="row mb-3">
-        <!-- Resim Önizleme Sol Tarafta -->
-        <div class="col-md-2 text-center">
-            <img id="imagePreview" src="#" alt="Önizleme" style="display:none; width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; padding: 4px;" />
-        </div>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-        <!-- File Input Sağ Tarafta -->
-        <div class="col-md-4">
-            <label for="ImageFile">Gözlem Görseli</label>
-            <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" onchange="previewImage(event)" />
-        </div>
-    </div>
+</head>
 
-    <div class="row">
-        <div class="col-md-4">
-            <label asp-for="CreatureId"></label>
-            <select asp-for="CreatureId" class="form-control" asp-items="Model.CreatureNamed">
-                <option value="">-- Select Creature --</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="GenderId"></label>
-            <select asp-for="GenderId" class="form-control" asp-items="Model.GenderNamed">
-                <option value="">-- Select Gender --</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="MigrationStatusId"></label>
-            <select asp-for="MigrationStatusId" class="form-control" asp-items="Model.MigrationstatNamed">
-                <option value="">-- Select Migration Status --</option>
-            </select>
-        </div>
-    </div>
+<body style="font-family: 'Poppins' , sans-serif;">
 
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label asp-for="EndemicStatusId"></label>
-            <select asp-for="EndemicStatusId" class="form-control" asp-items="Model.EndemicstatNamed">
-                <option value="">-- Select Endemic Status --</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="ProjectId"></label>
-            <select asp-for="ProjectId" class="form-control" asp-items="Model.ProjectNamed">
-                <option value="">-- Select Project --</option>
-            </select>
-            <span asp-validation-for="ProjectId" class="text-danger"></span>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="CitationId"></label>
-            <select asp-for="CitationId" class="form-control" asp-items="Model.CitationNamed">
-                <option value="">-- Select Citation --</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label asp-for="ReferenceId"></label>
-            <select asp-for="ReferenceId" class="form-control" asp-items="Model.ReferenceNamed">
-                <option value="">-- Select Reference --</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="LocationTypeId"></label>
-            <select asp-for="LocationTypeId" class="form-control" asp-items="Model.LocationtypeNamed">
-                <option value="">-- Select Location Type --</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label asp-for="LocationRangeId"></label>
-            <select asp-for="LocationRangeId" class="form-control" asp-items="Model.LocationRangeNamed">
-                <option value="">-- Select Location Range --</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label asp-for="Activity"></label>
-            <input asp-for="Activity" class="form-control" />
-        </div>
-        <div class="col-md-4">
-            <label asp-for="SeenTime"></label>
-            <input asp-for="SeenTime" class="form-control" type="datetime-local" />
-        </div>
-    </div>
-    
-
-    <!-- Gizli alanlar (Koordinat ve İl/İlçe) -->
-    <input type="hidden" id="LongInput" name="Long" />
-    <input type="hidden" id="LatInput" name="Lat" />
-    <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
-    <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
-
-    <div class="mt-4">
-        <button type="submit" class="btn btn-primary">Kaydet</button>
-    </div>
-</form>
-
-<!-- Koordinat Modal Penceresi -->
-<div class="modal fade" id="coordinateModal" tabindex="-1" aria-labelledby="coordinateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Koordinat Seçimi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+    <div class="container">
+        <!-- Success Message -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
             </div>
-            <div class="modal-body">
-                <div id="coordinateMap" style="width: 100%; height: 400px;"></div>
-                <br />
+        }
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <!-- Card Header -->
+            <div class="card-header-custom">
+                <h2><i class="fas fa-binoculars me-3"></i>Yeni Gözlem Ekle</h2>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body-custom">
+                <!-- Top Section: Coordinate Selection & Info -->
                 <div class="row">
-                    <div class="col-md-3">
-                        <label>Longitude</label>
-                        <input type="text" id="selectedLongitude" class="form-control" readonly />
+                    <!-- Left: Coordinate Map -->
+                    <div class="col-lg-8">
+                        <div class="coordinate-section">
+                            <h5 class="section-title mb-2"><i class="fas fa-map-marker-alt me-2" style="color: #2E590E;"></i>Koordinat Seçimi</h5>
+                            <div style="position: relative;">
+                                <div id="coordinateMap" style="width: 100%; height: 450px; border-radius: 8px; border: 2px solid #fff;"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <label>Latitude</label>
-                        <input type="text" id="selectedLatitude" class="form-control" readonly />
-                    </div>
-                    <div class="col-md-3">
-                        <label>Province</label>
-                        <input type="text" id="selectedProvince" class="form-control" readonly />
-                    </div>
-                    <div class="col-md-3">
-                        <label>District</label>
-                        <input type="text" id="selectedDistrict" class="form-control" readonly />
+
+                    <!-- Right: Coordinate Info & Image Upload -->
+                    <div class="col-lg-4">
+                        <div class="info-section">
+                            <h6 class="section-title"><i class="fas fa-info-circle me-2" style="color: #2E590E;"></i>Konum Bilgileri</h6>
+                            <div class="coordinate-info-compact">
+                                <div class="row">
+                                    <div class="col-12 mb-2">
+                                        <small class="text-muted">Enlem / Boylam</small>
+                                        <div class="fw-bold small" id="displayCoords">Seçilmedi</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <small class="text-muted">İl / İlçe</small>
+                                        <div class="fw-bold small" id="displayLocation">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="image-preview-container">
+                                <h6 class="section-title mb-2"><i class="fas fa-camera me-2" style="color: #2E590E;"></i>Görsel</h6>
+                                <div class="file-input-wrapper">
+                                    <input type="file" name="ImageFile" id="ImageFile" accept="image/*" onchange="previewImage(event)" />
+                                    <label for="ImageFile" class="file-input-label-compact" id="fileLabel">
+                                        <i class="fas fa-cloud-upload-alt fa-lg mb-1 text-muted"></i>
+                                        <div class="medium">Görsel Seçin</div>
+                                        <small class="text-muted">PNG, JPG, JPEG</small>
+                                    </label>
+                                </div>
+                                <div class="image-preview-wrapper" style="display:none" id="imageWrapper">
+                                    <img id="imagePreview" src="#" alt="Önizleme" onclick="openImageModal()" />
+                                    <button type="button" class="remove-image-btn" onclick="removeImage()" title="Görseli Kaldır">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="confirmCoordinatesBtn" class="btn btn-primary" data-bs-dismiss="modal">
-                    Seçimi Onayla
-                </button>
+
+                <!-- Form Section -->
+                <form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
+                    <div class="form-section">
+                        <h5 class="section-title">
+                            <i class="fas fa-clipboard-list me-2" style="color: #2E590E;"></i>
+                            Gözlem Detayları
+                        </h5>
+
+                        <!-- First Row -->
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CreatureId" class="form-label">Tür Seçimi</label>
+                                <select asp-for="CreatureId" class="form-control select2-enable" asp-items="Model.CreatureNamed" data-live-search="true">
+                                    <option value="" disabled selected hidden>Tür Seçiniz</option>
+                                </select>
+                                <span asp-validation-for="CreatureId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="ProjectId" class="form-label">Proje</label>
+                                <div class="select-with-add">
+                                    <select asp-for="ProjectId" class="form-control select2-enable" asp-items="Model.ProjectNamed" data-live-search="true">
+                                        <option value="" disabled selected hidden>Proje Seçiniz</option>
+                                    </select>
+                                    <button type="button" class="btn-add-new" onclick="openAddProjectModal()">
+                                        <i class="fas fa-plus me-1"></i>Yeni
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ProjectId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="ReferenceId" class="form-label">Referans</label>
+                                <div class="select-with-add">
+                                    <select asp-for="ReferenceId" class="form-control select2-enable" asp-items="Model.ReferenceNamed" data-live-search="true">
+                                        <option value="" disabled selected hidden>Referans Seçiniz</option>
+                                    </select>
+                                    <button type="button" class="btn-add-new" onclick="openAddReferenceModal()">
+                                        <i class="fas fa-plus me-1"></i>Yeni
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ReferenceId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Second Row -->
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="EndemicStatusId" class="form-label">Endemik Durumu</label>
+                                <div class="radio-group">
+                                    @foreach (var endemic in Model.EndemicstatNamed)
+                                    {
+                                        <div class="radio-option">
+                                            <input type="radio" id="endemic@(endemic.Value)" name="EndemicStatusId" value="@endemic.Value">
+                                            <label for="endemic@(endemic.Value)" class="radio-label">@endemic.Text</label>
+                                        </div>
+                                    }
+                                </div>
+                                <span asp-validation-for="EndemicStatusId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="GenderId" class="form-label">Cinsiyet</label>
+                                <div class="radio-group">
+                                    @foreach (var gender in Model.GenderNamed)
+                                    {
+                                        <div class="radio-option">
+                                            <input type="radio" id="gender@(gender.Value)" name="GenderId" value="@gender.Value">
+                                            <label for="gender@(gender.Value)" class="radio-label">@gender.Text</label>
+                                        </div>
+                                    }
+                                </div>
+                                <span asp-validation-for="GenderId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="MigrationStatusId" class="form-label">Göç Durumu</label>
+                                <div class="radio-group">
+                                    @foreach (var migration in Model.MigrationstatNamed)
+                                    {
+                                        <div class="radio-option">
+                                            <input type="radio" id="migration@(migration.Value)" name="MigrationStatusId" value="@migration.Value">
+                                            <label for="migration@(migration.Value)" class="radio-label">@migration.Text</label>
+                                        </div>
+                                    }
+                                </div>
+                                <span asp-validation-for="MigrationStatusId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Third Row -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Activity" class="form-label">Aktivite</label>
+                                <input asp-for="Activity" class="form-control" placeholder="Gözlemlenen aktiviteyi açıklayın" />
+                                <span asp-validation-for="Activity" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SeenTime" class="form-label">Gözlem Zamanı</label>
+                                <input asp-for="SeenTime" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="SeenTime" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" id="LongInput" name="Long" />
+                        <input type="hidden" id="LatInput" name="Lat" />
+                        <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
+                        <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" id="confirmCoordinatesBtn" class="btn btn-submit" data-bs-dismiss="modal">
+                                <i class="fas fa-save me-2"></i>Gözlemi Kaydet
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <img id="modalImage" src="#" alt="Büyük Görsel" />
+        </div>
+        <div class="image-controls">
+            <button class="control-btn" onclick="removeImageFromModal()">
+                <i class="fas fa-trash me-2"></i>Görseli Kaldır
+            </button>
+            <button class="control-btn" onclick="closeImageModal()">
+                <i class="fas fa-times me-2"></i>Kapat
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div id="addProjectModal" class="popup-modal">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h4 class="popup-title">Yeni Proje Ekle</h4>
+                <button type="button" class="popup-close" onclick="closeAddProjectModal()">&times;</button>
+            </div>
+            <div class="popup-form">
+                <input type="text" id="newProjectName" placeholder="Proje adını girin" />
+            </div>
+            <div class="popup-buttons">
+                <button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddProjectModal()">İptal</button>
+                <button type="button" class="btn-popup btn-popup-save" onclick="saveNewProject()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Reference Modal -->
+    <div id="addReferenceModal" class="popup-modal">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h4 class="popup-title">Yeni Referans Ekle</h4>
+                <button type="button" class="popup-close" onclick="closeAddReferenceModal()">&times;</button>
+            </div>
+            <div class="popup-form">
+                <input type="text" id="newReferenceName" placeholder="Referans adını girin" />
+            </div>
+            <div class="popup-buttons">
+                <button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddReferenceModal()">İptal</button>
+                <button type="button" class="btn-popup btn-popup-save" onclick="saveNewReference()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/6.14.1/ol.js"></script>
+
+
+
     <script>
-        let coordinateMap, coordMarkerLayer, provinceFeatures = [], districtFeatures = [], countryBorderFeature = null;
+        let coordinateMap, coordMarkerLayer, provinceFeatures = [], districtFeatures = [], countryBorderGeometry = null;
 
         document.addEventListener("DOMContentLoaded", function () {
             if (!document.getElementById("coordinateMap")) return;
@@ -186,12 +292,12 @@
 
             // Toggle uydu görünümü butonu
             const layerToggleBtn = document.createElement("button");
-            layerToggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
+            layerToggleBtn.innerHTML = `<i class="fas fa-globe" style="color: #2E590E;"></i> Uydu Görünümü`;
             layerToggleBtn.className = "satellite-toggle";
             layerToggleBtn.style.position = "absolute";
             layerToggleBtn.style.top = "10px";
             layerToggleBtn.style.right = "10px";
-            layerToggleBtn.style.zIndex = "1000";
+            layerToggleBtn.style.zIndex = "1";
             layerToggleBtn.style.backgroundColor = "white";
             layerToggleBtn.style.boxShadow = "0px 2px 5px rgba(0,0,0,0.3)";
             layerToggleBtn.style.fontSize = "0.9rem";
@@ -215,29 +321,22 @@
             });
 
             // Türkiye sınırı yükle
-            
-
-
             fetch("/data/TR_ulke_siniri.geojson")
-        .then(res => res.json())
-        .then(countryData => {
-            const features = format.readFeatures(countryData, {
-                featureProjection: coordinateMap.getView().getProjection()
-            });
+                .then(res => res.json())
+                .then(countryData => {
+                    const features = format.readFeatures(countryData, {
+                        featureProjection: coordinateMap.getView().getProjection()
+                    });
 
-            const geometries = features.map(f => f.getGeometry());
-            if (geometries.length > 1) {
-                // Eğer birden fazla geometri varsa birleşim yapılabilir
-                // OpenLayers'ta union desteği yoksa, ilk geometriyi kullan
-                countryBorderGeometry = new ol.geom.MultiPolygon(
-                    geometries.map(g => g.getCoordinates())
-                );
-            } else {
-                countryBorderGeometry = geometries[0];
-            }
-        });
-
-
+                    const geometries = features.map(f => f.getGeometry());
+                    if (geometries.length > 1) {
+                        countryBorderGeometry = new ol.geom.MultiPolygon(
+                            geometries.map(g => g.getCoordinates())
+                        );
+                    } else {
+                        countryBorderGeometry = geometries[0];
+                    }
+                });
 
             // İl ve ilçe sınırları yükle
             Promise.all([
@@ -254,23 +353,19 @@
 
             coordinateMap.on("click", function (evt) {
                 // Türkiye sınırı kontrolü
-                        if (!countryBorderGeometry) {
-            alert("Türkiye sınırları henüz yüklenmedi.");
-            return;
-        }
+                if (!countryBorderGeometry) {
+                    alert("Türkiye sınırları henüz yüklenmedi.");
+                    return;
+                }
 
-        if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
-            alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
-            return;
-        }
-
+                if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
+                    alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
+                    return;
+                }
 
                 const coord = ol.proj.toLonLat(evt.coordinate);
                 const lon = coord[0].toFixed(6);
                 const lat = coord[1].toFixed(6);
-
-                document.getElementById("selectedLongitude").value = lon;
-                document.getElementById("selectedLatitude").value = lat;
 
                 coordMarkerLayer.getSource().clear();
                 const point = new ol.Feature(new ol.geom.Point(evt.coordinate));
@@ -292,38 +387,372 @@
                     }
                 }
 
-                document.getElementById("selectedProvince").value = foundProvince;
-                document.getElementById("selectedDistrict").value = foundDistrict;
-            });
+                // Update hidden inputs
+                document.getElementById("LongInput").value = lon;
+                document.getElementById("LatInput").value = lat;
+                document.getElementById("HiddenProvinceName").value = foundProvince;
+                document.getElementById("HiddenDistrictName").value = foundDistrict;
 
-            document.getElementById("confirmCoordinatesBtn").addEventListener("click", function () {
-                const lon = document.getElementById("selectedLongitude").value;
-                const lat = document.getElementById("selectedLatitude").value;
-                const province = document.getElementById("selectedProvince").value;
-                const district = document.getElementById("selectedDistrict").value;
-
-                if (lon && lat) {
-                    document.getElementById("LongInput").value = lon;
-                    document.getElementById("LatInput").value = lat;
-                    document.getElementById("HiddenProvinceName").value = province;
-                    document.getElementById("HiddenDistrictName").value = district;
-                }
+                // Update display
+                document.getElementById("displayCoords").textContent = `${lat} / ${lon}`;
+                document.getElementById("displayLocation").textContent = `${foundProvince || "-"} / ${foundDistrict || "-"}`;
             });
         });
+
+        // Gelişmiş Görsel Önizleme Fonksiyonları
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById("imagePreview");
+            const wrapper = document.getElementById("imageWrapper");
+            const label = document.getElementById("fileLabel");
 
             if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Dosya boyutu kontrolü (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert("Dosya boyutu 10MB'dan küçük olmalıdır!");
+                    input.value = "";
+                    return;
+                }
+
+                // Dosya türü kontrolü
+                if (!file.type.match(/^image\/(jpeg|jpg|png|gif)$/)) {
+                    alert("Lütfen geçerli bir görsel dosyası seçin (JPEG, JPG, PNG, GIF)!");
+                    input.value = "";
+                    return;
+                }
+
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
                     preview.src = e.target.result;
-                    preview.style.display = "block";
+                    wrapper.style.display = "block";
+                    label.style.display = "none";
                 }
 
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
+
+        function removeImage() {
+            const input = document.getElementById("ImageFile");
+            const preview = document.getElementById("imagePreview");
+            const wrapper = document.getElementById("imageWrapper");
+            const label = document.getElementById("fileLabel");
+
+            // Dosya inputunu temizle
+            input.value = "";
+
+            // Önizlemeyi gizle
+            preview.src = "#";
+            wrapper.style.display = "none";
+            label.style.display = "block";
+        }
+
+        function openImageModal() {
+            const preview = document.getElementById("imagePreview");
+            const modal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
+
+            if (preview.src && preview.src !== window.location.href + "#") {
+                modalImage.src = preview.src;
+                modal.style.display = "block";
+
+                // Body scroll'unu engelle
+                document.body.style.overflow = "hidden";
+            }
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+
+            // Body scroll'unu geri aç
+            document.body.style.overflow = "auto";
+        }
+
+        function removeImageFromModal() {
+            removeImage();
+            closeImageModal();
+        }
+
+        // Modal dışına tıklayınca kapanması için
+        document.getElementById("imageModal").addEventListener("click", function(event) {
+            if (event.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // ESC tuşu ile modal kapanması
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closeImageModal();
+            }
+        });
+
+        // Dosya sürükle-bırak özelliği
+        const fileLabel = document.getElementById("fileLabel");
+        const fileInput = document.getElementById("ImageFile");
+
+        fileLabel.addEventListener("dragover", function(e) {
+            e.preventDefault();
+            this.style.borderColor = "#764ba2";
+            this.style.background = "#f8f9ff";
+        });
+
+        fileLabel.addEventListener("dragleave", function(e) {
+            e.preventDefault();
+            this.style.borderColor = "#667eea";
+            this.style.background = "white";
+        });
+
+        fileLabel.addEventListener("drop", function(e) {
+            e.preventDefault();
+            this.style.borderColor = "#667eea";
+            this.style.background = "white";
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                previewImage({ target: fileInput });
+            }
+        });
+
+        $(document).ready(function() {
+            // Select2 başlatma
+            $('[asp-for="CreatureId"]').select2({
+                placeholder: 'Tür Seçiniz',
+                allowClear: true,
+                theme: 'default',
+                tags: false,
+                width: '100%',
+                minimumInputLength: 0,
+                maximumSelectionLength: 10, // Maksimum seçim sayısı
+                language: {
+                    noResults: function() {
+                        return "Sonuç bulunamadı";
+                    },
+                    searching: function() {
+                        return "Aranıyor...";
+                    },
+                    inputTooShort: function() {
+                        return "Arama için yazın";
+                    }
+                },
+                // Dropdown açıldığında search input'u görünür yap
+                dropdownCssClass: 'select2-dropdown-searchable',
+                // Sonuçları sınırla
+                ajax: null, // Eğer ajax kullanmıyorsanız null bırakın
+                templateResult: function(option) {
+                    // Maksimum 10 öğe göster
+                    return option.text;
+                }
+            }).on('select2:open', function() {
+                // Dropdown açıldığında search kutusuna focus ver
+                setTimeout(function() {
+                    $('.select2-search--dropdown .select2-search__field').focus();
+                }, 100);
+            });
+
+            $('[asp-for="ProjectId"]').select2({
+                placeholder: 'Proje Seçiniz',
+                allowClear: true,
+                theme: 'default',
+                width: '100%',
+                minimumInputLength: 0,
+                maximumSelectionLength: 10,
+                dropdownCssClass: 'select2-dropdown-searchable'
+            }).on('select2:open', function() {
+                setTimeout(function() {
+                    $('.select2-search--dropdown .select2-search__field').focus();
+                }, 100);
+            });
+
+            $('[asp-for="ReferenceId"]').select2({
+                placeholder: 'Referans Seçiniz',
+                allowClear: true,
+                theme: 'default',
+                width: '100%',
+                minimumInputLength: 0,
+                maximumSelectionLength: 10,
+                dropdownCssClass: 'select2-dropdown-searchable'
+            }).on('select2:open', function() {
+                setTimeout(function() {
+                    $('.select2-search--dropdown .select2-search__field').focus();
+                }, 100);
+            });
+
+            // Sonuçları sınırlama için özel filtreleme
+            $('.form-control').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).on('select2:open', function() {
+                        var dropdown = $(this).data('select2').dropdown.$dropdown;
+                        var results = dropdown.find('.select2-results__options');
+
+                        // Maksimum 10 öğe göster
+                        results.find('.select2-results__option').each(function(index) {
+                            if (index >= 10) {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                }
+            });
+
+            // Form submit işlemi
+            $('form').on('submit', function(e) {
+                console.log('Form submitted');
+            });
+        });
+
+
+        // Başarı mesajı gösterme
+        function showSuccessMessage() {
+            const successAlert = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Gözlem başarıyla kaydedildi!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            $('.form-section').append(successAlert);
+
+            // 3 saniye sonra otomatik gizle
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 3000);
+        }
+
+        // Proje ekleme modal fonksiyonları
+        function openAddProjectModal() {
+            $('#addProjectModal').fadeIn(300);
+            $('#newProjectName').focus();
+        }
+
+        function closeAddProjectModal() {
+            $('#addProjectModal').fadeOut(300);
+            $('#newProjectName, #newProjectDescription').val('');
+        }
+
+        function saveNewProject() {
+            const projectName = $('#newProjectName').val().trim();
+            const projectDescription = $('#newProjectDescription').val().trim();
+
+            if (projectName) {
+                // AJAX ile controller'a yeni proje ekle
+                $.ajax({
+                    url: '/Observation/AddProject',
+                    type: 'POST',
+                    data: {
+                        name: projectName,
+                        description: projectDescription
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Yeni proje dropdown'a ekle
+                            const newOption = new Option(response.name, response.id, true, true);
+                            $('[asp-for="ProjectId"]').append(newOption).trigger('change');
+
+                            closeAddProjectModal();
+                            showTempMessage('Yeni proje başarıyla eklendi!', 'success');
+                        } else {
+                            showTempMessage('Proje eklenirken hata oluştu!', 'danger');
+                        }
+                    },
+                    error: function() {
+                        showTempMessage('Proje eklenirken hata oluştu!', 'danger');
+                    }
+                });
+            } else {
+                showTempMessage('Proje adı boş olamaz!', 'danger');
+            }
+        }
+
+        // Referans ekleme modal fonksiyonları
+        function openAddReferenceModal() {
+            $('#addReferenceModal').fadeIn(300);
+            $('#newReferenceName').focus();
+        }
+
+        function closeAddReferenceModal() {
+            $('#addReferenceModal').fadeOut(300);
+            $('#newReferenceName, #newReferenceAuthor').val('');
+        }
+
+        function saveNewReference() {
+            const referenceName = $('#newReferenceName').val().trim();
+            const referenceAuthor = $('#newReferenceAuthor').val().trim();
+
+            if (referenceName) {
+                // AJAX ile controller'a yeni referans ekle
+                $.ajax({
+                    url: '/Observation/AddReference',
+                    type: 'POST',
+                    data: {
+                        name: referenceName,
+                        author: referenceAuthor
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Yeni referans dropdown'a ekle
+                            const newOption = new Option(response.name, response.id, true, true);
+                            $('[asp-for="ReferenceId"]').append(newOption).trigger('change');
+
+                            closeAddReferenceModal();
+                            showTempMessage('Yeni referans başarıyla eklendi!', 'success');
+                        } else {
+                            showTempMessage('Referans eklenirken hata oluştu!', 'danger');
+                        }
+                    },
+                    error: function() {
+                        showTempMessage('Referans eklenirken hata oluştu!', 'danger');
+                    }
+                });
+            } else {
+                showTempMessage('Referans adı boş olamaz!', 'danger');
+            }
+        }
+
+        // Geçici mesaj gösterme
+        function showTempMessage(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+            const tempAlert = `
+                <div class="alert ${alertClass} alert-dismissible fade show position-fixed"
+                     style="top: 20px; right: 20px; z-index: 10000; min-width: 300px;" role="alert">
+                    <i class="fas ${icon} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            $('body').append(tempAlert);
+
+            // 3 saniye sonra otomatik gizle
+            setTimeout(function() {
+                $('.alert.position-fixed').fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+
+        // Modal dışına tıklandığında kapatma
+        $(document).on('click', '.popup-modal', function(e) {
+            if (e.target === this) {
+                $(this).fadeOut(300);
+                // Input'ları temizle
+                $(this).find('input').val('');
+            }
+        });
+
+        // ESC tuşu ile modal kapatma
+        $(document).keydown(function(e) {
+            if (e.key === 'Escape') {
+                $('.popup-modal:visible').fadeOut(300);
+                $('.popup-modal input').val('');
+            }
+        });
     </script>
-}
+</body>
+</html>
