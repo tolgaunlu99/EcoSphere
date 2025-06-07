@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EcoSphere.Models;
 public partial class VwObservation
 {
+    [Column("ID")]
+    public int Id { get; set; }
     [Column("scientific_name")]
     public string? ScientificName { get; set; }
     [Column("username")]
