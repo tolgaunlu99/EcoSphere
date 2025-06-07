@@ -74,6 +74,9 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<TblUserRole> TblUserRoles { get; set; }
 
     public virtual DbSet<TblUseraction> TblUseractions { get; set; }
+    public virtual DbSet<VwMap> VwMaps { get; set; }
+    public virtual DbSet<VwObservation> VwObservations { get; set; }
+    public virtual DbSet<VwSpecy> VwSpecies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("name=ConnectionStrings:MyDbContext");
@@ -731,6 +734,23 @@ public partial class MyDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.TblUseractions)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_tbl_useractions_tbl_user");
+        });
+        modelBuilder.Entity<VwMap>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_map");
+        });
+
+        modelBuilder.Entity<VwObservation>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_observations");
+        });
+
+        modelBuilder.Entity<VwSpecy>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("vw_species");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -20,14 +20,28 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchTerm = "")
         {
-            int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
-
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3)) // 1=Admin, 2=Expert
+            // 1) Oturumdan rolü alalım
+            int? userRoleId = HttpContext.Session.GetInt32("Role_ID");
+            if (userRoleId == null || (userRoleId != 1 && userRoleId != 2 && userRoleId != 3 && userRoleId != 4))
             {
+                // Rol çekilemediyse veya tanımlı olmayan rolde ise erişim izni yok
                 return RedirectToAction("AccessDenied", "UserView");
             }
+
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
+
+            // 2) Eğer Admin/Expert değilse “True” Endemic ID’sini alalım
+            int? trueEndemicId = null;
+            if (roleID != 1 && roleID != 2)
+            {
+                trueEndemicId = _context.TblEndemicstatuses
+                                  .Where(e => e.EndemicStatus == "True")
+                                  .Select(e => e.EndemicStatusId)
+                                  .FirstOrDefault();
+            }
+
+            // 3) LINQ sorgusuna Endemic filtresini ekliyoruz:
             var observationsWithNames =
                 from m in _context.TblMaintables
                 join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
@@ -42,16 +56,17 @@ namespace EcoSphere.Controllers
                 join lt in _context.TblLocationtypes on m.LocationTypeId equals lt.LocationTypeId
                 join lr in _context.TblLocationranges on m.LocationRangeId equals lr.LocationRangeId
                 join g in _context.TblGenders on m.GenderId equals g.GenderId
-
-                // LEFT JOIN yapılan kısımlar
+                // LEFT JOIN bölümleri…
                 join r in _context.TblRegions on m.RegionId equals r.RegionId into regionGroup
                 from r in regionGroup.DefaultIfEmpty()
-
                 join l in _context.TblLocalities on m.LocalityId equals l.LocalityId into localityGroup
                 from l in localityGroup.DefaultIfEmpty()
-
                 join n in _context.TblNeighbourhoods on m.NeighborhoodId equals n.NeighbourhoodId into hoodGroup
                 from n in hoodGroup.DefaultIfEmpty()
+
+                    // İşte buraya Endemic filtresi ekliyoruz:
+                where (roleID == 1 || roleID == 2  // Admin/Expert ise bütün kayıtları al
+                       || m.EndemicStatusId != trueEndemicId)  // Değilse “True” kaydı atla
 
                 select new ObservationViewModel
                 {
@@ -79,6 +94,7 @@ namespace EcoSphere.Controllers
                     CreationDate = m.CreationDate
                 };
 
+            // 4) Arama varsa arama filtresini uygulama
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 observationsWithNames = observationsWithNames.Where(o =>
@@ -86,10 +102,17 @@ namespace EcoSphere.Controllers
                     o.provincename.Contains(searchTerm));
             }
 
-            ViewData["SearchTerm"] = searchTerm;
+            // 5) Son olarak ToListAsync() ile execute et
             var viewModel = await observationsWithNames.ToListAsync();
             return View(viewModel);
         }
+
+
+
+
+
+
+
         [HttpPost]
         public IActionResult LogUserExport(string exportType, string sourceTable)
         {
@@ -281,21 +304,27 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult GetObservationsByProvince(string province)
         {
-            var observations = (from m in _context.TblMaintables
-                                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                                join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
-                                join p in _context.TblProvinces on m.CityId equals p.ProvinceId
-                                where m.Lat != null && m.Long != null && p.ProvinceName == province
-                                select new
-                                {
-                                    Id = m.Id,
-                                    Lat = m.Lat,
-                                    Long = m.Long,
-                                    Name = c.ScientificName,
-                                    Kingdom = c.Kingdom!.KingdomName,    // ★ Kingdom alanını ekledik
-                                    SeenTime = m.SeenTime
-                                })
-                           .ToList();
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            // Endemic Status kontrolü eğer ihtiyaç varsa (şu an View'da bu kolon yok gibi görünüyor)
+            // Bu kısım VwMap view'ına eklenmediyse veya gerekmiyorsa iptal edilebilir.
+
+            // Sorgu
+            var observations = _context.VwMaps
+                .Where(v => v.Lat != null
+                            && v.Long != null
+                            && v.ProvinceName == province)
+                .OrderByDescending(v => v.SeenTime)
+                .Select(v => new
+                {
+                    v.Id,
+                    v.Lat,
+                    v.Long,
+                    Name = v.ScientificName,
+                    Kingdom = v.KingdomName,
+                    SeenTime = v.SeenTime
+                })
+                .ToList();  // <-- Tüm verileri getir
 
             return Json(observations);
         }
@@ -304,20 +333,26 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult GetObservationsByDistrict(string district)
         {
-            var observations = (from m in _context.TblMaintables
-                                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                                join d in _context.TblDistricts on m.DistrictId equals d.DistrictId
-                                where m.Lat != null && m.Long != null && d.DistrictName == district
-                                select new
-                                {
-                                    Id = m.Id,
-                                    Lat = m.Lat,
-                                    Long = m.Long,
-                                    Name = c.ScientificName,
-                                    Kingdom = c.Kingdom!.KingdomName,   // ★ Kingdom alanını ekledik
-                                    SeenTime = m.SeenTime
-                                })
-                           .ToList();
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            // Burada EndemicStatusId kontrolü View'da yoksa atlayabiliriz;
+            // VwMap'e eklenirse role bazlı filtreyi kullanabiliriz.
+
+            var observations = _context.VwMaps
+                .Where(v => v.Lat != null
+                            && v.Long != null
+                            && v.DistrictName == district)
+                .OrderByDescending(v => v.SeenTime)
+                .Select(v => new
+                {
+                    v.Id,
+                    v.Lat,
+                    v.Long,
+                    Name = v.ScientificName,
+                    Kingdom = v.KingdomName,
+                    SeenTime = v.SeenTime
+                })
+                .ToList();  // <-- Tüm verileri getir
 
             return Json(observations);
         }
@@ -351,7 +386,7 @@ namespace EcoSphere.Controllers
 
             return View(obs);
         }
-        
+
 
 
 
