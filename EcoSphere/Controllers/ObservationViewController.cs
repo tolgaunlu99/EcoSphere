@@ -358,6 +358,7 @@ namespace EcoSphere.Controllers
         }
 
 
+
         [HttpGet]
         public IActionResult Details(int id)
         {
