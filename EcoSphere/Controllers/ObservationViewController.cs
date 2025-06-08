@@ -1,10 +1,11 @@
-﻿using EcoSphere.Models;
+﻿using EcoSphere.Caching;
+using EcoSphere.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.IO; // GeoJSON için gerekli
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO; // GeoJSON için gerekli
 
 namespace EcoSphere.Controllers
 {
@@ -18,78 +19,68 @@ namespace EcoSphere.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string searchTerm = "")
+        public IActionResult Index()
         {
+            var roleID = GetCurrentUserRoleId();
+            ViewBag.UserRoleId = roleID;
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3)) // 1=Admin, 2=Expert
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2))
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
-            var roleID = GetCurrentUserRoleId();
-            ViewBag.UserRoleId = roleID;
-            var observationsWithNames =
-                from m in _context.TblMaintables
-                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                join u in _context.TblUsers on m.UserId equals u.UserId
-                join p in _context.TblProvinces on m.CityId equals p.ProvinceId
-                join d in _context.TblDistricts on m.DistrictId equals d.DistrictId
-                join ms in _context.TblMigrationstatuses on m.MigrationStatusId equals ms.MigrationStatusId
-                join es in _context.TblEndemicstatuses on m.EndemicStatusId equals es.EndemicStatusId
-                join pr in _context.TblProjects on m.ProjectId equals pr.ProjectId
-                join ci in _context.TblCitations on m.CitationId equals ci.CitationId
-                join re in _context.TblReferences on m.ReferenceId equals re.ReferenceId
-                join lt in _context.TblLocationtypes on m.LocationTypeId equals lt.LocationTypeId
-                join lr in _context.TblLocationranges on m.LocationRangeId equals lr.LocationRangeId
-                join g in _context.TblGenders on m.GenderId equals g.GenderId
 
-                // LEFT JOIN yapılan kısımlar
-                join r in _context.TblRegions on m.RegionId equals r.RegionId into regionGroup
-                from r in regionGroup.DefaultIfEmpty()
-
-                join l in _context.TblLocalities on m.LocalityId equals l.LocalityId into localityGroup
-                from l in localityGroup.DefaultIfEmpty()
-
-                join n in _context.TblNeighbourhoods on m.NeighborhoodId equals n.NeighbourhoodId into hoodGroup
-                from n in hoodGroup.DefaultIfEmpty()
-
-                select new ObservationViewModel
-                {
-                    Id = m.Id,
-                    CreatureName = c.ScientificName,
-                    UserName = u.Name,
-                    UsersurName = u.Surname,
-                    RegionName = r != null ? r.RegionName : "",
-                    provincename = p.ProvinceName,
-                    DistrictName = d.DistrictName,
-                    LocalityName = l != null ? l.LocalityName : "",
-                    HoodName = n != null ? n.HoodName : "",
-                    MigrationStatName = ms.MigrationStatusName,
-                    EndemicStatName = es.EndemicStatus,
-                    ProjectName = pr.ProjectName,
-                    CitationName = ci.CitationName,
-                    ReferenceName = re.ReferenceName,
-                    LocationType = lt.LocationType,
-                    LocationRange = lr.LocationRangeValue,
-                    GenderName = g.GenderName,
-                    Long = m.Long,
-                    Lat = m.Lat,
-                    Activity = m.Activity,
-                    SeenTime = m.SeenTime,
-                    CreationDate = m.CreationDate
-                };
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                observationsWithNames = observationsWithNames.Where(o =>
-                    o.CreatureName.Contains(searchTerm) ||
-                    o.provincename.Contains(searchTerm));
-            }
-
-            ViewData["SearchTerm"] = searchTerm;
-            var viewModel = await observationsWithNames.ToListAsync();
-            return View(viewModel);
+            return View();
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> GetObservations()
+        //{
+        //    try
+        //    {
+        //        var data = await _context.VwObservations
+        //            .Select(v => new ObservationViewModel
+        //            {
+        //                Id = v.Id,  // ID'yi buraya ekledik
+        //                CreatureName = v.ScientificName,
+        //                UserName = v.Username,
+        //                provincename = v.ProvinceName,
+        //                DistrictName = v.DistrictName,
+        //                EndemicStatName = v.EndemicStatus,
+        //                ProjectName = v.ProjectName,
+        //                ReferenceName = v.ReferenceName,
+        //                LocationType = v.LocationType,
+        //                GenderName = v.GenderName,
+        //                Lat = v.Lat,
+        //                Long = v.Long,
+        //                Activity = v.Activity,
+        //                SeenTime = v.SeenTime,
+        //                CreationDate = v.CreationDate
+        //            })
+        //            .ToListAsync();
+
+        //        return Json(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+        //    }
+        //}
+        [HttpPost]
+        public IActionResult GetObservations()
+        {
+            try
+            {
+                var data = ObservationCache.GetCachedObservations();
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         public IActionResult LogUserExport(string exportType, string sourceTable)
         {
@@ -260,19 +251,21 @@ namespace EcoSphere.Controllers
             {
                 return Json(new { success = false, message = "Kayıt bulunamadı." });
             }
+
             var userId = HttpContext.Session.GetInt32("UserID");
-            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
 
             _context.TblMaintables.Remove(obs);
-            _context.SaveChanges();
+
             var action = new TblUseraction
             {
-                UserId = userId,
-                Action = id + "'li Kayıt " + username + " tarafından Silindi",
+                UserId = userId ?? 0,
+                Action = $"{id} ID'li kayıt {username} tarafından silindi.",
                 ActionTime = DateTime.Now
             };
 
             _context.TblUseractions.Add(action);
+
             _context.SaveChanges();
 
             return Json(new { success = true });
@@ -281,21 +274,27 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult GetObservationsByProvince(string province)
         {
-            var observations = (from m in _context.TblMaintables
-                                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                                join k in _context.TblKingdoms on c.KingdomId equals k.KingdomId
-                                join p in _context.TblProvinces on m.CityId equals p.ProvinceId
-                                where m.Lat != null && m.Long != null && p.ProvinceName == province
-                                select new
-                                {
-                                    Id = m.Id,
-                                    Lat = m.Lat,
-                                    Long = m.Long,
-                                    Name = c.ScientificName,
-                                    Kingdom = c.Kingdom!.KingdomName,    // ★ Kingdom alanını ekledik
-                                    SeenTime = m.SeenTime
-                                })
-                           .ToList();
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            // Endemic Status kontrolü eğer ihtiyaç varsa (şu an View'da bu kolon yok gibi görünüyor)
+            // Bu kısım VwMap view'ına eklenmediyse veya gerekmiyorsa iptal edilebilir.
+
+            // Sorgu
+            var observations = _context.VwMaps
+                .Where(v => v.Lat != null
+                            && v.Long != null
+                            && v.ProvinceName == province)
+                .OrderByDescending(v => v.SeenTime)
+                .Select(v => new
+                {
+                    v.Id,
+                    v.Lat,
+                    v.Long,
+                    Name = v.ScientificName,
+                    Kingdom = v.KingdomName,
+                    SeenTime = v.SeenTime
+                })
+                .ToList();  // <-- Tüm verileri getir
 
             return Json(observations);
         }
@@ -304,23 +303,30 @@ namespace EcoSphere.Controllers
         [HttpGet]
         public IActionResult GetObservationsByDistrict(string district)
         {
-            var observations = (from m in _context.TblMaintables
-                                join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                                join d in _context.TblDistricts on m.DistrictId equals d.DistrictId
-                                where m.Lat != null && m.Long != null && d.DistrictName == district
-                                select new
-                                {
-                                    Id = m.Id,
-                                    Lat = m.Lat,
-                                    Long = m.Long,
-                                    Name = c.ScientificName,
-                                    Kingdom = c.Kingdom!.KingdomName,   // ★ Kingdom alanını ekledik
-                                    SeenTime = m.SeenTime
-                                })
-                           .ToList();
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            // Burada EndemicStatusId kontrolü View'da yoksa atlayabiliriz;
+            // VwMap'e eklenirse role bazlı filtreyi kullanabiliriz.
+
+            var observations = _context.VwMaps
+                .Where(v => v.Lat != null
+                            && v.Long != null
+                            && v.DistrictName == district)
+                .OrderByDescending(v => v.SeenTime)
+                .Select(v => new
+                {
+                    v.Id,
+                    v.Lat,
+                    v.Long,
+                    Name = v.ScientificName,
+                    Kingdom = v.KingdomName,
+                    SeenTime = v.SeenTime
+                })
+                .ToList();  // <-- Tüm verileri getir
 
             return Json(observations);
         }
+
 
 
         [HttpGet]
@@ -351,7 +357,7 @@ namespace EcoSphere.Controllers
 
             return View(obs);
         }
-        
+
 
 
 
