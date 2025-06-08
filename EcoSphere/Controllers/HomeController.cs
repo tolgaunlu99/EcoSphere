@@ -48,7 +48,7 @@ public class HomeController : Controller
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
         }
         var totalCreatures = _context.TblCreatures.Count();
-        var totalObservations = _context.TblMaintables.Count();
+        var totalObservations = _context.VwObservations.Count();
         var model = new DashboardViewModel
         {
             TotalCreatures = totalCreatures,

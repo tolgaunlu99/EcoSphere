@@ -314,8 +314,8 @@
 
                                     // ► Kingdom’a göre renk atama
                                     const markerColor =
-                                        o.kingdom === "Animal" ? "red" :
-                                            o.kingdom === "Plant" ? "purple" :
+                                        o.kingdom === "Animalia" ? "red" :
+                                            o.kingdom === "Plantae" ? "purple" :
                                                 "gray";
 
                                     ft.setStyle(new ol.style.Style({
@@ -358,8 +358,8 @@
 
                                     // ► Burada da aynı renk atama
                                     const markerColor =
-                                        o.kingdom === "Animal" ? "red" :
-                                            o.kingdom === "Plant" ? "purple" :
+                                        o.kingdom === "Animalia" ? "red" :
+                                            o.kingdom === "Plantae" ? "purple" :
                                                 "gray";
 
                                     ft.setStyle(new ol.style.Style({

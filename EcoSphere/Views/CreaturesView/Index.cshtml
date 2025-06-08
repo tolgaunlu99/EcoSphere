@@ -1,8 +1,8 @@
 ﻿@model List<EcoSphere.Models.CreaturesViewModel>
+
 @{
     ViewData["Title"] = "Creatures Details";
 }
-
 
 <div class="container obs-container mt-4">
     <h3>@ViewData["Title"]</h3>
@@ -14,28 +14,26 @@
         <table id="creaturesTable" class="table table-striped table-bordered" cellspacing="0">
             <thead class="table-active">
                 <tr>
-                    <th>Upper Realm</th>
-                    <th>Kingdom</th>
-                    <th>Phylum</th>
-                    <th>Class</th>
-                    <th>Order</th>
-                    <th>Family</th>
-                    <th>Genus</th>
-                    <th>Species</th>
-                    <th>Sub Species</th>
-                    <th>IUCN</th>
-                    <th>Author</th>
-                    <th>Scientific Name</th>
+                    <th>ID</th>
+                    <th>Upper Realm Name</th>
+                    <th>Kingdom Name</th>
+                    <th>Phylum Name</th>
+                    <th>Class Name</th>
+                    <th>Order Name</th>
+                    <th>Family Name</th>
+                    <th>Genus Name</th>
+                    <th>Species Name</th>
                     <th>Common Name</th>
-                    <th class="noExport" style="text-align:center; width:120px;">Actions</th>
+                    <th>IUCN Code</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model != null && Model.Any())
                 {
-                    @foreach (var creature in Model)
+                    foreach (var creature in Model)
                     {
                         <tr>
+                            <td>@creature.CreatureId</td>
                             <td>@creature.UpperRealmName</td>
                             <td>@creature.KingdomName</td>
                             <td>@creature.PhylumName</td>
@@ -43,26 +41,17 @@
                             <td>@creature.OrderName</td>
                             <td>@creature.FamilyName</td>
                             <td>@creature.GenusName</td>
-                            <td>@creature.SpeciesName</td>
-                            <td>@creature.SubspeciesName</td>
-                            <td>@creature.IucnCode</td>
-                            <td>@creature.AuthorName</td>
-                            <td>@creature.ScientificName</td>
+                            <td>@creature.SpeciesName</td>                            
                             <td>@creature.CommonName</td>
-                            <td style="text-align:center;">
-                                <div class="btn-group btn-group-sm">
-                                    <a asp-controller="Creatures" asp-action="Edit" asp-route-id="@creature.CreatureId" class="btn btn-primary">Edit</a>
-                                    <a asp-controller="Creatures" asp-action="Delete" asp-route-id="@creature.CreatureId" class="btn btn-danger">Delete</a>
-                                </div>
-                            </td>
+                            <td>@creature.IucnCode</td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="14">
-                            <div class="text-center py-2">No Creatures Available</div>
+                        <td colspan="11">
+                            <div class="text-center py-2">Loading...</div>
                         </td>
                     </tr>
                 }
@@ -83,13 +72,32 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+                $(document).ready(function () {
             var table = $('#creaturesTable').DataTable({
                 language: { lengthMenu: 'Show _MENU_' },
                 dom: '<"table-header d-flex justify-content-between mb-3"<"dt-buttons btn-group"B><"table-controls d-flex align-items-center"<"me-2"l><"table-search"f>>>rtip',
                 scrollX: true,
                 paging: true,
                 autoWidth: false,
+                processing: true, // loading spinner için
+                ajax: {
+                    url: '/CreaturesView/GetCreatures',
+                    type: 'POST',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'creatureId' },
+                    { data: 'upperRealmName' },
+                    { data: 'kingdomName' },
+                    { data: 'phylumName' },
+                    { data: 'className' },
+                    { data: 'orderName' },
+                    { data: 'familyName' },
+                    { data: 'genusName' },
+                    { data: 'speciesName' },
+                    { data: 'commonName' },
+                    { data: 'iucnCode' }
+                ],
                 columnDefs: [{ orderable: false, targets: -1 }],
                 buttons: [
                     {
