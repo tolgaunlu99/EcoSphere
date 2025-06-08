@@ -1,21 +1,27 @@
-﻿using EcoSphere.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using EcoSphere.Caching;
+using EcoSphere.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net.Mail;
-using System.Net;
+using System;
+using System.Threading.Tasks;
 
 namespace EcoSphere.Controllers
 {
     public class UserViewController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly IServiceProvider _serviceProvider;
 
-        public UserViewController(MyDbContext context)
+        public UserViewController(MyDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet]
@@ -25,6 +31,7 @@ namespace EcoSphere.Controllers
             ViewBag.UserRoleId = roleID;
             return View();
         }
+
         private int GetCurrentUserRoleId()
         {
             var userId = HttpContext.Session.GetInt32("UserID");
@@ -33,10 +40,10 @@ namespace EcoSphere.Controllers
             {
                 var userRole = _context.TblUserRoles
                                        .FirstOrDefault(ur => ur.UserId == userId.Value);
-                return userRole?.RoleId ?? 0;  // Eğer kullanıcı yoksa, misafir için 0 döndür
+                return userRole?.RoleId ?? 0;
             }
 
-            return 0;  // Misafir rolü
+            return 0;
         }
 
         [HttpPost]
@@ -53,7 +60,7 @@ namespace EcoSphere.Controllers
 
                 if (user != null)
                 {
-                    var action= new TblUseraction
+                    var action = new TblUseraction
                     {
                         UserId = user.UserId,
                         Action = "Giriş Yapıldı!!",
@@ -61,17 +68,48 @@ namespace EcoSphere.Controllers
                     };
                     _context.TblUseractions.Add(action);
                     _context.SaveChanges();
+
                     var userRole = _context.TblUserRoles.FirstOrDefault(r => r.UserId == user.UserId);
 
                     if (userRole != null && userRole.RoleId.HasValue)
                     {
                         HttpContext.Session.SetInt32("UserID", user.UserId);
-                        HttpContext.Session.SetInt32("Role_ID", userRole.RoleId.Value); // Burada .Value kullanılıyor
+                        HttpContext.Session.SetInt32("Role_ID", userRole.RoleId.Value);
+
+                        if (userRole.RoleId.Value == 1 || userRole.RoleId.Value == 2)
+                        {
+                            // Observation Cache'i doldur
+                            if (ObservationCache.IsCacheEmpty())
+                            {
+                                Task.Run(() =>
+                                {
+                                    using (var scope = _serviceProvider.CreateScope())
+                                    {
+                                        var scopedContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+                                        ObservationCache.LoadCache(scopedContext);
+                                    }
+                                });
+                            }
+
+                            // Creatures Cache'i doldur
+                            if (CreaturesCache.IsCacheEmpty())
+                            {
+                                Task.Run(() =>
+                                {
+                                    using (var scope = _serviceProvider.CreateScope())
+                                    {
+                                        var scopedContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+                                        CreaturesCache.LoadCache(scopedContext);
+                                    }
+                                });
+                            }
+                        }
                     }
                     else
                     {
                         return RedirectToAction("AccessDenied", "UserView");
                     }
+
                     return Json(new { success = true, redirectUrl = Url.Action("Index", "Home"), message = $"Welcome, {user.Username}!" });
                 }
 
@@ -101,17 +139,20 @@ namespace EcoSphere.Controllers
 
                 _context.TblUsers.Add(newUser);
                 _context.SaveChanges();
-                var createdUserID=newUser.UserId;
-                var userRole= new TblUserRole
+
+                var createdUserID = newUser.UserId;
+                var userRole = new TblUserRole
                 {
                     UserId = createdUserID,
                     RoleId = 4,
-                    Status="available",
+                    Status = "available",
                     CreationDate = DateTime.Now,
                     UpdatedDate = DateTime.Now
                 };
+
                 _context.TblUserRoles.Add(userRole);
                 _context.SaveChanges();
+
                 return Json(new { success = true, message = "Registration successful. You can now log in." });
             }
 
@@ -133,23 +174,27 @@ namespace EcoSphere.Controllers
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
             }
         }
+
         public IActionResult AccessDenied()
         {
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
             return View();
         }
+
         public IActionResult ForgotPassword()
         {
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
             return View();
         }
+
         [HttpPost]
         public IActionResult ForgotPassword(string email)
         {
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
+
             var user = _context.TblUsers.FirstOrDefault(x => x.Email == email);
             if (user == null)
             {
@@ -162,12 +207,12 @@ namespace EcoSphere.Controllers
             HttpContext.Session.SetString("ResetOTP", otp);
             HttpContext.Session.SetString("OTPTime", DateTime.Now.ToString());
 
-            // Gmail ile OTP gönder
             SendOtpMail(email, otp);
 
             ViewBag.EmailConfirmed = true;
             return View();
         }
+
         private void SendOtpMail(string toEmail, string otp)
         {
             var fromAddress = new MailAddress("dkmverifysystem@gmail.com", "Şifre Sıfırlama");
@@ -194,11 +239,13 @@ namespace EcoSphere.Controllers
                 smtp.Send(message);
             }
         }
+
         [HttpPost]
         public IActionResult VerifyOtp(string otp)
         {
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
+
             var sessionOtp = HttpContext.Session.GetString("ResetOTP");
             var email = HttpContext.Session.GetString("ResetEmail");
 
@@ -211,6 +258,7 @@ namespace EcoSphere.Controllers
             ViewBag.Error = "Kod yanlış. Lütfen tekrar deneyin.";
             return View("ForgotPassword");
         }
+
         [HttpGet]
         public IActionResult UpdatePassword()
         {
@@ -218,6 +266,7 @@ namespace EcoSphere.Controllers
             ViewBag.UserRoleId = roleID;
             return View();
         }
+
         [HttpPost]
         public IActionResult UpdatePassword(string newPassword, string confirmPassword)
         {
