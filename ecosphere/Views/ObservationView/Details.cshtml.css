@@ -68,7 +68,7 @@
         .detail-item.endemicc:hover {
             background: #ff0000;
             transform: translateX(3px);
-            border-left-color: #548C1C;
+            border-color: #000000;
             box-shadow: 0 4px 12px rgba(46, 89, 14, 0.1);
         }
 
