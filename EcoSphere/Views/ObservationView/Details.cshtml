@@ -1,41 +1,145 @@
-﻿@model EcoSphere.Models.ObservationViewModel
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observation Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-@{
-    ViewData["Title"] = "Observation Details";
-}
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="observation-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-eye me-2"></i>Gözlem Detayları</h2>
+                    </div>
 
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header">
-            <h3>Observation Details</h3>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Creature Name</dt>
-                <dd class="col-sm-9">@Model.CreatureName</dd>
+                    <div class="row g-0">
+                        <!-- Sol Taraf - Tüm Bilgiler -->
+                        <div class="col-lg-4 col-md-5">
+                            <div class="detail-section">
+                                <h5 class="mb-3 texthead"><i class="fas fa-user me-2"></i>Kullanıcı Bilgileri</h5>
 
-                <dt class="col-sm-3">User Name</dt>
-                <dd class="col-sm-9">@Model.UserName @Model.UsersurName</dd>
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Username</div>
+                                        <div class="detail-value">Abuzer99</div>
+                                    </div>
+                                </div>
 
-                <dt class="col-sm-3">Latitude</dt>
-                <dd class="col-sm-9">@Model.Lat</dd>
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Ad Soyad</div>
+                                        <div class="detail-value">Ahmet Yılmaz</div>
+                                    </div>
+                                </div>
 
-                <dt class="col-sm-3">Longitude</dt>
-                <dd class="col-sm-9">@Model.Long</dd>
+                                <h5 class="mb-3 mt-4 texthead"><i class="fas fa-paw me-2"></i>Canlı Bilgileri</h5>
 
-                <dt class="col-sm-3">Image</dt>
-                <dd class="col-sm-9">
-                    @if (!string.IsNullOrEmpty(Model.ImagePath))
-                    {
-                        <img src="~/uploads/@Model.ImagePath" alt="Observation Image" class="img-thumbnail" style="max-width: 300px; height: auto;" />
-                    }
-                    else
-                    {
-                        <span>No image available</span>
-                    }
-                </dd>
-            </dl>
-            <a href="@Url.Action("Explore", "Home")" class="btn btn-primary">Back to Map</a>
+                                <div class="detail-item endemicc">
+                                <div class="detail-content ">
+                                    <div class="endemic">Endemik bir türdür</div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Bilimsel Adı</div>
+                                        <div class="detail-value">Amunus Mamunus Simunus</div>
+                                    </div>
+                                    <div class="detail-content">
+                                        <div class="detail-label">Canlı Adı</div>
+                                        <div class="detail-value">Kızıl Tilki</div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Cinsiyet</div>
+                                        <div class="detail-value">Erkek</div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Bölge</div>
+                                        <div class="detail-value">İstanbul/Tuzla</div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item compact">
+                                    <div class="detail-content">
+                                        <div class="detail-label">Görülme Zamanı</div>
+                                        <div class="detail-value">15.03.2024 14:30</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sağ Taraf - Büyük Fotoğraf Alanı -->
+                        <div class="col-lg-8 col-md-7">
+                            <div class="photo-section">
+                                <h5 class="mb-3 texthead"><i class="fas fa-camera me-2"></i>Gözlem Fotoğrafı</h5>
+                                <div class="main-image-container">
+                                    <img src="https://images.unsplash.com/photo-1504595403659-9088ce801e29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                                         alt="Gözlem Fotoğrafı"
+                                         class="main-observation-image"
+                                         onclick="openImageModal(this.src)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center pb-4">
+                        <a href="#" class="back-btn">
+                            <i class="fas fa-arrow-left"></i>
+                            Haritaya Geri Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <button type="button" class="close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="modal-body">
+                    <img id="modalImage" src="" class="modal-image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openImageModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        }
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+                if (modal) {
+                    modal.hide();
+                }
+            }
+        });
+
+
+
+
+
+    </script>
+</body>
+</html>
