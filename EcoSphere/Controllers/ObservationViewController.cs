@@ -1,10 +1,11 @@
-﻿using EcoSphere.Models;
+﻿using EcoSphere.Caching;
+using EcoSphere.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.IO; // GeoJSON için gerekli
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO; // GeoJSON için gerekli
 
 namespace EcoSphere.Controllers
 {
@@ -32,32 +33,45 @@ namespace EcoSphere.Controllers
             return View();
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> GetObservations()
+        //{
+        //    try
+        //    {
+        //        var data = await _context.VwObservations
+        //            .Select(v => new ObservationViewModel
+        //            {
+        //                Id = v.Id,  // ID'yi buraya ekledik
+        //                CreatureName = v.ScientificName,
+        //                UserName = v.Username,
+        //                provincename = v.ProvinceName,
+        //                DistrictName = v.DistrictName,
+        //                EndemicStatName = v.EndemicStatus,
+        //                ProjectName = v.ProjectName,
+        //                ReferenceName = v.ReferenceName,
+        //                LocationType = v.LocationType,
+        //                GenderName = v.GenderName,
+        //                Lat = v.Lat,
+        //                Long = v.Long,
+        //                Activity = v.Activity,
+        //                SeenTime = v.SeenTime,
+        //                CreationDate = v.CreationDate
+        //            })
+        //            .ToListAsync();
+
+        //        return Json(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+        //    }
+        //}
         [HttpPost]
-        public async Task<IActionResult> GetObservations()
+        public IActionResult GetObservations()
         {
             try
             {
-                var data = await _context.VwObservations
-                    .Select(v => new ObservationViewModel
-                    {
-                        Id = v.Id,  // ID'yi buraya ekledik
-                        CreatureName = v.ScientificName,
-                        UserName = v.Username,
-                        provincename = v.ProvinceName,
-                        DistrictName = v.DistrictName,
-                        EndemicStatName = v.EndemicStatus,
-                        ProjectName = v.ProjectName,
-                        ReferenceName = v.ReferenceName,
-                        LocationType = v.LocationType,
-                        GenderName = v.GenderName,
-                        Lat = v.Lat,
-                        Long = v.Long,
-                        Activity = v.Activity,
-                        SeenTime = v.SeenTime,
-                        CreationDate = v.CreationDate
-                    })
-                    .ToListAsync();
-
+                var data = ObservationCache.GetCachedObservations();
                 return Json(data);
             }
             catch (Exception ex)
@@ -65,7 +79,6 @@ namespace EcoSphere.Controllers
                 return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
             }
         }
-
 
 
         [HttpPost]

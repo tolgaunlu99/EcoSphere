@@ -165,19 +165,19 @@
 
     // ── Stil tanımları ───────────────────────────────────────
     const defaultProvinceStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
         fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
     });
     const hoverProvinceStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
         fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
     });
     const defaultDistrictStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
         fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
     });
     const hoverDistrictStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+        stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
         fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
     });
 
