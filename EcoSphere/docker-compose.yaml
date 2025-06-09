@@ -8,6 +8,6 @@
       - "4000:8080"
     environment:
       - ConnectionStrings__MyDbContext=Server=tcp:dkmappdbserver.database.windows.net,1433;Database=EcoSphereDB;User ID=ecosphere;Password=Savetheplanet123.;TrustServerCertificate=True;Encrypt=True;MultipleActiveResultSets=True;Connection Timeout=30;
-    restart: unless-stopped
+    restart: always
     container_name: ecosphere
  

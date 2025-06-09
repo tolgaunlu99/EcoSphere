@@ -294,6 +294,13 @@ namespace EcoSphere.Controllers
 
             user.Password = HashPassword(newPassword);
             user.UpdatedDate = DateTime.Now;
+            var action = new TblUseraction
+            {
+                UserId = user.UserId,
+                Action = $"{user.Username} kullanıcısı, şifresini değiştirdi.",
+                ActionTime = DateTime.Now
+            };
+            _context.TblUseractions.Add(action);
             _context.SaveChanges();
 
             HttpContext.Session.Remove("ResetEmail");

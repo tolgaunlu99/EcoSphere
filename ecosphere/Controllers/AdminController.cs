@@ -202,112 +202,6 @@ public class AdminController : Controller
         return View(logs);
     }
 
-    [HttpPost]
-    public JsonResult FilterLogs(string filterType)
-    {
-        try
-        {
-            List<UserActionViewModel> filteredLogs = new List<UserActionViewModel>();
-
-            switch (filterType)
-            {
-                case "login-logout":
-                    filteredLogs = _context.TblUseractions
-                        .Where(x => x.Action.Contains("Giriş Yapıldı") || x.Action.Contains("Çıkış Yapıldı"))
-                        .Join(_context.TblUsers,
-                            action => action.UserId,
-                            user => user.UserId,
-                            (action, user) => new UserActionViewModel
-                            {
-                                UserActionID = action.UserActionId,
-                                UserName = user.Username,
-                                Action = action.Action,
-                                ActionTime = action.ActionTime ?? DateTime.MinValue
-                            })
-                        .OrderByDescending(x => x.ActionTime)
-                        .ToList();
-                    break;
-
-                case "add":
-                    filteredLogs = _context.TblUseractions
-                        .Where(x => x.Action.Contains("ekledi"))
-                        .Join(_context.TblUsers,
-                            action => action.UserId,
-                            user => user.UserId,
-                            (action, user) => new UserActionViewModel
-                            {
-                                UserActionID = action.UserActionId,
-                                UserName = user.Username,
-                                Action = action.Action,
-                                ActionTime = action.ActionTime ?? DateTime.MinValue
-                            })
-                        .OrderByDescending(x => x.ActionTime)
-                        .ToList();
-                    break;
-
-                case "role-change":
-                    filteredLogs = _context.TblUseractions
-                        .Where(x => x.Action.Contains("rolünü"))
-                        .Join(_context.TblUsers,
-                            action => action.UserId,
-                            user => user.UserId,
-                            (action, user) => new UserActionViewModel
-                            {
-                                UserActionID = action.UserActionId,
-                                UserName = user.Username,
-                                Action = action.Action,
-                                ActionTime = action.ActionTime ?? DateTime.MinValue
-                            })
-                        .OrderByDescending(x => x.ActionTime)
-                        .ToList();
-                    break;
-
-                case "delete-user":
-                    filteredLogs = _context.TblUseractions
-                        .Where(x => x.Action.Contains("kullanıcısını sildi"))
-                        .Join(_context.TblUsers,
-                            action => action.UserId,
-                            user => user.UserId,
-                            (action, user) => new UserActionViewModel
-                            {
-                                UserActionID = action.UserActionId,
-                                UserName = user.Username,
-                                Action = action.Action,
-                                ActionTime = action.ActionTime ?? DateTime.MinValue
-                            })
-                        .OrderByDescending(x => x.ActionTime)
-                        .ToList();
-                    break;
-
-                case "delete-records":
-                    filteredLogs = _context.TblUseractions
-                        .Where(x => x.Action.Contains("tarafından Silindi"))
-                        .Join(_context.TblUsers,
-                            action => action.UserId,
-                            user => user.UserId,
-                            (action, user) => new UserActionViewModel
-                            {
-                                UserActionID = action.UserActionId,
-                                UserName = user.Username,
-                                Action = action.Action,
-                                ActionTime = action.ActionTime ?? DateTime.MinValue
-                            })
-                        .OrderByDescending(x => x.ActionTime)
-                        .ToList();
-                    break;
-
-                default:
-                    filteredLogs = new List<UserActionViewModel>();
-                    break;
-            }
-
-            return Json(new { success = true, data = filteredLogs });
-        }
-        catch (Exception ex)
-        {
-            return Json(new { success = false, message = ex.Message });
-        }
-    }
     public IActionResult ObservationManagement()
     {
         var roleID = GetCurrentUserRoleId();
@@ -396,13 +290,13 @@ public class AdminController : Controller
             if (userRole != null)
             {
                 userRole.RoleId = roleId;
-                _context.SaveChanges();
 
-                // Seçilen RoleName'i bul ve dön
-                var roleName = _context.TblRoles.FirstOrDefault(r => r.RoleId == roleId)?.RoleName;
+                // Action log kaydı ekle
                 var userIdd = HttpContext.Session.GetInt32("UserID");
                 var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userIdd)?.Username ?? "Sistem";
                 var username2 = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Sistem";
+                var roleName = _context.TblRoles.FirstOrDefault(r => r.RoleId == roleId)?.RoleName;
+
                 var action = new TblUseraction
                 {
                     UserId = userIdd,
@@ -411,7 +305,7 @@ public class AdminController : Controller
                 };
                 _context.TblUseractions.Add(action);
 
-                // 4️⃣ Değişiklikleri kaydet
+                // 🔥 Tüm değişiklikleri tek SaveChanges ile kaydet
                 _context.SaveChanges();
 
                 return Json(new { success = true, message = "Kullanıcı rolü başarıyla güncellendi!", newRoleName = roleName });
@@ -423,38 +317,45 @@ public class AdminController : Controller
         }
         catch (Exception ex)
         {
-            return Json(new { success = false, message = "Bir hata oluştu: " + ex.Message });
+            // En derindeki sebebi al
+            var baseEx = ex.GetBaseException();
+            var innerMsg = baseEx.Message;
+
+            return Json(new
+            {
+                success = false,
+                message = "Bir hata oluştu: " + innerMsg
+            });
         }
     }
     [HttpPost]
-    [HttpPost]
-public IActionResult LogUserExport(string exportType, string sourceTable)
-{
-    try
+    public IActionResult LogUserExport(string exportType, string sourceTable)
     {
-        var userId = HttpContext.Session.GetInt32("UserID");
-        if (userId == null)
+        try
         {
-            return Json(new { success = false, message = "UserID session bilgisi bulunamadı." });
+            var userId = HttpContext.Session.GetInt32("UserID");
+            if (userId == null)
+            {
+                return Json(new { success = false, message = "UserID session bilgisi bulunamadı." });
+            }
+
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
+
+            var userAction = new TblUseraction
+            {
+                UserId = userId,
+                Action = $"{username} '{sourceTable}' tablosunu '{exportType}' formatında indirdi.",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(userAction);
+            _context.SaveChanges();
+
+            return Json(new { success = true });
         }
-
-        var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
-
-        var userAction = new TblUseraction
+        catch (Exception ex)
         {
-            UserId = userId,
-            Action = $"{username} '{sourceTable}' tablosunu '{exportType}' formatında indirdi.",
-            ActionTime = DateTime.Now
-        };
-
-        _context.TblUseractions.Add(userAction);
-        _context.SaveChanges();
-
-        return Json(new { success = true });
-    }
-    catch (Exception ex)
-    {
-        return Json(new { success = false, message = ex.Message });
-    }
+            return Json(new { success = false, message = ex.Message });
+        }
     }
 }

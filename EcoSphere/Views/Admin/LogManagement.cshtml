@@ -14,15 +14,7 @@
 
 <div class="container-fluid mt-5">
     <h3>Log Management</h3>
-    <hr />
-
-    <div class="mb-3">
-        <button class="btn btn-info btn-sm filter-button mr-2" data-filter="login-logout">Giriş/Çıkış İşlemleri</button>
-        <button class="btn btn-success btn-sm filter-button mr-2" data-filter="add">Ekleme İşlemleri</button>
-        <button class="btn btn-warning btn-sm filter-button mr-2" data-filter="role-change">Rol Değiştirme İşlemleri</button>
-        <button class="btn btn-danger btn-sm filter-button mr-2" data-filter="delete-user">Silme İşlemleri</button>
-        <button class="btn btn-secondary btn-sm filter-button" data-filter="delete-records">Kayıt Silme İşlemleri</button>
-    </div>
+    <hr />  
 
     <div class="table-responsive">
         <table id="logTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
@@ -136,21 +128,7 @@
                     }
                 });
             }
-
-            $('.filter-button').on('click', function () {
-                var filterType = $(this).data('filter');
-                $.ajax({
-                    url: '@Url.Action("FilterLogs", "Admin")',
-                    type: 'POST',
-                    data: { filterType: filterType },
-                    success: function (res) {
-                        table.clear().rows.add(res.data).draw();
-                    },
-                    error: function () {
-                        Swal.fire('Hata', 'Filtrelenmiş loglar yüklenirken bir hata oluştu.', 'error');
-                    }
-                });
-            });
+           
         });
     </script>
 }
