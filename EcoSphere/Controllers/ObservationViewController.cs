@@ -32,40 +32,6 @@ namespace EcoSphere.Controllers
 
             return View();
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> GetObservations()
-        //{
-        //    try
-        //    {
-        //        var data = await _context.VwObservations
-        //            .Select(v => new ObservationViewModel
-        //            {
-        //                Id = v.Id,  // ID'yi buraya ekledik
-        //                CreatureName = v.ScientificName,
-        //                UserName = v.Username,
-        //                provincename = v.ProvinceName,
-        //                DistrictName = v.DistrictName,
-        //                EndemicStatName = v.EndemicStatus,
-        //                ProjectName = v.ProjectName,
-        //                ReferenceName = v.ReferenceName,
-        //                LocationType = v.LocationType,
-        //                GenderName = v.GenderName,
-        //                Lat = v.Lat,
-        //                Long = v.Long,
-        //                Activity = v.Activity,
-        //                SeenTime = v.SeenTime,
-        //                CreationDate = v.CreationDate
-        //            })
-        //            .ToListAsync();
-
-        //        return Json(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
-        //    }
-        //}
         [HttpPost]
         public IActionResult GetObservations()
         {
@@ -140,7 +106,8 @@ namespace EcoSphere.Controllers
                 model.RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList();
                 return View("AddObservation", model);
             }
-
+            Console.WriteLine("ImageFile geldi mi?: " + (model.ImageFile != null));
+            Console.WriteLine("ImageFile adı: " + model.ImageFile?.FileName);
             string? savedFileName = null;
 
             if (model.ImageFile != null && model.ImageFile.Length > 0)
@@ -191,10 +158,10 @@ namespace EcoSphere.Controllers
                 MigrationStatusId = model.MigrationStatusId,
                 EndemicStatusId = model.EndemicStatusId,
                 ProjectId = model.ProjectId,
-                CitationId = model.CitationId,
+                CitationId = 1,
                 ReferenceId = model.ReferenceId,
-                LocationTypeId = model.LocationTypeId,
-                LocationRangeId = model.LocationRangeId,
+                LocationTypeId = 1,
+                LocationRangeId = 1,
                 GenderId = model.GenderId,
                 ImagePath = savedFileName // sadece dosya adı (örneğin: abc123.jpg)
             };
@@ -212,10 +179,66 @@ namespace EcoSphere.Controllers
 
             _context.TblUseractions.Add(action);
             _context.SaveChanges();
+            // ✅ Cache'e de ekle
+            var addedCreature = _context.TblCreatures.FirstOrDefault(c => c.CreatureId == newObs.CreatureId);
+            var addedProject = _context.TblProjects.FirstOrDefault(p => p.ProjectId == newObs.ProjectId);
+            var addedReference = _context.TblReferences.FirstOrDefault(r => r.ReferenceId == newObs.ReferenceId);
+            var addedLocationType = _context.TblLocationtypes.FirstOrDefault(l => l.LocationTypeId == newObs.LocationTypeId);
+            var addedGender = _context.TblGenders.FirstOrDefault(g => g.GenderId == newObs.GenderId);
+            var addedEndemic = _context.TblEndemicstatuses.FirstOrDefault(e => e.EndemicStatusId == newObs.EndemicStatusId);
+
+            ObservationCache.AddObservation(new ObservationViewModel
+            {
+                Id = newObs.Id,
+                CreatureName = addedCreature?.ScientificName,
+                UserName = username,
+                provincename = province.ProvinceName,
+                DistrictName = district.DistrictName,
+                EndemicStatName = addedEndemic?.EndemicStatus,
+                ProjectName = addedProject?.ProjectName,
+                ReferenceName = addedReference?.ReferenceName,
+                LocationType = addedLocationType?.LocationType,
+                GenderName = addedGender?.GenderName,
+                Lat = newObs.Lat,
+                Long = newObs.Long,
+                Activity = newObs.Activity,
+                SeenTime = newObs.SeenTime,
+                CreationDate = newObs.CreationDate
+            });
 
             return RedirectToAction("AddObservation");
         }
+        [HttpPost]
+        [HttpPost]
+        public JsonResult AddProject(string projectName)
+        {
+            var existing = _context.TblProjects.FirstOrDefault(x => x.ProjectName == projectName);
+            if (existing != null)
+            {
+                return Json(new { success = false, message = "Bu proje zaten var." });
+            }
 
+            var newProject = new TblProject { ProjectName = projectName };
+            _context.TblProjects.Add(newProject);
+            _context.SaveChanges();
+
+            return Json(new { success = true, id = newProject.ProjectId, name = newProject.ProjectName });
+        }
+
+        [HttpPost]
+        public JsonResult AddReference(string referenceName)
+        {
+            var existing = _context.TblReferences.FirstOrDefault(x => x.ReferenceName == referenceName);
+            if (existing != null)
+            {
+                return Json(new { success = false, message = "Bu referans zaten var." });
+            }
+            var newReference = new TblReference { ReferenceName = referenceName };
+            _context.TblReferences.Add(newReference);
+            _context.SaveChanges();
+
+            return Json(new { success = true, id = newReference.ReferenceId, name = newReference.ReferenceName });
+        }
         [HttpGet]
         public IActionResult AddObservation()
         {
@@ -229,16 +252,10 @@ namespace EcoSphere.Controllers
             ViewBag.UserRoleId = roleID;
             var model = new ObservationViewModel
             {
-                CreatureNamed = _context.TblCreatures.Select(x => new SelectListItem { Value = x.CreatureId.ToString(), Text = x.ScientificName }).ToList(),
+                CreatureNamed = CreaturesCache.GetCachedCreatures().Select(x => new SelectListItem {  Value = x.CreatureId.ToString(),Text = x.ScientificName ?? x.SpeciesName}).ToList(),
                 RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList(),
-                MigrationstatNamed = _context.TblMigrationstatuses.Select(x => new SelectListItem { Value = x.MigrationStatusId.ToString(), Text = x.MigrationStatusName }).ToList(),
-                EndemicstatNamed = _context.TblEndemicstatuses.Select(x => new SelectListItem { Value = x.EndemicStatusId.ToString(), Text = x.EndemicStatus }).ToList(),
                 ProjectNamed = _context.TblProjects.Select(x => new SelectListItem { Value = x.ProjectId.ToString(), Text = x.ProjectName }).ToList(),
-                CitationNamed = _context.TblCitations.Select(x => new SelectListItem { Value = x.CitationId.ToString(), Text = x.CitationName }).ToList(),
-                ReferenceNamed = _context.TblReferences.Select(x => new SelectListItem { Value = x.ReferenceId.ToString(), Text = x.ReferenceName }).ToList(),
-                LocationtypeNamed = _context.TblLocationtypes.Select(x => new SelectListItem { Value = x.LocationTypeId.ToString(), Text = x.LocationType }).ToList(),
-                LocationRangeNamed = _context.TblLocationranges.Select(x => new SelectListItem { Value = x.LocationRangeId.ToString(), Text = x.LocationRangeValue }).ToList(),
-                GenderNamed = _context.TblGenders.Select(x => new SelectListItem { Value = x.GenderId.ToString(), Text = x.GenderName }).ToList()
+                ReferenceNamed=_context.TblReferences.Select(x => new SelectListItem { Value = x.ReferenceId.ToString(), Text = x.ReferenceName }).ToList(),    
             };
 
             return View(model);
@@ -267,6 +284,8 @@ namespace EcoSphere.Controllers
             _context.TblUseractions.Add(action);
 
             _context.SaveChanges();
+            // ✅ Cache'den de sil
+            ObservationCache.RemoveObservation(id);
 
             return Json(new { success = true });
         }
@@ -335,27 +354,12 @@ namespace EcoSphere.Controllers
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
 
-            var obs = (from m in _context.TblMaintables
-                       join c in _context.TblCreatures on m.CreatureId equals c.CreatureId
-                       join u in _context.TblUsers on m.UserId equals u.UserId
-                       where m.Id == id
-                       select new ObservationViewModel
-                       {
-                           Id = m.Id,
-                           CreatureName = c.ScientificName,
-                           Long = m.Long,
-                           Lat = m.Lat,
-                           SeenTime = m.SeenTime,
-                           CreationDate = m.CreationDate,
-                           ImagePath = m.ImagePath, // yalnızca dosya adı olmalı, örn: "abc.jpg"
-                           UserName = u.Name,
-                           UsersurName = u.Surname
-                       }).FirstOrDefault();
+            var observation = _context.VwObservations.FirstOrDefault(o => o.Id == id);
 
-            if (obs == null)
+            if (observation == null)
                 return NotFound();
 
-            return View(obs);
+            return View(observation);
         }
 
 

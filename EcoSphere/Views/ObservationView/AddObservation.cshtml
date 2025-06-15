@@ -1,283 +1,394 @@
 ﻿@model EcoSphere.Models.ObservationViewModel
 
 @{
-    ViewData["Title"] = "Create Observation";
+	ViewData["Title"] = "Create Observation";
 }
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeni Gözlem Ekle</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Yeni Gözlem Ekle</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.14.1/ol.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/EcoSphere.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/AddObservation.css" asp-append-version="true" />
- </head>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.14.1/ol.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="~/EcoSphere.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/AddObservation.css" asp-append-version="true" />
+</head>
 
 <body>
-    <div class="container">
-        <!-- Success Message -->
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["SuccessMessage"]
-            </div>
-        }
+	<form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
 
-        <!-- Main Card -->
-        <div class="main-card">
-            <!-- Card Header -->
-            <div class="card-header-custom">
-                <h2><i class="fas fa-binoculars me-3"></i>Yeni Gözlem Ekle</h2>
-            </div>
+	<div class="container">
+		<!-- Success Message -->
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-success">
+				@TempData["SuccessMessage"]
+			</div>
+		}
 
-            <!-- Card Body -->
-            <div class="card-body-custom">
-                <!-- Top Section: Coordinate Selection & Info -->
-                <div class="row">
-                    <!-- Left: Coordinate Map -->
-                    <div class="col-lg-8">
-                        <div class="coordinate-section">
-                            <h5 class="section-title mb-2"><i class="fas fa-map-marker-alt me-2"></i>Koordinat Seçimi</h5>
-                            <div style="position: relative;">
-                                <div id="coordinateMap" style="width: 100%; height: 450px; border-radius: 8px; border: 2px solid #fff;"></div>
-                            </div>
-                        </div>
-                    </div>
+		<!-- Main Card -->
+		<div class="main-card">
+			<!-- Card Header -->
+			<div class="card-header-custom">
+				<h2><i class="fas fa-binoculars me-3"></i>Yeni Gözlem Ekle</h2>
+			</div>
 
-                    <!-- Right: Coordinate Info & Image Upload -->
-                    <div class="col-lg-4">
-                        <div class="info-section">
-                            <h6 class="section-title"><i class="fas fa-info-circle me-2"></i>Konum Bilgileri</h6>
-                            <div class="coordinate-info-compact">
-                                <div class="row">
-                                    <div class="col-12 mb-2">
-                                        <small class="text-muted">Enlem / Boylam</small>
-                                        <div class="fw-bold small" id="displayCoords">Seçilmedi</div>
-                                    </div>
-                                    <div class="col-12">
-                                        <small class="text-muted">İl / İlçe</small>
-                                        <div class="fw-bold small" id="displayLocation">-</div>
-                                    </div>
-                                </div>
-                            </div>
+			<!-- Card Body -->
+			<div class="card-body-custom">
+				<!-- Top Section: Coordinate Selection & Info -->
+				<div class="row">
+					<!-- Left: Coordinate Map -->
+					<div class="col-lg-8">
+						<div class="coordinate-section">
+							<h5 class="section-title mb-2"><i class="fas fa-map-marker-alt me-2"></i>Koordinat Seçimi</h5>
+							<div style="position: relative;">
+								<div id="coordinateMap" style="width: 100%; height: 450px; border-radius: 8px; border: 2px solid #fff;"></div>
+							</div>
+						</div>
+					</div>
 
-                            <div class="image-preview-container">
-                                <h6 class="section-title mb-2"><i class="fas fa-camera me-2"></i>Görsel</h6>
-                                <div class="file-input-wrapper">
-                                    <input type="file" name="ImageFile" id="ImageFile" accept="image/*" onchange="previewImage(event)" />
-                                    <label for="ImageFile" class="file-input-label-compact" id="fileLabel">
-                                        <i class="fas fa-cloud-upload-alt fa-lg mb-1 text-muted"></i>
-                                        <div class="medium">Görsel Seçin</div>
-                                        <small class="text-muted">PNG, JPG, JPEG</small>
-                                    </label>
-                                </div>
-                                <div class="image-preview-wrapper" style="display:none" id="imageWrapper">
-                                    <img id="imagePreview" src="#" alt="Önizleme" onclick="openImageModal()" />
-                                    <button type="button" class="remove-image-btn" onclick="removeImage()" title="Görseli Kaldır">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+					<!-- Right: Coordinate Info & Image Upload -->
+					<div class="col-lg-4">
+						<div class="info-section">
+							<h6 class="section-title"><i class="fas fa-info-circle me-2"></i>Konum Bilgileri</h6>
+							<div class="coordinate-info-compact">
+								<div class="row">
+									<div class="col-12 mb-2">
+										<small class="text-muted">Enlem / Boylam</small>
+										<div class="fw-bold small" id="displayCoords">Seçilmedi</div>
+									</div>
+									<div class="col-12">
+										<small class="text-muted">İl / İlçe</small>
+										<div class="fw-bold small" id="displayLocation">-</div>
+									</div>
+								</div>
+							</div>
 
-                <!-- Form Section -->
-                <form asp-action="SubmitObservation" method="post" enctype="multipart/form-data">
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-clipboard-list me-2"></i>
-                            Gözlem Detayları
-                        </h5>
+							<div class="image-preview-container">
+								<h6 class="section-title mb-2"><i class="fas fa-camera me-2"></i>Görsel</h6>
+								<div class="file-input-wrapper">
+									<input type="file" name="ImageFile" id="ImageFile" accept="image/*" onchange="previewImage(event)" />
+									<label for="ImageFile" class="file-input-label-compact" id="fileLabel">
+										<i class="fas fa-cloud-upload-alt fa-lg mb-1 text-muted"></i>
+										<div class="medium">Görsel Seçin</div>
+										<small class="text-muted">PNG, JPG, JPEG</small>
+									</label>
+								</div>
+								<div class="image-preview-wrapper" style="display:none" id="imageWrapper">
+									<img id="imagePreview" src="#" alt="Önizleme" onclick="openImageModal()" />
+									<button type="button" class="remove-image-btn" onclick="removeImage()" title="Görseli Kaldır">
+										<i class="fas fa-times"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-                        <!-- First Row -->
-                        <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="CreatureId" class="form-label">Tür Seçimi</label>
-                                <select asp-for="CreatureId" class="form-control tom-select-creature" asp-items="Model.CreatureNamed">
-                                    <option value="" disabled selected hidden>Tür Seçiniz</option>
-                                </select>
-                                <span asp-validation-for="CreatureId" class="text-danger"></span>
-                            </div>
+				<!-- Form Section -->
+					<div class="form-section">
+						<h5 class="section-title">
+							<i class="fas fa-clipboard-list me-2"></i>
+							Gözlem Detayları
+						</h5>
 
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="ProjectId" class="form-label">Proje</label>
-                                <div class="select-with-add">
-                                    <select asp-for="ProjectId" class="form-control tom-select-project" asp-items="Model.ProjectNamed">
-                                        <option value="" disabled selected hidden>Proje Seçiniz</option>
-                                    </select>
-                                    <button type="button" class="btn-add-new" onclick="openAddProjectModal()">
-                                        <i class="fas fa-plus me-1"></i>Yeni
-                                    </button>
-                                </div>
-                                <span asp-validation-for="ProjectId" class="text-danger"></span>
-                            </div>
+						<!-- First Row -->
+						<div class="row mb-3">
+							<div class="col-md-4 mb-3">
+								<label asp-for="CreatureId" class="form-label">Tür Seçimi</label>
+								<select asp-for="CreatureId" class="form-control tom-select-creature" asp-items="Model.CreatureNamed">
+									<option value="" disabled selected hidden>Tür Seçiniz</option>
+								</select>
+								<span asp-validation-for="CreatureId" class="text-danger"></span>
+							</div>
 
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="ReferenceId" class="form-label">Referans</label>
-                                <div class="select-with-add">
-                                    <select asp-for="ReferenceId" class="form-control tom-select-reference" asp-items="Model.ReferenceNamed">
-                                        <option value="" disabled selected hidden>Referans Seçiniz</option>
-                                    </select>
-                                    <button type="button" class="btn-add-new" onclick="openAddReferenceModal()">
-                                        <i class="fas fa-plus me-1"></i>Yeni
-                                    </button>
-                                </div>
-                                <span asp-validation-for="ReferenceId" class="text-danger"></span>
-                            </div>
-                        </div>
+							<div class="col-md-4 mb-3">
+								<label asp-for="ProjectId" class="form-label">Proje</label>
+								<div class="select-with-add">
+									<select asp-for="ProjectId" class="form-control tom-select-project" asp-items="Model.ProjectNamed">
+										<option value="" disabled selected hidden>Proje Seçiniz</option>
+									</select>
+									<button type="button" class="btn-add-new" onclick="openAddProjectModal()">
+										<i class="fas fa-plus me-1"></i>Yeni
+									</button>
+								</div>
+								<span asp-validation-for="ProjectId" class="text-danger"></span>
+							</div>
 
-                        <!-- Second Row -->
-                        <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="EndemicStatusId" class="form-label">Endemik Durumu</label>
-                                <div class="radio-group">
-                                    <div class="radio-option">
-                                        <input type="radio" id="endemic1" name="EndemicStatusId" value="1">
-                                        <label for="endemic1" class="radio-label">True</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="endemic2" name="EndemicStatusId" value="2">
-                                        <label for="endemic2" class="radio-label">False</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="endemic3" name="EndemicStatusId" value="3">
-                                        <label for="endemic3" class="radio-label">Unknown</label>
-                                    </div>
-                                </div>
-                                <span asp-validation-for="EndemicStatusId" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="GenderId" class="form-label">Cinsiyet</label>
-                                <div class="radio-group">
-                                    <div class="radio-option">
-                                        <input type="radio" id="gender1" name="GenderId" value="1">
-                                        <label for="gender1" class="radio-label">Male</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="gender2" name="GenderId" value="2">
-                                        <label for="gender2" class="radio-label">Female</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="gender3" name="GenderId" value="3">
-                                        <label for="gender3" class="radio-label">Unknown</label>
-                                    </div>
-                                </div>
-                                <span asp-validation-for="GenderId" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label asp-for="MigrationStatusId" class="form-label">Göç Durumu</label>
-                                <div class="radio-group">
-                                    <div class="radio-option">
-                                        <input type="radio" id="migration1" name="MigrationStatusId" value="1">
-                                        <label for="migration1" class="radio-label">True</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="migration2" name="MigrationStatusId" value="2">
-                                        <label for="migration2" class="radio-label">False</label>
-                                    </div>
-                                    <div class="radio-option">
-                                        <input type="radio" id="migration4" name="MigrationStatusId" value="4">
-                                        <label for="migration4" class="radio-label">Unknown</label>
-                                    </div>
-                                </div>
-                                <span asp-validation-for="MigrationStatusId" class="text-danger"></span>
-                            </div>
-                        </div>
+							<div class="col-md-4 mb-3">
+								<label asp-for="ReferenceId" class="form-label">Referans</label>
+								<div class="select-with-add">
+									<select asp-for="ReferenceId" class="form-control tom-select-reference" asp-items="Model.ReferenceNamed">
+										<option value="" disabled selected hidden>Referans Seçiniz</option>
+									</select>
+									<button type="button" class="btn-add-new" onclick="openAddReferenceModal()">
+										<i class="fas fa-plus me-1"></i>Yeni
+									</button>
+								</div>
+								<span asp-validation-for="ReferenceId" class="text-danger"></span>
+							</div>
+						</div>
 
-                        <!-- Third Row -->
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Activity" class="form-label">Aktivite</label>
-                                <input asp-for="Activity" class="form-control" placeholder="Gözlemlenen aktiviteyi açıklayın" />
-                                <span asp-validation-for="Activity" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="SeenTime" class="form-label">Gözlem Zamanı</label>
-                                <input asp-for="SeenTime" class="form-control" type="datetime-local" />
-                                <span asp-validation-for="SeenTime" class="text-danger"></span>
-                            </div>
-                        </div>
+						<!-- Second Row -->
+						<div class="row mb-3">
+							<div class="col-md-4 mb-3">
+								<label asp-for="EndemicStatusId" class="form-label">Endemik Durumu</label>
+								<div class="radio-group">
+									<div class="radio-option">
+										<input type="radio" id="endemic1" name="EndemicStatusId" value="1">
+										<label for="endemic1" class="radio-label">True</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="endemic2" name="EndemicStatusId" value="2">
+										<label for="endemic2" class="radio-label">False</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="endemic3" name="EndemicStatusId" value="3">
+										<label for="endemic3" class="radio-label">Unknown</label>
+									</div>
+								</div>
+								<span asp-validation-for="EndemicStatusId" class="text-danger"></span>
+							</div>
+							<div class="col-md-4 mb-3">
+								<label asp-for="GenderId" class="form-label">Cinsiyet</label>
+								<div class="radio-group">
+									<div class="radio-option">
+										<input type="radio" id="gender1" name="GenderId" value="1">
+										<label for="gender1" class="radio-label">Male</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="gender2" name="GenderId" value="2">
+										<label for="gender2" class="radio-label">Female</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="gender3" name="GenderId" value="3">
+										<label for="gender3" class="radio-label">Unknown</label>
+									</div>
+								</div>
+								<span asp-validation-for="GenderId" class="text-danger"></span>
+							</div>
+							<div class="col-md-4 mb-3">
+								<label asp-for="MigrationStatusId" class="form-label">Göç Durumu</label>
+								<div class="radio-group">
+									<div class="radio-option">
+										<input type="radio" id="migration1" name="MigrationStatusId" value="1">
+										<label for="migration1" class="radio-label">True</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="migration2" name="MigrationStatusId" value="2">
+										<label for="migration2" class="radio-label">False</label>
+									</div>
+									<div class="radio-option">
+										<input type="radio" id="migration4" name="MigrationStatusId" value="4">
+										<label for="migration4" class="radio-label">Unknown</label>
+									</div>
+								</div>
+								<span asp-validation-for="MigrationStatusId" class="text-danger"></span>
+							</div>
+						</div>
 
-                        <!-- Hidden Fields -->
-                        <input type="hidden" id="LongInput" name="Long" />
-                        <input type="hidden" id="LatInput" name="Lat" />
-                        <input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
-                        <input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
+						<!-- Third Row -->
+						<div class="row mb-3">
+							<div class="col-md-6 mb-3">
+								<label asp-for="Activity" class="form-label">Aktivite</label>
+								<input asp-for="Activity" class="form-control" placeholder="Gözlemlenen aktiviteyi açıklayın" />
+								<span asp-validation-for="Activity" class="text-danger"></span>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label asp-for="SeenTime" class="form-label">Gözlem Zamanı</label>
+								<input asp-for="SeenTime" class="form-control" type="datetime-local" />
+								<span asp-validation-for="SeenTime" class="text-danger"></span>
+							</div>
+						</div>
 
-                        <!-- Submit Button -->
-                        <div class="text-center mt-4">
-                            <button type="submit" id="confirmCoordinatesBtn" class="btn btn-submit">
-                                <i class="fas fa-save me-2"></i>Gözlemi Kaydet
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+						<!-- Hidden Fields -->
+						<input type="hidden" id="LongInput" name="Long" />
+						<input type="hidden" id="LatInput" name="Lat" />
+						<input type="hidden" id="HiddenProvinceName" name="HiddenProvinceName" />
+						<input type="hidden" id="HiddenDistrictName" name="HiddenDistrictName" />
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="image-modal">
-        <div class="image-modal-content">
-            <img id="modalImage" src="#" alt="Büyük Görsel" />
-        </div>
-        <div class="image-controls">
-            <button class="control-btn" onclick="removeImageFromModal()">
-                <i class="fas fa-trash me-2"></i>Görseli Kaldır
-            </button>
-            <button class="control-btn" onclick="closeImageModal()">
-                <i class="fas fa-times me-2"></i>Kapat
-            </button>
-        </div>
-    </div>
+						<!-- Submit Button -->
+						<div class="text-center mt-4">
+							<button type="submit" id="confirmCoordinatesBtn" class="btn btn-submit">
+								<i class="fas fa-save me-2"></i>Gözlemi Kaydet
+							</button>
+						</div>
+					</div>
+				
+			</div>
+		</div>
+	</div>
+	</form>
+	<!-- Image Modal -->
+	<div id="imageModal" class="image-modal">
+		<div class="image-modal-content">
+			<img id="modalImage" src="#" alt="Büyük Görsel" />
+		</div>
+		<div class="image-controls">
+			<button class="control-btn" onclick="removeImageFromModal()">
+				<i class="fas fa-trash me-2"></i>Görseli Kaldır
+			</button>
+			<button class="control-btn" onclick="closeImageModal()">
+				<i class="fas fa-times me-2"></i>Kapat
+			</button>
+		</div>
+	</div>
 
-    <!-- Add Project Modal -->
-    <div id="addProjectModal" class="popup-modal">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h4 class="popup-title">Yeni Proje Ekle</h4>
-                <button type="button" class="popup-close" onclick="closeAddProjectModal()">&times;</button>
-            </div>
-            <div class="popup-form">
-                <input type="text" id="newProjectName" placeholder="Proje adını girin" />
-            </div>
-            <div class="popup-buttons">
-                <button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddProjectModal()">İptal</button>
-                <button type="button" class="btn-popup btn-popup-save" onclick="saveNewProject()">Kaydet</button>
-            </div>
-        </div>
-    </div>
+	<!-- Add Project Modal -->
+	<div id="addProjectModal" class="popup-modal">
+		<div class="popup-content">
+			<div class="popup-header">
+				<h4 class="popup-title">Yeni Proje Ekle</h4>
+				<button type="button" class="popup-close" onclick="closeAddProjectModal()">&times;</button>
+			</div>
+			<div class="popup-form">
+				<input type="text" id="newProjectName" placeholder="Proje adını girin" />
+			</div>
+			<div class="popup-buttons">
+				<button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddProjectModal()">İptal</button>
+				<button type="button" class="btn-popup btn-popup-save" onclick="saveNewProject()">Kaydet</button>
+			</div>
+		</div>
+	</div>
 
-    <!-- Add Reference Modal -->
-    <div id="addReferenceModal" class="popup-modal">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h4 class="popup-title">Yeni Referans Ekle</h4>
-                <button type="button" class="popup-close" onclick="closeAddReferenceModal()">&times;</button>
-            </div>
-            <div class="popup-form">
-                <input type="text" id="newReferenceName" placeholder="Referans adını girin" />
-            </div>
-            <div class="popup-buttons">
-                <button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddReferenceModal()">İptal</button>
-                <button type="button" class="btn-popup btn-popup-save" onclick="saveNewReference()">Kaydet</button>
-            </div>
-        </div>
-    </div>
+	<!-- Add Reference Modal -->
+	<div id="addReferenceModal" class="popup-modal">
+		<div class="popup-content">
+			<div class="popup-header">
+				<h4 class="popup-title">Yeni Referans Ekle</h4>
+				<button type="button" class="popup-close" onclick="closeAddReferenceModal()">&times;</button>
+			</div>
+			<div class="popup-form">
+				<input type="text" id="newReferenceName" placeholder="Referans adını girin" />
+			</div>
+			<div class="popup-buttons">
+				<button type="button" class="btn-popup btn-popup-cancel" onclick="closeAddReferenceModal()">İptal</button>
+				<button type="button" class="btn-popup btn-popup-save" onclick="saveNewReference()">Kaydet</button>
+			</div>
+		</div>
+	</div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/js/tom-select.complete.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.14.1/ol.js"></script>
-    <script src="~/js/AddObservation.js" asp-append-version="true"></script>
+	<!-- Scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/js/tom-select.complete.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/6.14.1/ol.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="~/js/AddObservation.js" asp-append-version="true"></script>
+	<script>
+		let projectSelect;
+		let referenceSelect;
+
+		document.addEventListener("DOMContentLoaded", function () {
+			projectSelect = new TomSelect(".tom-select-project", {
+				persist: false,
+				create: false
+			});
+
+			referenceSelect = new TomSelect(".tom-select-reference", {
+				persist: false,
+				create: false
+			});
+
+			document.getElementById("confirmCoordinatesBtn").addEventListener("click", function (e) {
+				let errors = [];
+
+				const lat = document.getElementById("LatInput").value;
+				const lng = document.getElementById("LongInput").value;
+				if (!lat || !lng) errors.push("Koordinat seçilmemiş.");
+
+				const imageFile = document.getElementById("ImageFile").files[0];
+				if (!imageFile) errors.push("Görsel seçilmemiş.");
+
+				const creature = document.querySelector("[name='CreatureId']").value;
+				if (!creature) errors.push("Tür seçimi yapılmamış.");
+
+				const project = document.querySelector("[name='ProjectId']").value;
+				if (!project) errors.push("Proje seçimi yapılmamış.");
+
+				const reference = document.querySelector("[name='ReferenceId']").value;
+				if (!reference) errors.push("Referans seçimi yapılmamış.");
+
+				if (!document.querySelector("input[name='EndemicStatusId']:checked"))
+					errors.push("Endemik durumu seçilmemiş.");
+				if (!document.querySelector("input[name='GenderId']:checked"))
+					errors.push("Cinsiyet seçilmemiş.");
+				if (!document.querySelector("input[name='MigrationStatusId']:checked"))
+					errors.push("Göç durumu seçilmemiş.");
+
+				const activity = document.querySelector("[name='Activity']").value.trim();
+				if (!activity) errors.push("Aktivite bilgisi girilmemiş.");
+
+				const date = document.querySelector("[name='SeenTime']").value;
+				if (!date) errors.push("Gözlem zamanı girilmemiş.");
+
+				if (errors.length > 0) {
+					e.preventDefault();
+
+					Swal.fire({
+						icon: 'warning',
+						title: 'Lütfen Eksikleri Tamamlayın',
+						html: '<ul style="text-align: left;">' + errors.map(err => `<li>${err}</li>`).join('') + '</ul>',
+						confirmButtonColor: '#198754',
+						confirmButtonText: 'Tamam',
+						customClass: {
+							popup: 'swal-custom-width'
+						}
+					});
+				}
+			});
+		});
+
+		function saveNewProject() {
+			const name = $("#newProjectName").val().trim();
+			if (!name) return;
+
+			$.post("/ObservationView/AddProject", { projectName: name }, function (response) {
+				if (response.success) {
+					projectSelect.addOption({ value: response.id, text: response.name });
+					projectSelect.addItem(response.id);
+					projectSelect.refreshOptions(false);
+					$("#addProjectModal").hide();
+					$("#newProjectName").val("");
+				} else {
+					Swal.fire({
+						icon: 'info',
+						title: 'Bilgilendirme',
+						text: response.message || "Bu proje zaten var.",
+						confirmButtonText: 'Tamam'
+					});
+				}
+			});
+		}
+
+		function saveNewReference() {
+			const name = $("#newReferenceName").val().trim();
+			if (!name) return;
+
+			$.post("/ObservationView/AddReference", { referenceName: name }, function (response) {
+				if (response.success) {
+					referenceSelect.addOption({ value: response.id, text: response.name });
+					referenceSelect.addItem(response.id);
+					referenceSelect.refreshOptions(false);
+					$("#addReferenceModal").hide();
+					$("#newReferenceName").val("");
+				} else {
+					Swal.fire({
+						icon: 'info',
+						title: 'Bilgilendirme',
+						text: response.message || "Bu referans zaten var.",
+						confirmButtonText: 'Tamam'
+					});
+				}
+			});
+		}
+	</script>
+
 </body>
 </html>

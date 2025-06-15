@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace EcoSphere.Models;
 public partial class VwObservation
@@ -30,6 +31,8 @@ public partial class VwObservation
     public string? Long { get; set; }
     [Column("activity")]
     public string? Activity { get; set; }
+    [DisplayName("Image Path")]
+    public string? ImagePath { get; set; }
     [Column("seen_time")]
     public DateTime? SeenTime { get; set; }
     [Column("creation_date")]

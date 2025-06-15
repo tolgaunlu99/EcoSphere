@@ -34,35 +34,7 @@ namespace EcoSphere.Controllers
 
             return View();
         }
-        //[HttpPost]
-        //public async Task<IActionResult> GetCreatures()
-        //{
-        //    try
-        //    {
-        //        var data = await _context.VwSpecies
-        //            .Select(v => new CreaturesViewModel
-        //            {
-        //                CreatureId = v.CreatureId,
-        //                UpperRealmName = v.RealmName,
-        //                KingdomName = v.KingdomName,
-        //                PhylumName = v.PhylumName,
-        //                ClassName = v.ClassName,
-        //                OrderName = v.OrderName,
-        //                FamilyName = v.FamilyName,
-        //                GenusName = v.GenusName,
-        //                SpeciesName = v.SpeciesName,
-        //                CommonName = v.CommonName,
-        //                IucnCode = v.IucnCode
-        //            })
-        //            .ToListAsync();
 
-        //        return Json(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
-        //    }
-        //}
         [HttpPost]
         public IActionResult GetCreatures()
         {
@@ -377,32 +349,31 @@ namespace EcoSphere.Controllers
             TempData["ErrorMessage"] = "There was an error saving the data.";
             return RedirectToAction("AddCreature");
         }
-        //public async Task<IActionResult> SubmitCreature(CreaturesViewModel model)
-        //{
-        //      var NewCreature = new TblCreature
-        //        {
-        //            UpperRealmId = model.UpperRealmId,
-        //            KingdomId = model.KingdomId,
-        //            PhylumId = model.PhylumId,
-        //            ClassId = model.ClassId,
-        //            OrderId = model.OrderId,
-        //            FamilyId = model.FamilyId,
-        //            GenusId = model.GenusId,
-        //            SpeciesId = model.SpeciesId,
-        //            SubspeciesId = model.SubspeciesId,
-        //            IucnId = model.IucnId,
-        //            AuthorId = model.AuthorId,
-        //            CommonName = model.CommonName,
-        //            ScientificName = model.ScientificName
+        [HttpPost]
+        public async Task<IActionResult> UpdateSpecies(int creatureId, string commonName, int? iucnId)
+        {
+            var existing = _context.TblCreatures.FirstOrDefault(c => c.CreatureId == creatureId);
+            if (existing == null)
+            {
+                return NotFound();
+            }
 
-        //        };
-        //        _context.TblCreatures.Add(NewCreature);
-        //        await _context.SaveChangesAsync();
-        //        TempData["SuccessMessage"] = "Creature added successfully.";
-        //        return RedirectToAction("AddCreature");
+            // ✅ DB'deki veriyi güncelle
+            existing.CommonName = commonName;
+            existing.IucnId = iucnId;
+            await _context.SaveChangesAsync();
 
+            // ✅ Cache içindeki nesneyi bul ve sadece 2 alanı güncelle
+            var cached = CreaturesCache.GetCachedCreatures().FirstOrDefault(c => c.CreatureId == creatureId);
+            if (cached != null)
+            {
+                cached.CommonName = commonName;
+                cached.IucnCode = _context.TblIucns.FirstOrDefault(i => i.IucnId == iucnId)?.IucnCode ?? "";
+            }
 
-        //}
+            TempData["SuccessMessage"] = "IUCN ve Common Name güncellendi.";
+            return RedirectToAction("CreatureList");
+        }
         [HttpPost]
         public async Task<IActionResult> SubmitCreature(CreaturesViewModel model)
         {
@@ -426,21 +397,23 @@ namespace EcoSphere.Controllers
             _context.TblCreatures.Add(NewCreature);
             await _context.SaveChangesAsync();
 
-            // Cache'e yeni veriyi ekle
-            CreaturesCache.AddCreature(new CreaturesViewModel
+            // Cache'e yeni kayıt ekle
+            var cachedCreature = new CreaturesViewModel
             {
                 CreatureId = NewCreature.CreatureId,
-                UpperRealmName = "", // Detay istersen ekleyebilirsin
-                KingdomName = "",
-                PhylumName = "",
-                ClassName = "",
-                OrderName = "",
-                FamilyName = "",
-                GenusName = "",
+                UpperRealmName = _context.TblUpperrealms.FirstOrDefault(r => r.RealmId == NewCreature.UpperRealmId)?.RealmName ?? "",
+                KingdomName = _context.TblKingdoms.FirstOrDefault(k => k.KingdomId == NewCreature.KingdomId)?.KingdomName ?? "",
+                PhylumName = _context.TblPhylums.FirstOrDefault(p => p.PhylumId == NewCreature.PhylumId)?.PhylumName ?? "",
+                ClassName = _context.TblClasses.FirstOrDefault(c => c.ClassId == NewCreature.ClassId)?.ClassName ?? "",
+                OrderName = _context.TblOrders.FirstOrDefault(o => o.OrderId == NewCreature.OrderId)?.OrderName ?? "",
+                FamilyName = _context.TblFamilies.FirstOrDefault(f => f.FamilyId == NewCreature.FamilyId)?.FamilyName ?? "",
+                GenusName = _context.TblGenus.FirstOrDefault(g => g.GenusId == NewCreature.GenusId)?.GenusName ?? "",
                 SpeciesName = model.ScientificName,
                 CommonName = model.CommonName,
-                IucnCode = ""
-            });
+                IucnCode = _context.TblIucns.FirstOrDefault(i => i.IucnId == NewCreature.IucnId)?.IucnCode ?? ""
+            };
+
+            CreaturesCache.AddCreature(cachedCreature);
 
             TempData["SuccessMessage"] = "Creature added successfully.";
             return RedirectToAction("AddCreature");
