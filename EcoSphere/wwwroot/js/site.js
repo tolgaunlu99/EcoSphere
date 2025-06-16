@@ -10,6 +10,7 @@
     const districtDropdown = document.getElementById('DistrictDropdown');
     const localityDropdown = document.getElementById('LocalityDropdown');
     const neighborhoodDropdown = document.getElementById('NeighborhoodDropdown');
+    const originalObservationCount = document.getElementById("observationCount")?.innerText;
 
     if (regionDropdown && provinceDropdown) {
         regionDropdown.addEventListener('change', function () {
@@ -273,13 +274,15 @@
 
             // Tıklama mantığı
             map.on("singleclick", function (evt) {
-                map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-                    const provinceName = feature.get("Il_Adi"),
-                        districtName = feature.get("Ilce_Adi"),
-                        basePath = window.location.pathname;
+                let featureClicked = false;
 
-                    // ── İl seçildi
+                map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+                    const provinceName = feature.get("Il_Adi");
+                    const districtName = feature.get("Ilce_Adi");
+                    const basePath = window.location.pathname;
+
                     if (provinceName && layer === provinceLayer) {
+                        featureClicked = true;
                         history.pushState(null, "", `${basePath}?province=${encodeURIComponent(provinceName)}`);
                         showLoader();
                         markerLayer.getSource().clear();
@@ -298,67 +301,20 @@
                                 ilceLayer.setVisible(true);
                             });
 
-                        // Marker’ları getir ve renk ata
+                        // Marker'ları getir
                         fetch(`/ObservationView/GetObservationsByProvince?province=${encodeURIComponent(provinceName)}`)
                             .then(r => r.json())
                             .then(obs => {
                                 const feats = obs.map(o => {
                                     const ft = new ol.Feature({
-                                        geometry: new ol.geom.Point(
-                                            ol.proj.fromLonLat([+o.long, +o.lat])
-                                        )
+                                        geometry: new ol.geom.Point(ol.proj.fromLonLat([+o.long, +o.lat]))
                                     });
-
                                     ft.set("name", o.name);
                                     ft.set("id", o.id);
 
                                     const markerColor =
                                         o.kingdom === "Animalia" ? "red" :
-                                            o.kingdom === "Plantae" ? "purple" :
-                                                "gray";
-
-                                    ft.setStyle(new ol.style.Style({
-                                        image: new ol.style.Circle({
-                                            radius: 6,
-                                            fill: new ol.style.Fill({ color: markerColor }),
-                                            stroke: new ol.style.Stroke({ color: "#fff", width: 2 })
-                                        })
-                                    }));
-
-                                    return ft;
-                                });
-                                markerLayer.getSource().addFeatures(feats);
-                            })
-
-                        // Sadece bu province için güncelle
-
-                        return true;
-                    }
-
-                    if (districtName && layer === ilceLayer) {
-                        history.pushState(null, "", `${basePath}?district=${encodeURIComponent(districtName)}`);
-                        showLoader();
-                        markerLayer.getSource().clear();
-                        map.getView().fit(feature.getGeometry().getExtent(), { duration: 1000 });
-
-                        fetch(`/ObservationView/GetObservationsByDistrict?district=${encodeURIComponent(districtName)}`)
-                            .then(r => r.json())
-                            .then(obs => {
-                                const feats = obs.map(o => {
-                                    const ft = new ol.Feature({
-                                        geometry: new ol.geom.Point(
-                                            ol.proj.fromLonLat([+o.long, +o.lat])
-                                        )
-                                    });
-
-                                    ft.set("name", o.name);
-                                    ft.set("id", o.id);
-
-                                    // ► Burada da aynı renk atama
-                                    const markerColor =
-                                        o.kingdom === "Animalia" ? "red" :
-                                            o.kingdom === "Plantae" ? "purple" :
-                                                "gray";
+                                            o.kingdom === "Plantae" ? "purple" : "gray";
 
                                     ft.setStyle(new ol.style.Style({
                                         image: new ol.style.Circle({
@@ -374,18 +330,74 @@
                             })
                             .finally(() => hideLoader());
 
+                        // Sadece bu province için güncelle
+                        fetch(`/ObservationView/GetObservationCountByProvince?province=${encodeURIComponent(provinceName)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (window.location.search.includes(`province=${encodeURIComponent(provinceName)}`)) {
+                                    document.getElementById("observationCount").innerText = data.count;
+                                }
+                            });
+
+                        return true;
+                    }
+
+                    if (districtName && layer === ilceLayer) {
+                        featureClicked = true;
+                        history.pushState(null, "", `${basePath}?district=${encodeURIComponent(districtName)}`);
+                        showLoader();
+                        markerLayer.getSource().clear();
+                        map.getView().fit(feature.getGeometry().getExtent(), { duration: 1000 });
+
+                        fetch(`/ObservationView/GetObservationsByDistrict?district=${encodeURIComponent(districtName)}`)
+                            .then(r => r.json())
+                            .then(obs => {
+                                const feats = obs.map(o => {
+                                    const ft = new ol.Feature({
+                                        geometry: new ol.geom.Point(ol.proj.fromLonLat([+o.long, +o.lat]))
+                                    });
+                                    ft.set("name", o.name);
+                                    ft.set("id", o.id);
+
+                                    const markerColor =
+                                        o.kingdom === "Animalia" ? "red" :
+                                            o.kingdom === "Plantae" ? "purple" : "gray";
+
+                                    ft.setStyle(new ol.style.Style({
+                                        image: new ol.style.Circle({
+                                            radius: 6,
+                                            fill: new ol.style.Fill({ color: markerColor }),
+                                            stroke: new ol.style.Stroke({ color: "#fff", width: 2 })
+                                        })
+                                    }));
+
+                                    return ft;
+                                });
+                                markerLayer.getSource().addFeatures(feats);
+                            })
+                            .finally(() => hideLoader());
+
+                        // Sadece bu district için güncelle
+                        fetch(`/ObservationView/GetObservationCountByDistrict?district=${encodeURIComponent(districtName)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (window.location.search.includes(`district=${encodeURIComponent(districtName)}`)) {
+                                    document.getElementById("observationCount").innerText = data.count;
+                                }
+                            });
+
                         return true;
                     }
                 });
             });
-
-
-            // Marker’a tıklanınca detay sayfası
-            map.on("click", function (evt) {
-                const feat = map.forEachFeatureAtPixel(evt.pixel, f => f);
-                if (feat && feat.get("id")) {
-                    window.location.href = `/ObservationView/Details/${feat.get("id")}`;
-                }
-            });
+            
         });
+
+    // Marker’a tıklanınca detay sayfası
+    map.on("click", function (evt) {
+        const feat = map.forEachFeatureAtPixel(evt.pixel, f => f);
+        if (feat && feat.get("id")) {
+            window.location.href = `/ObservationView/Details/${feat.get("id")}`;
+        }
+    });
 });

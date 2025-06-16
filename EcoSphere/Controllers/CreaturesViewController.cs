@@ -350,29 +350,109 @@ namespace EcoSphere.Controllers
             return RedirectToAction("AddCreature");
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateSpecies(int creatureId, string commonName, int? iucnId)
+        public IActionResult DeleteSpecies(int creatureId)
+        {
+            var creature = _context.TblCreatures.FirstOrDefault(c => c.CreatureId == creatureId);
+            if (creature == null)
+                return Json(new { success = false, message = "Kayıt bulunamadı." });
+
+            // 1. Bu creature'a ait gözlemler varsa önce onları sil
+            var relatedObservations = _context.TblMaintables
+                .Where(o => o.CreatureId == creatureId)
+                .ToList();
+
+            if (relatedObservations.Any())
+            {
+                // ObservationCache'ten de sil
+                foreach (var obs in relatedObservations)
+                {
+                    ObservationCache.RemoveObservation(obs.Id);
+                }
+
+                _context.TblMaintables.RemoveRange(relatedObservations);
+            }
+
+            // 2. Creature'ı sil
+            _context.TblCreatures.Remove(creature);
+
+            // 3. CreaturesCache'ten sil
+            CreaturesCache.RemoveCreature(creatureId);
+
+            // 4. Loglama işlemi
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Sistem";
+
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = $"{username} adlı kullanıcı {creatureId} ID'li türü ve ilişkili gözlemleri sildi!",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(action);
+
+            // 5. Değişiklikleri kaydet
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult UpdateSpecies(int creatureId, string commonName, int? iucnId)
         {
             var existing = _context.TblCreatures.FirstOrDefault(c => c.CreatureId == creatureId);
             if (existing == null)
-            {
                 return NotFound();
-            }
 
-            // ✅ DB'deki veriyi güncelle
             existing.CommonName = commonName;
             existing.IucnId = iucnId;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            // ✅ Cache içindeki nesneyi bul ve sadece 2 alanı güncelle
             var cached = CreaturesCache.GetCachedCreatures().FirstOrDefault(c => c.CreatureId == creatureId);
             if (cached != null)
             {
                 cached.CommonName = commonName;
                 cached.IucnCode = _context.TblIucns.FirstOrDefault(i => i.IucnId == iucnId)?.IucnCode ?? "";
             }
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Sistem";
 
-            TempData["SuccessMessage"] = "IUCN ve Common Name güncellendi.";
-            return RedirectToAction("CreatureList");
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = $"{username} adlı kullanıcı {creatureId} ID'li türü Güncelledi!",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(action);
+
+            // 5. Değişiklikleri kaydet
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
+        [HttpGet]
+        public JsonResult GetIucnList()
+        {
+            var list = _context.TblIucns
+                .Select(i => new { i.IucnId, i.IucnCode })
+                .ToList();
+            return Json(list);
+        }
+
+        [HttpGet]
+        public JsonResult GetCreatureById(int id)
+        {
+            var creature = _context.TblCreatures
+                .Where(c => c.CreatureId == id)
+                .Select(c => new
+                {
+                    c.CreatureId,
+                    c.CommonName,
+                    c.IucnId
+                })
+                .FirstOrDefault();
+
+            return Json(creature);
         }
         [HttpPost]
         public async Task<IActionResult> SubmitCreature(CreaturesViewModel model)

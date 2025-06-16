@@ -30,6 +30,8 @@ public partial class VwMap
     public string? ImagePath { get; set; }
     [Column("Creature_ID")]
     public int CreatureId { get; set; }
+    [Column("Endemic_status_ID")]
+    public int EndemicstatID { get; set; }
     [Column("User_ID")]
     public int UserId { get; set; }
     [Column("username")]

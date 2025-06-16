@@ -43,12 +43,22 @@ public class HomeController : Controller
     {
         var roleID = GetCurrentUserRoleId();
         ViewBag.UserRoleId = roleID;
+
         if (TempData["SuccessMessage"] != null)
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
         }
-        var totalCreatures = _context.TblCreatures.Count();
-        var totalObservations = _context.VwObservations.Count();
+
+        var totalCreatures = _context.VwSpecies.Count();
+
+        var totalObservationsQuery = _context.VwMaps.AsQueryable();
+        if (roleID != 1 && roleID != 2) // Sadece admin ve uzmanlar tümünü görür
+        {
+            totalObservationsQuery = totalObservationsQuery.Where(v => v.EndemicstatID != 1);
+        }
+
+        var totalObservations = totalObservationsQuery.Count();
+
         var model = new DashboardViewModel
         {
             TotalCreatures = totalCreatures,
@@ -57,7 +67,6 @@ public class HomeController : Controller
 
         return View(model);
     }
-
     public IActionResult Privacy()
     {
         var roleID = GetCurrentUserRoleId();

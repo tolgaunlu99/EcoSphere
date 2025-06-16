@@ -1,5 +1,4 @@
 ﻿using EcoSphere.Models;
-using System.Timers;
 
 namespace EcoSphere.Caching
 {
@@ -9,8 +8,6 @@ namespace EcoSphere.Caching
         private static bool _isLoaded = false;
         private static readonly object _lock = new();
 
-        private static System.Timers.Timer? _refreshTimer;
-
         public static void LoadCache(MyDbContext context)
         {
             lock (_lock)
@@ -18,8 +15,6 @@ namespace EcoSphere.Caching
                 _cachedCreatures = LoadFromDatabase(context);
                 _isLoaded = true;
             }
-
-            StartAutoRefresh(context);
         }
 
         public static List<CreaturesViewModel> GetCachedCreatures()
@@ -72,17 +67,6 @@ namespace EcoSphere.Caching
                     IucnCode = v.IucnCode
                 })
                 .ToList();
-        }
-
-        private static void StartAutoRefresh(MyDbContext context)
-        {
-            if (_refreshTimer == null)
-            {
-                _refreshTimer = new System.Timers.Timer(30 * 60 * 1000); // 30 dakika
-                _refreshTimer.Elapsed += (sender, e) => ReloadCache(context);
-                _refreshTimer.AutoReset = true;
-                _refreshTimer.Enabled = true;
-            }
         }
 
         public static bool IsCacheEmpty()

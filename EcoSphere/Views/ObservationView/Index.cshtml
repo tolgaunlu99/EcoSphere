@@ -47,7 +47,7 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
             var table = $('#observationTable').DataTable({
@@ -136,31 +136,54 @@
                 });
             }
 
-                    // Delete handler
+                  // Delete handler
         $('#observationTable').on('click', '.dt-delete', function (e) {
             e.preventDefault();
             var row = table.row($(this).closest('tr'));
             var rowData = row.data();
             var id = rowData.id;
 
-            if (confirm("Bu gözlemi silmek istediğinize emin misiniz?")) {
-                $.ajax({
-                    url: '/ObservationView/Delete',
-                    type: 'POST',
-                    data: { id: id },
-                    success: function (response) {
-                        if (response.success) {
-                            row.remove().draw(false); // sadece o satırı kaldır
-                            alert("Gözlem başarıyla silindi.");
-                        } else {
-                            alert("Silme işlemi başarısız: " + response.message);
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: 'Bu gözlemi silmek istiyor musunuz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Evet, sil!',
+                cancelButtonText: 'İptal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/ObservationView/Delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                row.remove().draw(false);
+                                Swal.fire(
+                                    'Silindi!',
+                                    'Gözlem başarıyla silindi.',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Hata!',
+                                    response.message || 'Silme işlemi başarısız.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function () {
+                            Swal.fire(
+                                'Hata!',
+                                'Silme isteği sırasında bir hata oluştu.',
+                                'error'
+                            );
                         }
-                    },
-                    error: function () {
-                        alert("Bir hata oluştu.");
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
 
         });
