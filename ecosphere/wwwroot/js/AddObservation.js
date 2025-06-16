@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Toggle uydu görünümü butonu
     const layerToggleBtn = document.createElement("button");
+    layerToggleBtn.type = "button";
     layerToggleBtn.innerHTML = `<i class="fas fa-globe" style="color: #2E590E;"></i> Uydu Görünümü`;
     layerToggleBtn.className = "satellite-toggle";
     layerToggleBtn.style.position = "absolute";
@@ -87,12 +88,23 @@ document.addEventListener("DOMContentLoaded", function () {
     coordinateMap.on("click", function (evt) {
         // Türkiye sınırı kontrolü
         if (!countryBorderGeometry) {
-            alert("Türkiye sınırları henüz yüklenmedi.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Harita Yüklenmedi',
+                text: 'Türkiye sınırları henüz yüklenmedi. Lütfen sayfayı yenileyin.',
+                confirmButtonText: 'Tamam'
+            });
             return;
         }
 
         if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
-            alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Geçersiz Konum',
+                text: 'Lütfen Türkiye sınırları içinde bir konum seçin.',
+                confirmButtonText: 'Tamam',
+                confirmButtonColor: '#6A994E'
+            });
             return;
         }
 

@@ -204,7 +204,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Phylum added successfully.",
+                        message = "Şube başarıyla eklendi.",
                         phylumId = newPhylum.PhylumId,
                         phylumName = newPhylum.PhylumName
                     });
@@ -224,7 +224,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Class added successfully.",
+                        message = "Sınıf başarıyla eklendi.",
                         classId = newClass.ClassId,
                         className = newClass.ClassName
                     });
@@ -243,7 +243,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Order added successfully.",
+                        message = "Takım başarıyla eklendi.",
                         orderId = newOrder.OrderId,
                         orderName = newOrder.OrderName
                     });
@@ -262,7 +262,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Family added successfully.",
+                        message = "Familya başarıyla eklendi.",
                         familyId = newFamily.FamilyId,
                         familyName = newFamily.FamilyName
                     });
@@ -281,7 +281,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Genus added successfully.",
+                        message = "Cins başarıyla eklendi.",
                         genusId = newGenus.GenusId,
                         genusName = newGenus.GenusName
                     });
@@ -300,7 +300,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Species added successfully.",
+                        message = "Tür başarıyla eklendi.",
                         speciesId = newSpecies.SpeciesId,
                         speciesName = newSpecies.SpeciesName
                     });
@@ -318,7 +318,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Subspecies added successfully.",
+                        message = "Alttür başarıyla eklendi.",
                         subspeciesId = newSubspecies.SubspeciesId,
                         subspeciesName = newSubspecies.SubspeciesName
                     });
@@ -335,7 +335,7 @@ namespace EcoSphere.Controllers
                     return Json(new
                     {
                         success = true,
-                        message = "Author added successfully.",
+                        message = "Yazar başarıyla eklendi.",
                         authorId = newAuthor.AuthorId,
                         authorName = newAuthor.AuthorName
                     });
@@ -346,7 +346,7 @@ namespace EcoSphere.Controllers
                 return RedirectToAction("AddCreature");
             }
 
-            TempData["ErrorMessage"] = "There was an error saving the data.";
+            TempData["ErrorMessage"] = "Veriler kaydedilirken bir hata oluştu.";
             return RedirectToAction("AddCreature");
         }
         [HttpPost]
@@ -495,7 +495,7 @@ namespace EcoSphere.Controllers
 
             CreaturesCache.AddCreature(cachedCreature);
 
-            TempData["SuccessMessage"] = "Creature added successfully.";
+            TempData["SuccessMessage"] = "Canlı başarıyla eklendi.";
             return RedirectToAction("AddCreature");
         }
 
