@@ -3,8 +3,12 @@
         console.error("OpenLayers yüklenemedi!");
         return;
     }
-    // deneme123
-    // ── Form dropdown bağlılıkları ─────────────────────────────
+
+    // 🟩 YENİ: Seçili il ve ilçe bilgisini en üste ekle
+    let selectedProvince = null;
+    let selectedDistrict = null;
+
+    // --- Form dropdown bağlılıkları (aynı şekilde bırakıldı) ---
     const regionDropdown = document.getElementById('RegionDropdown');
     const provinceDropdown = document.getElementById('ProvinceDropdown');
     const districtDropdown = document.getElementById('DistrictDropdown');
@@ -88,7 +92,7 @@
 
     if (!document.getElementById("map")) return;
 
-    // ── Loader kontrol fonksiyonları ──────────────────────────
+    // Loader fonksiyonları
     function showLoader() {
         const l = document.getElementById("map-loader");
         if (l) l.style.display = "block";
@@ -98,7 +102,7 @@
         if (l) l.style.display = "none";
     }
 
-    // ── Harita ve overlay ─────────────────────────────────────
+    // Harita ve overlay
     const map = new ol.Map({
         target: "map",
         layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
@@ -108,7 +112,7 @@
         })
     });
 
-    // ── Uydu ve OSM katmanları ──────────────────────────────
+    // Uydu ve OSM katmanları
     const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
     const satelliteLayer = new ol.layer.Tile({
         source: new ol.source.XYZ({
@@ -117,10 +121,9 @@
         })
     });
 
-    // İlk katmanı OSM olarak ayarla
     map.getLayers().setAt(0, osmLayer);
 
-    // ── Toggle butonu oluştur ───────────────────────────────
+    // Toggle butonu
     const toggleBtn = document.createElement("button");
     toggleBtn.innerHTML = `<i class="fas fa-globe"></i> Uydu Görünümü`;
     toggleBtn.className = "satellite-toggle";
@@ -141,7 +144,6 @@
 
     document.getElementById("map").appendChild(toggleBtn);
 
-    // ── Butona tıklayınca katman değiştir ───────────────────
     let isSatellite = false;
     toggleBtn.addEventListener("click", function () {
         if (isSatellite) {
@@ -164,34 +166,100 @@
         });
     map.addOverlay(overlay);
 
-    // ── Stil tanımları ───────────────────────────────────────
+    // --- Stil tanımları ---
     const defaultProvinceStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
-        fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.08)" }) // Başlangıçta iller hafif yeşil
     });
     const hoverProvinceStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
-        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.2)" }) // Üzerine gelince belirgin yeşil
     });
     const defaultDistrictStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
-        fill: new ol.style.Fill({ color: "rgba(0,255,0,0)" })
+        fill: new ol.style.Fill({ color: "rgba(0,0,0,0)" }) // İlçeler renksiz (sadece çizgi)
     });
     const hoverDistrictStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
-        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.3)" })
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.2)" }) // Üzerine gelince yeşil hover efekti
+    });
+    // Yeşil saydam ilçe stili
+    const greenDistrictStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
+        fill: new ol.style.Fill({ color: "rgba(0,255,0,0.1)" }) // Saydam yeşil
     });
 
-    // ── İlçe katmanı (başlangıçta gizli) ──────────────────────
+    // --- 🟩 Dinamik style fonksiyonları ---
+    function provinceStyleFunction(feature) {
+        const featureProvince = feature.get("Il_Adi");
+
+        // Eğer bir il seçildiyse, seçili il hariç diğer iller yeşil olsun
+        if (selectedProvince) {
+            if (featureProvince === selectedProvince) {
+                // Seçili il renksiz
+                return new ol.style.Style({
+                    stroke: new ol.style.Stroke({ color: "green", width: 0.7 }),
+                    fill: new ol.style.Fill({ color: "rgba(0,0,0,0)" })
+                });
+            } else {
+                // Diğer iller yeşil
+                return defaultProvinceStyle;
+            }
+        }
+
+        // Hiç il seçilmemişse hepsi yeşil
+        return defaultProvinceStyle;
+    }
+
+    function districtStyleFunction(feature) {
+        const featureDistrict = feature.get("Ilce_Adi");
+        const featureProvince = feature.get("Il_Adi");
+
+        // İl tıklandıysa ve henüz ilçeye tıklanmadıysa
+        if (selectedProvince && !selectedDistrict) {
+            if (featureProvince === selectedProvince) {
+                return defaultDistrictStyle; // Tıklanan ilin ilçeleri renksiz
+            } else {
+                return new ol.style.Style({ // Diğer illerin ilçesi gizli
+                    stroke: new ol.style.Stroke({ color: "rgba(0,0,0,0)", width: 0 }),
+                    fill: new ol.style.Fill({ color: "rgba(0,0,0,0)" })
+                });
+            }
+        }
+
+        // İlçe tıklandıysa
+        if (selectedProvince && selectedDistrict) {
+            if (featureProvince === selectedProvince) {
+                if (featureDistrict === selectedDistrict) {
+                    return defaultDistrictStyle; // Seçilen ilçe: renksiz
+                } else {
+                    return greenDistrictStyle; // Diğer ilçeler: saydam yeşil
+                }
+            } else {
+                return new ol.style.Style({ // Diğer illerin ilçeleri gizli
+                    stroke: new ol.style.Stroke({ color: "rgba(0,0,0,0)", width: 0 }),
+                    fill: new ol.style.Fill({ color: "rgba(0,0,0,0)" })
+                });
+            }
+        }
+
+        // Hiç il tıklanmadıysa ilçeler gizli
+        return new ol.style.Style({
+            stroke: new ol.style.Stroke({ color: "rgba(0,0,0,0)", width: 0 }),
+            fill: new ol.style.Fill({ color: "rgba(0,0,0,0)" })
+        });
+    }
+
+    // --- İlçe katmanı (başlangıçta gizli) ---
     const ilceLayer = new ol.layer.Vector({
         source: new ol.source.Vector(),
-        style: defaultDistrictStyle,
+        style: districtStyleFunction,
         visible: false
     });
     ilceLayer.setZIndex(10);
     map.addLayer(ilceLayer);
 
-    // ── Marker katmanı ─────────────────────────────────────────
+    // --- Marker katmanı ---
     const markerLayer = new ol.layer.Vector({
         source: new ol.source.Vector(),
         style: new ol.style.Style({
@@ -205,7 +273,7 @@
     markerLayer.setZIndex(15);
     map.addLayer(markerLayer);
 
-    // ── İl katmanı ve etkileşim ───────────────────────────────
+    // --- İl katmanı ve etkileşim ---
     fetch("/data/TR_iller.geojson")
         .then(res => res.json())
         .then(data => {
@@ -216,7 +284,7 @@
 
             const provinceLayer = new ol.layer.Vector({
                 source: new ol.source.Vector({ features: provinceFeatures }),
-                style: defaultProvinceStyle
+                style: provinceStyleFunction
             });
             provinceLayer.setZIndex(5);
             map.addLayer(provinceLayer);
@@ -227,29 +295,49 @@
                 let hit = false;
                 map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
                     if (layer === provinceLayer || layer === ilceLayer) {
+                        const featureProvince = feature.get("Il_Adi");
+                        const featureDistrict = feature.get("Ilce_Adi");
+
+                        const isSelectedProvince = selectedProvince && selectedDistrict && featureProvince === selectedProvince;
+
+                        const isSelectedDistrict = selectedDistrict && featureDistrict === selectedDistrict && featureProvince === selectedProvince;
+
+                        // 🔒 Seçili ilçe veya il hover olmasın
+                        // 🔒 Sadece seçilen ilçe hover olmasın
+                        if (isSelectedDistrict) {
+                            if (prevHover.feature) {
+                                prevHover.feature.setStyle(null);
+                                prevHover = { feature: null, layer: null };
+                            }
+                            hit = true;
+                            return true;
+                        }
+
+
+
+                        // ✅ Hover edilebilir alan
                         hit = true;
                         if (prevHover.feature && prevHover.feature !== feature) {
-                            prevHover.feature.setStyle(
-                                prevHover.layer === provinceLayer
-                                    ? defaultProvinceStyle
-                                    : defaultDistrictStyle
-                            );
+                            prevHover.feature.setStyle(null);
+                            prevHover = { feature: null, layer: null };
                         }
-                        feature.setStyle(
-                            layer === provinceLayer
-                                ? hoverProvinceStyle
-                                : hoverDistrictStyle
-                        );
-                        prevHover = { feature, layer };
+
+                        // ✅ Aynı feature'a tekrar hover yapılmasın
+                        if (prevHover.feature !== feature) {
+                            feature.setStyle(
+                                layer === provinceLayer
+                                    ? hoverProvinceStyle
+                                    : hoverDistrictStyle
+                            );
+                            prevHover = { feature, layer };
+                        }
+
                         return true;
                     }
                 });
+
                 if (!hit && prevHover.feature) {
-                    prevHover.feature.setStyle(
-                        prevHover.layer === provinceLayer
-                            ? defaultProvinceStyle
-                            : defaultDistrictStyle
-                    );
+                    prevHover.feature.setStyle(null);
                     prevHover = { feature: null, layer: null };
                 }
 
@@ -281,8 +369,8 @@
                     const districtName = feature.get("Ilce_Adi");
                     const basePath = window.location.pathname;
 
+                    // ── İl seçildi
                     if (provinceName && layer === provinceLayer) {
-                        featureClicked = true;
                         history.pushState(null, "", `${basePath}?province=${encodeURIComponent(provinceName)}`);
                         showLoader();
                         markerLayer.getSource().clear();
@@ -301,7 +389,7 @@
                                 ilceLayer.setVisible(true);
                             });
 
-                        // Marker'ları getir
+                        // Marker’ları getir ve renk ata
                         fetch(`/ObservationView/GetObservationsByProvince?province=${encodeURIComponent(provinceName)}`)
                             .then(r => r.json())
                             .then(obs => {
@@ -328,22 +416,14 @@
                                 });
                                 markerLayer.getSource().addFeatures(feats);
                             })
-                            .finally(() => hideLoader());
 
-                        // Sadece bu province için güncelle
-                        fetch(`/ObservationView/GetObservationCountByProvince?province=${encodeURIComponent(provinceName)}`)
-                            .then(res => res.json())
-                            .then(data => {
-                                if (window.location.search.includes(`province=${encodeURIComponent(provinceName)}`)) {
-                                    document.getElementById("observationCount").innerText = data.count;
-                                }
-                            });
+                            .finally(() => hideLoader());
 
                         return true;
                     }
 
+                    // ── İlçe seçildi
                     if (districtName && layer === ilceLayer) {
-                        featureClicked = true;
                         history.pushState(null, "", `${basePath}?district=${encodeURIComponent(districtName)}`);
                         showLoader();
                         markerLayer.getSource().clear();
@@ -390,14 +470,14 @@
                     }
                 });
             });
-            
-        });
 
-    // Marker’a tıklanınca detay sayfası
-    map.on("click", function (evt) {
-        const feat = map.forEachFeatureAtPixel(evt.pixel, f => f);
-        if (feat && feat.get("id")) {
-            window.location.href = `/ObservationView/Details/${feat.get("id")}`;
-        }
-    });
+
+            // Marker’a tıklanınca detay sayfası
+            map.on("click", function (evt) {
+                const feat = map.forEachFeatureAtPixel(evt.pixel, f => f);
+                if (feat && feat.get("id")) {
+                    window.location.href = `/ObservationView/Details/${feat.get("id")}`;
+                }
+            });
+        });
 });
