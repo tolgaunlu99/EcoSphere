@@ -141,6 +141,56 @@
         cursor: "pointer"
     });
 
+    // 🔘 Harita Bilgisi Toggle Butonu
+    const infoToggleBtn = document.createElement("button");
+    infoToggleBtn.innerHTML = `<i class="fas fa-info-circle"></i> Harita Bilgisi`;
+    infoToggleBtn.className = "legend-toggle-btn";
+    Object.assign(infoToggleBtn.style, {
+        position: "absolute",
+        bottom: "10px",
+        left: "10px",
+        zIndex: "1000",
+        backgroundColor: "white",
+        border: "none",
+        padding: "6px 10px",
+        borderRadius: "6px",
+        boxShadow: "0px 2px 5px rgba(0,0,0,0.3)",
+        fontSize: "0.9rem",
+        cursor: "pointer"
+    });
+    document.getElementById("map").appendChild(infoToggleBtn);
+
+    // 🧾 Harita Bilgisi Kutusu
+    const legendBox = document.createElement("div");
+    legendBox.id = "map-legend";
+    Object.assign(legendBox.style, {
+        position: "absolute",
+        bottom: "50px", // butonun üstünde olacak şekilde
+        left: "10px",
+        zIndex: "1000",
+        backgroundColor: "white",
+        padding: "10px 15px",
+        border: "1px solid #ccc",
+        borderRadius: "6px",
+        fontSize: "13px",
+        boxShadow: "0px 2px 5px rgba(0,0,0,0.2)",
+        width: "160px",
+        display: "none" // başlangıçta kapalı
+    });
+    legendBox.innerHTML = `
+    <strong>Harita Simgesi</strong>
+    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:red;margin-right:8px;"></span> Hayvanlar</div>
+    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:purple;margin-right:8px;"></span> Bitkiler</div>
+    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:gray;margin-right:8px;"></span> Diğer</div>
+`;
+    document.getElementById("map").appendChild(legendBox);
+
+    // 🔁 Toggle davranışı
+    infoToggleBtn.addEventListener("click", function () {
+        legendBox.style.display = (legendBox.style.display === "none") ? "block" : "none";
+    });
+
+
     document.getElementById("map").appendChild(toggleBtn);
 
     let isSatellite = false;
