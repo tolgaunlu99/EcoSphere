@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Toggle uydu görünümü butonu
     const layerToggleBtn = document.createElement("button");
+    layerToggleBtn.type = "button";
     layerToggleBtn.innerHTML = `<i class="fas fa-globe" style="color: #2E590E;"></i> Uydu Görünümü`;
     layerToggleBtn.className = "satellite-toggle";
     layerToggleBtn.style.position = "absolute";
