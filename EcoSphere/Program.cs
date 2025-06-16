@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.StaticFiles; // 📌 MIME tipi için gerekli
+﻿using EcoSphere.Caching;
 using EcoSphere.Models;
+using Microsoft.AspNetCore.StaticFiles; // 📌 MIME tipi için gerekli
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,5 +45,23 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+// 📌 Cache yüklemesini arka planda başlat
+#pragma warning disable CS4014
+Task.Run(() =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
 
+        if (ObservationCache.IsCacheEmpty())
+        {
+            ObservationCache.LoadCache(dbContext);
+        }
+
+        if (CreaturesCache.IsCacheEmpty())
+        {
+            CreaturesCache.LoadCache(dbContext);
+        }
+    }
+});
 app.Run();

@@ -25,7 +25,7 @@ namespace EcoSphere.Controllers
             ViewBag.UserRoleId = roleID;
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2))
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3))
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
@@ -37,7 +37,15 @@ namespace EcoSphere.Controllers
         {
             try
             {
+                int? roleID = HttpContext.Session.GetInt32("Role_ID");
                 var data = ObservationCache.GetCachedObservations();
+
+                // Endemik türleri sadece RoleID 1 (admin) ve 2 (expertr) görebilir
+                if (roleID != 1 && roleID != 2)
+                {
+                    data = data.Where(x => x.EndemicStatusId != 1).ToList(); // ID kontrolü
+                }
+
                 return Json(data);
             }
             catch (Exception ex)
@@ -170,7 +178,7 @@ namespace EcoSphere.Controllers
             _context.TblMaintables.Add(newObs);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Observation added successfully.";
+            TempData["SuccessMessage"] = "Gözlem başarıyla eklendi.";
             var action = new TblUseraction
             {
                 UserId = userId,
@@ -418,6 +426,12 @@ namespace EcoSphere.Controllers
 
             if (observation == null)
                 return NotFound();
+
+            // 🌟 Endemikse ve yetkili rol değilse AccessDenied'a yönlendir
+            if (observation.EndemicStatus == "True" && roleID != 1 && roleID != 2)
+            {
+                return RedirectToAction("AccessDenied", "UserView");
+            }
 
             return View(observation);
         }

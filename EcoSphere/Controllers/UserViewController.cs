@@ -75,55 +75,30 @@ namespace EcoSphere.Controllers
                     {
                         HttpContext.Session.SetInt32("UserID", user.UserId);
                         HttpContext.Session.SetInt32("Role_ID", userRole.RoleId.Value);
-
-                        if (userRole.RoleId.Value == 1 || userRole.RoleId.Value == 2)
-                        {
-                            // Observation Cache'i doldur
-                            if (ObservationCache.IsCacheEmpty())
-                            {
-                                Task.Run(() =>
-                                {
-                                    using (var scope = _serviceProvider.CreateScope())
-                                    {
-                                        var scopedContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
-                                        ObservationCache.LoadCache(scopedContext);
-                                    }
-                                });
-                            }
-
-                            // Creatures Cache'i doldur
-                            if (CreaturesCache.IsCacheEmpty())
-                            {
-                                Task.Run(() =>
-                                {
-                                    using (var scope = _serviceProvider.CreateScope())
-                                    {
-                                        var scopedContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
-                                        CreaturesCache.LoadCache(scopedContext);
-                                    }
-                                });
-                            }
-                        }
                     }
                     else
                     {
                         return RedirectToAction("AccessDenied", "UserView");
                     }
 
-                    return Json(new { success = true, redirectUrl = Url.Action("Index", "Home"), message = $"Welcome, {user.Username}!" });
+                    return Json(new { success = true, redirectUrl = Url.Action("Index", "Home"), message = $"Hoşgeldin, {user.Username}!" });
                 }
 
-                return Json(new { success = false, message = "Invalid username or password." });
+                return Json(new { success = false, message = "Yanlış Kullanıcı adı veya şifre." });
             }
             else if (formAction == "signup")
             {
+                if (string.IsNullOrEmpty(model.Password) || model.Password.Length < 8)
+                {
+                    return Json(new { success = false, message = "Şifre en az 8 karakter olmalıdır." });
+                }
                 if (_context.TblUsers.Any(u => u.Username == model.Username))
                 {
-                    return Json(new { success = false, message = "Username already exists." });
+                    return Json(new { success = false, message = "Kullanıcı adı halihazırda sisteme kayıtlı." });
                 }
                 if (_context.TblUsers.Any(u => u.Email == model.Email))
                 {
-                    return Json(new { success = false, message = "E-mail already exists." });
+                    return Json(new { success = false, message = "E-mail halihazırda sistemde kayıtlı." });
                 }
 
                 var newUser = new TblUser
@@ -153,10 +128,10 @@ namespace EcoSphere.Controllers
                 _context.TblUserRoles.Add(userRole);
                 _context.SaveChanges();
 
-                return Json(new { success = true, message = "Registration successful. You can now log in." });
+                return Json(new { success = true, message = " Kayıt başarılı. Artık giriş yapabilirsiniz." });
             }
 
-            return Json(new { success = false, message = "Unknown form action." });
+            return Json(new { success = false, message = "Bilinmeyen form işlemi." });
         }
 
         public IActionResult Logout()

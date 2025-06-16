@@ -87,12 +87,23 @@ document.addEventListener("DOMContentLoaded", function () {
     coordinateMap.on("click", function (evt) {
         // Türkiye sınırı kontrolü
         if (!countryBorderGeometry) {
-            alert("Türkiye sınırları henüz yüklenmedi.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Harita Yüklenmedi',
+                text: 'Türkiye sınırları henüz yüklenmedi. Lütfen sayfayı yenileyin.',
+                confirmButtonText: 'Tamam'
+            });
             return;
         }
 
         if (!countryBorderGeometry.intersectsCoordinate(evt.coordinate)) {
-            alert("Lütfen Türkiye sınırları içinde bir konum seçin.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Geçersiz Konum',
+                text: 'Lütfen Türkiye sınırları içinde bir konum seçin.',
+                confirmButtonText: 'Tamam',
+                confirmButtonColor: '#6A994E'
+            });
             return;
         }
 
