@@ -46,8 +46,8 @@ public class AdminController : Controller
         var dashboard = new DashboardViewModel
         {
             TotalUsers = _context.TblUsers.Count(),
-            TotalCreatures = _context.TblCreatures.Count(),
-            TotalObservations = _context.TblMaintables.Count(),
+            TotalCreatures = _context.VwSpecies.Count(),
+            TotalObservations = _context.VwObservations.Count(),
             TodayLogins = userActions.Count(x => x.Date == today.Date),
             TotalLogs = _context.TblUseractions.Count(),
             RecentLogs = _context.TblUseractions

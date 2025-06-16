@@ -160,7 +160,15 @@ namespace EcoSphere.Controllers
         }
 
         public IActionResult Logout()
-        {
+        {            
+            var action = new TblUseraction
+            {
+                UserId = HttpContext.Session.GetInt32("UserID").GetValueOrDefault(),
+                Action = "Çıkış Yapıldı!!",
+                ActionTime = DateTime.Now
+            };
+            _context.TblUseractions.Add(action);
+            _context.SaveChanges();
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }

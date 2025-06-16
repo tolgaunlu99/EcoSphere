@@ -96,6 +96,8 @@ namespace EcoSphere.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
         {
+            
+
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
 
@@ -106,8 +108,6 @@ namespace EcoSphere.Controllers
                 model.RegionNamed = _context.TblRegions.Select(x => new SelectListItem { Value = x.RegionId.ToString(), Text = x.RegionName }).ToList();
                 return View("AddObservation", model);
             }
-            Console.WriteLine("ImageFile geldi mi?: " + (model.ImageFile != null));
-            Console.WriteLine("ImageFile adı: " + model.ImageFile?.FileName);
             string? savedFileName = null;
 
             if (model.ImageFile != null && model.ImageFile.Length > 0)
@@ -130,7 +130,8 @@ namespace EcoSphere.Controllers
             }
 
             var province = await _context.TblProvinces.FirstOrDefaultAsync(p => p.ProvinceName == model.HiddenProvinceName);
-            var district = await _context.TblDistricts.FirstOrDefaultAsync(d => d.DistrictName == model.HiddenDistrictName);
+            var district = await _context.TblDistricts.FirstOrDefaultAsync(d => d.DistrictName == model.HiddenDistrictName);        
+
 
             if (province == null || district == null)
             {
@@ -209,7 +210,6 @@ namespace EcoSphere.Controllers
             return RedirectToAction("AddObservation");
         }
         [HttpPost]
-        [HttpPost]
         public JsonResult AddProject(string projectName)
         {
             var existing = _context.TblProjects.FirstOrDefault(x => x.ProjectName == projectName);
@@ -220,6 +220,17 @@ namespace EcoSphere.Controllers
 
             var newProject = new TblProject { ProjectName = projectName };
             _context.TblProjects.Add(newProject);
+            _context.SaveChanges();
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = username + " adlı kullanıcı " + projectName + " Adındaki Projeyi ekledi!",
+                ActionTime = DateTime.Now
+            };
+
+            _context.TblUseractions.Add(action);
             _context.SaveChanges();
 
             return Json(new { success = true, id = newProject.ProjectId, name = newProject.ProjectName });
@@ -236,7 +247,17 @@ namespace EcoSphere.Controllers
             var newReference = new TblReference { ReferenceName = referenceName };
             _context.TblReferences.Add(newReference);
             _context.SaveChanges();
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username;
+            var action = new TblUseraction
+            {
+                UserId = userId,
+                Action = username + " adlı kullanıcı " + newReference + " Adındaki Referansı ekledi!",
+                ActionTime = DateTime.Now
+            };
 
+            _context.TblUseractions.Add(action);
+            _context.SaveChanges();
             return Json(new { success = true, id = newReference.ReferenceId, name = newReference.ReferenceName });
         }
         [HttpGet]
@@ -259,6 +280,37 @@ namespace EcoSphere.Controllers
             };
 
             return View(model);
+        }
+        [HttpGet]
+        public JsonResult GetObservationCountByProvince(string province)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps.Where(v => v.ProvinceName == province);
+
+            if (roleID != 1 && roleID != 2)
+            {
+                query = query.Where(v => v.EndemicstatID != 1);
+            }
+
+            int count = query.Count();
+            return Json(new { count });
+        }
+
+        [HttpGet]
+        public JsonResult GetObservationCountByDistrict(string district)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps.Where(v => v.DistrictName == district);
+
+            if (roleID != 1 && roleID != 2)
+            {
+                query = query.Where(v => v.EndemicstatID != 1);
+            }
+
+            int count = query.Count();
+            return Json(new { count });
         }
         [HttpPost]
         public JsonResult Delete(int id)
@@ -295,14 +347,18 @@ namespace EcoSphere.Controllers
         {
             int? roleID = HttpContext.Session.GetInt32("Role_ID");
 
-            // Endemic Status kontrolü eğer ihtiyaç varsa (şu an View'da bu kolon yok gibi görünüyor)
-            // Bu kısım VwMap view'ına eklenmediyse veya gerekmiyorsa iptal edilebilir.
-
-            // Sorgu
-            var observations = _context.VwMaps
+            var query = _context.VwMaps
                 .Where(v => v.Lat != null
                             && v.Long != null
-                            && v.ProvinceName == province)
+                            && v.ProvinceName == province);
+
+            // Sadece admin (1) ve expert (2) endemikleri görebilsin
+            if (roleID != 1 && roleID != 2)
+            {
+                query = query.Where(v => v.EndemicstatID != 1);
+            }
+
+            var observations = query
                 .OrderByDescending(v => v.SeenTime)
                 .Select(v => new
                 {
@@ -313,7 +369,7 @@ namespace EcoSphere.Controllers
                     Kingdom = v.KingdomName,
                     SeenTime = v.SeenTime
                 })
-                .ToList();  // <-- Tüm verileri getir
+                .ToList();
 
             return Json(observations);
         }
@@ -324,13 +380,17 @@ namespace EcoSphere.Controllers
         {
             int? roleID = HttpContext.Session.GetInt32("Role_ID");
 
-            // Burada EndemicStatusId kontrolü View'da yoksa atlayabiliriz;
-            // VwMap'e eklenirse role bazlı filtreyi kullanabiliriz.
-
-            var observations = _context.VwMaps
+            var query = _context.VwMaps
                 .Where(v => v.Lat != null
                             && v.Long != null
-                            && v.DistrictName == district)
+                            && v.DistrictName == district);
+
+            if (roleID != 1 && roleID != 2)
+            {
+                query = query.Where(v => v.EndemicstatID != 1);
+            }
+
+            var observations = query
                 .OrderByDescending(v => v.SeenTime)
                 .Select(v => new
                 {
@@ -341,7 +401,7 @@ namespace EcoSphere.Controllers
                     Kingdom = v.KingdomName,
                     SeenTime = v.SeenTime
                 })
-                .ToList();  // <-- Tüm verileri getir
+                .ToList();
 
             return Json(observations);
         }
