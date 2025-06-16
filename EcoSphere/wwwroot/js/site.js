@@ -312,7 +312,6 @@
                                     ft.set("name", o.name);
                                     ft.set("id", o.id);
 
-                                    // ► Kingdom’a göre renk atama
                                     const markerColor =
                                         o.kingdom === "Animalia" ? "red" :
                                             o.kingdom === "Plantae" ? "purple" :
@@ -331,12 +330,11 @@
                                 markerLayer.getSource().addFeatures(feats);
                             })
 
-                            .finally(() => hideLoader());
+                        // Sadece bu province için güncelle
 
                         return true;
                     }
 
-                    // ── İlçe seçildi
                     if (districtName && layer === ilceLayer) {
                         history.pushState(null, "", `${basePath}?district=${encodeURIComponent(districtName)}`);
                         showLoader();
