@@ -1,5 +1,8 @@
 ﻿@import "bootstrap";
 @import 'tom-select/dist/css/tom-select';
+body {
+    font-family: 'Poppins', sans-serif;
+}
 
 .main-card {
     background: #fff;

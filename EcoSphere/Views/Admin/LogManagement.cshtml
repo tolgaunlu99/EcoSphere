@@ -18,7 +18,7 @@
 
     <div class="table-responsive">
         <table id="logTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
-            <thead class="table-active">
+            <thead class="table-active" style="background-color:#010D00; color:#ffffff">
                 <tr>
                     <th>Action ID</th>
                     <th>User Name</th>
@@ -26,7 +26,7 @@
                     <th>Action Time</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="color:#010D00;">
                 @foreach (var log in Model)
                 {
                     <tr>
@@ -66,15 +66,6 @@
                         className: 'btn btn-outline-primary btn-sm mr-1'
                     },
                     {
-                        extend: 'copyHtml5',
-                        text: 'Copy',
-                        className: 'btn btn-outline-primary btn-sm mr-1',
-                        action: function (e, dt, button, config) {
-                            logExport('copy');
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
                         extend: 'csvHtml5',
                         text: 'CSV',
                         className: 'btn btn-outline-primary btn-sm mr-1',
@@ -92,24 +83,7 @@
                             $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
                         }
                     },
-                    {
-                        extend: 'pdfHtml5',
-                        text: 'PDF',
-                        className: 'btn btn-outline-primary btn-sm mr-1',
-                        action: function (e, dt, button, config) {
-                            logExport('pdf');
-                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        className: 'btn btn-outline-primary btn-sm',
-                        action: function (e, dt, button, config) {
-                            logExport('print');
-                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
-                        }
-                    }
+
                 ]
             });
 

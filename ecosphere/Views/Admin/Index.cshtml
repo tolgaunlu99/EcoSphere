@@ -12,7 +12,7 @@
     <!-- Summary Cards -->
     <div class="row">
         <div class="col mb-3">
-            <div class="card bg-primary text-white shadow">
+            <div class="card text-white shadow" style="background-color: #286107;">
                 <div class="card-body">
                     <div class="text-uppercase mb-1">Toplam Kullanıcı</div>
                     <div class="h5 mb-0 font-weight-bold">@Model.TotalUsers</div>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col mb-3">
-            <div class="card bg-success text-white shadow">
+            <div class="card text-white shadow" style="background-color: #286107;">
                 <div class="card-body">
                     <div class="text-uppercase mb-1">Toplam Species</div>
                     <div class="h5 mb-0 font-weight-bold">@Model.TotalCreatures</div>
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="col mb-3">
-            <div class="card bg-info text-white shadow">
+            <div class="card text-white shadow" style="background-color: #286107;">
                 <div class="card-body">
                     <div class="text-uppercase mb-1">Toplam Observations</div>
                     <div class="h5 mb-0 font-weight-bold">@Model.TotalObservations</div>
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="col mb-3">
-            <div class="card text-white shadow" style="background-color: #17a2b8;">
+            <div class="card text-white shadow" style="background-color: #286107;">
                 <div class="card-body">
                     <div class="text-uppercase mb-1">Bugünkü Giriş Sayısı</div>
                     <div class="h5 mb-0 font-weight-bold">@Model.TodayLogins</div>
@@ -44,30 +44,10 @@
             </div>
         </div>
         <div class="col mb-3">
-            <div class="card bg-warning text-white shadow">
+            <div class="card  text-white shadow" style="background-color: #286107;">
                 <div class="card-body">
                     <div class="text-uppercase mb-1">Toplam Log Kaydı</div>
                     <div class="h5 mb-0 font-weight-bold">@Model.TotalLogs</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Server Health -->
-    <div class="row mt-4">
-        <div class="col-md-6 mb-3">
-            <div class="card bg-secondary text-white shadow">
-                <div class="card-body">
-                    <div class="text-uppercase mb-1">CPU Kullanımı</div>
-                    <div class="h5 mb-0 font-weight-bold">@Model.CpuUsage %</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card bg-dark text-white shadow">
-                <div class="card-body">
-                    <div class="text-uppercase mb-1">RAM Kullanımı</div>
-                    <div class="h5 mb-0 font-weight-bold">@Model.RamUsage %</div>
                 </div>
             </div>
         </div>
@@ -93,7 +73,7 @@
             <h5>Rol Dağılımı Detayları</h5>
             <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                 <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
+                    <thead class="table-dark" style="background-color:#010D00; color:#ffffff">
                         <tr>
                             <th>Rol Adı</th>
                             <th>Kullanıcı Sayısı</th>
@@ -101,7 +81,7 @@
                             <th>Rol Yetkisi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="color:#010D00;">
                         @{
                             var total = Model.RoleCounts.Sum();
                             for (int i = 0; i < Model.RoleNames.Count; i++)
@@ -132,14 +112,14 @@
             <h5>Son 5 İşlem</h5>
             <div class="table-responsive">
                 <table class="table table-bordered">
-                    <thead class="table-dark">
+                    <thead class="table-dark" style="background-color:#010D00;">
                         <tr>
                             <th>Kullanıcı</th>
                             <th>İşlem</th>
                             <th>Tarih</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="color:#010D00;">
                         @foreach (var log in Model.RecentLogs)
                         {
                             <tr>

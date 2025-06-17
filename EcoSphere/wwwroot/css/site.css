@@ -23,6 +23,7 @@ body {
     background-repeat: repeat;
     background-position: center;
     background-color: #fff;
+    font-family: 'Poppins', sans-serif !important;
 }
 .navbar-transparent {
     background-color: transparent !important;

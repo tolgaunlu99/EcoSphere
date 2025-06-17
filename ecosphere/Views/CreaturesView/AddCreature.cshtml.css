@@ -1,3 +1,68 @@
-﻿.card{
+﻿body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.main-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #2E590E, #548C1C);
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.card-body-custom {
+    background-color: #ebebeb;
+    padding: 15px;
+}
+.form-group {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.btn-add-new {
+    background: linear-gradient(135deg, #2E590E, #548C1C);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+    .btn-add-new:hover {
+        transform: scale(1.05);
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+    }
+
+.btn-submit {
+    background: linear-gradient(135deg, #2E590E, #548C1C);
+    border: none;
+    border-radius: 15px;
+    padding: 12px 20px;
+    color: white;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+.modal-header {
+    text-align: center !important;
+}
+.modal-title {
     
+    margin-bottom: 0;
+    line-height: var(--bs-modal-title-line-height);
+    color: #2E590E;
 }
