@@ -146,7 +146,7 @@
                 $.post('@Url.Action("Index", "UserView")', $(this).serialize(), function (res) {
                     if (res.success) {
                         showToast(res.message, "success");
-                        setTimeout(() => window.location.href = res.redirectUrl, 1500);
+                        setTimeout(() => window.location.href = res.redirectUrl, 750);
                     } else {
                         showToast(res.message, "error");
                     }
