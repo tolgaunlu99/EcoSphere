@@ -23,7 +23,7 @@
 
 	<!-- Card Header -->
 	<div class="card-header-custom">
-		<h2><i class="fas fa-binoculars me-3"></i>Create Creature</h2>
+		<h2><i class="fas fa-binoculars me-3"></i>Canlı Oluştur</h2>
 	</div>
 
 	<div class="card-body-custom">
@@ -34,22 +34,22 @@
 				<div class="row">
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="UpperRealmName">Select Upper Realm</label>
-							@Html.DropDownListFor(m => m.UpperRealmId, Model.UpperRealmNamed, "Select Upper Realm", new { @class = "form-control", id = "UpperRealmDropdown" })
+									<label for="UpperRealmName">Üst Alem Seçin</label>
+									@Html.DropDownListFor(m => m.UpperRealmId, Model.UpperRealmNamed, "Üst Âlem Seçin", new { @class = "form-control", id = "UpperRealmDropdown" })
 						</div>
 					</div>
 					<div class="col-md-4" id="KingdomSection">
 						<div class="form-group">
-							<label for="KingdomName">Select Kingdom</label>
-									@Html.DropDownListFor(m => m.KingdomId, Model.KingdomNamed, "Select Kingdom", new { @class = "form-control", id = "KingdomDropdown", disabled = "disabled" })
+									<label for="KingdomName">Alem Seçin</label>
+									@Html.DropDownListFor(m => m.KingdomId, Model.KingdomNamed, "Alem Seçin", new { @class = "form-control", id = "KingdomDropdown", disabled = "disabled" })
 						</div>
 					</div>
 
 						<div class="col-md-4" id="PhylumSection">
 							<div class="form-group">
-								<label for="PhylumName">Select Phylum</label>
+									<label for="PhylumName">Şube Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.PhylumId, Model.PhylumNamed, "Select Phylum", new { @class = "form-control", id = "PhylumDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.PhylumId, Model.PhylumNamed, "Şube Seçin", new { @class = "form-control", id = "PhylumDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddPhylumModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -60,9 +60,9 @@
 
 					<div class="col-md-4" id="ClassSection">
 						<div class="form-group">
-							<label for="ClassName">Select Class</label>
+									<label for="ClassName">Sınıf Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.ClassId, Model.ClassNamed, "Select Class", new { @class = "form-control", id = "ClassDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.ClassId, Model.ClassNamed, "Sınıf Seçin", new { @class = "form-control", id = "ClassDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddClassModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -71,9 +71,9 @@
 					</div>
 					<div class="col-md-4" id="OrderSection">
 						<div class="form-group">
-							<label for="OrderName">Select Order</label>
+									<label for="OrderName">Takım Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.OrderId, Model.OrderNamed, "Select Order", new { @class = "form-control", id = "OrderDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.OrderId, Model.OrderNamed, "Takım Seçin", new { @class = "form-control", id = "OrderDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddOrderModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -82,9 +82,9 @@
 					</div>
 					<div class="col-md-4" id="FamilySection">
 						<div class="form-group">
-							<label for="FamilyName">Select Family</label>
+									<label for="FamilyName">Familya Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.FamilyId, Model.FamilyNamed, "Select Family", new { @class = "form-control", id = "FamilyDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.FamilyId, Model.FamilyNamed, "Familya Seçin", new { @class = "form-control", id = "FamilyDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddFamilyModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -94,9 +94,9 @@
 
 					<div class="col-md-4" id="GenusSection">
 						<div class="form-group">
-							<label for="GenusName">Select Genus</label>
+									<label for="GenusName">Cins Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.GenusId, Model.GenusNamed, "Select Genus", new { @class = "form-control", id = "GenusDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.GenusId, Model.GenusNamed, "Cins Seçin", new { @class = "form-control", id = "GenusDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddGenusModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -106,9 +106,9 @@
 
 					<div class="col-md-4" id="SpeciesSection">
 						<div class="form-group">
-							<label for="SpeciesName">Select Species</label>
+									<label for="SpeciesName">Tür Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.SpeciesId, Model.SpeciesNamed, "Select Species", new { @class = "form-control", id = "SpeciesDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.SpeciesId, Model.SpeciesNamed, "Tür Seçin", new { @class = "form-control", id = "SpeciesDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddSpeciesModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -118,9 +118,9 @@
 
 					<div class="col-md-4" id="SubspeciesSection">
 						<div class="form-group">
-							<label for="SubspeciesName">Select Subspecies</label>
+									<label for="SubspeciesName">Alt Tür Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.SubspeciesId, Model.SubspeciesNamed, "Select Subspecies", new { @class = "form-control", id = "SubspeciesDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.SubspeciesId, Model.SubspeciesNamed, "Alt Tür Seçin", new { @class = "form-control", id = "SubspeciesDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddSubSpeciesModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -134,9 +134,9 @@
 
 					<div class="col-md-6" id="AuthorSection">
 						<div class="form-group">
-							<label for="AuthorName">Select Author</label>
+									<label for="AuthorName">Yazar Seçin</label>
 								<div class="d-flex align-items-center gap-2">
-										@Html.DropDownListFor(m => m.AuthorId, Model.AuthorNamed, "Select Author", new { @class = "form-control", id = "AuthorDropdown", disabled = "disabled" })
+										@Html.DropDownListFor(m => m.AuthorId, Model.AuthorNamed, "Yazar Seçin", new { @class = "form-control", id = "AuthorDropdown", disabled = "disabled" })
 									<button type="button" class="btn btn-outline-primary btn-sm ms-2 btn-add-new" data-bs-toggle="modal" data-bs-target="#AddAuthorModal">
 										<i class="fas fa-plus me-1"></i>Yeni
 									</button>
@@ -146,21 +146,21 @@
 
 					<div class="col-md-6" id="IucnSection">
 						<div class="form-group">
-							<label for="IucnCode">Select IUCN</label>
-							@Html.DropDownListFor(m => m.IucnId, Model.IucnCoded, "Select IUCN", new { @class = "form-control", id = "IucnDropdown", disabled = "disabled" })
+									<label for="IucnCode">IUCN Seçin</label>
+							@Html.DropDownListFor(m => m.IucnId, Model.IucnCoded, "IUCN Seçin", new { @class = "form-control", id = "IucnDropdown", disabled = "disabled" })
 						</div>
 					</div>
 
 					<div class="col-md-6" id="CommonNameSection">
 						<div class="form-group">
-							<label for="CommonName">Enter Common Name</label>
+									<label for="CommonName">Yaygın Adı Girin</label>
 									@Html.TextBoxFor(m => m.CommonName, new { @class = "form-control", id = "CommonNameInput", disabled = "disabled" })
 						</div>
 					</div>
 
 					<div class="col-md-6" id="ScientificNameSection">
 						<div class="form-group">
-							<label for="ScientificName">Enter Scientific Name</label>
+							<label for="ScientificName">Bilimsel Adı Girin</label>
 									@Html.TextBoxFor(m => m.ScientificName, new { @class = "form-control", id = "ScientificNameInput", disabled = "disabled" })
 						</div>
 					</div>

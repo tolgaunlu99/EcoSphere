@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Observation Details";
+    ViewData["Title"] = "Gözlem Detayları";
     var roleId = Context.Session.GetInt32("Role_ID") ?? 0;
 }
 
@@ -7,28 +7,29 @@
     <h3>@ViewData["Title"]</h3>
     <hr />
 
-    <a href="/ObservationView/AddObservation" class="btn btn-create mb-3">Create Observation</a>
+    <a href="/ObservationView/AddObservation" class="btn btn-create mb-3">Gözlem Oluştur</a>
 
     <div class="table-responsive">
         <table id="observationTable" class="table table-striped table-bordered" cellspacing="0">
             <thead class="table-active">
                 <tr>
                     <th style="display:none;">ID</th>
-                    <th>Creature Name</th>
-                    <th>User Name</th>
-                    <th>Province</th>
-                    <th>District</th>
-                    <th>Endemic Status</th>
-                    <th>Project Name</th>
-                    <th>Reference</th>
-                    <th>Location Type</th>
-                    <th>Gender</th>
-                    <th>Longitude</th>
-                    <th>Latitude</th>
-                    <th>Activity</th>
-                    <th>Seen Time</th>
-                    <th>Creation Date</th>
-                    <th class="noExport" style="text-align:center; width:120px;">Actions</th>
+                    <th>Tür Adı</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>İl</th>
+                    <th>İlçe</th>
+                    <th>Endemik Durumu</th>
+                    <th>Proje Adı</th>
+                    <th>Referans</th>
+                    <th>Lokasyon Türü</th>
+                    <th>Cinsiyet</th>
+                    <th>Boylam</th>
+                    <th>Enlem</th>
+                    <th>Aktivite</th>
+                    <th>Gözlem Zamanı</th>
+                    <th>Oluşturulma Tarihi</th>
+                    <th class="noExport" style="text-align:center; width:120px;">İşlemler</th>
+
                 </tr>
             </thead>
             <tbody></tbody>

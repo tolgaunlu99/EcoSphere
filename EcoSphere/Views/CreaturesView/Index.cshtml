@@ -1,30 +1,31 @@
 ﻿@model List<EcoSphere.Models.CreaturesViewModel>
 
 @{
-    ViewData["Title"] = "Creatures Details";
+    ViewData["Title"] = "Canlı Detayları";
 }
 
 <div class="container obs-container mt-4">
     <h3>@ViewData["Title"]</h3>
     <hr />
 
-    <a href="/CreaturesView/AddCreature" class="btn btn-create mb-3">Add Creature</a>
+    <a href="/CreaturesView/AddCreature" class="btn btn-create mb-3">Canlı Oluştur</a>
 
     <div class="table-responsive">
         <table id="creaturesTable" class="table table-striped table-bordered" cellspacing="0">
             <thead class="table-active">
                 <tr>
                     <th>ID</th>
-                    <th>Upper Realm Name</th>
-                    <th>Kingdom Name</th>
-                    <th>Phylum Name</th>
-                    <th>Class Name</th>
-                    <th>Order Name</th>
-                    <th>Family Name</th>
-                    <th>Genus Name</th>
-                    <th>Species Name</th>
-                    <th>Common Name</th>
-                    <th>IUCN Code</th>
+                    <th>Üst Alem Adı</th>
+                    <th>Alem Adı</th>
+                    <th>Şube (Filum) Adı</th>
+                    <th>Sınıf Adı</th>
+                    <th>Takım Adı</th>
+                    <th>Familya Adı</th>
+                    <th>Cins Adı</th>
+                    <th>Tür Adı</th>
+                    <th>Yaygın Adı</th>
+                    <th>IUCN Kodu</th>
+
                 </tr>
             </thead>
             <tbody>
