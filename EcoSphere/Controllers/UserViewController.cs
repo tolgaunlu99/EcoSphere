@@ -128,6 +128,14 @@ namespace EcoSphere.Controllers
                 _context.TblUserRoles.Add(userRole);
                 _context.SaveChanges();
 
+                var action = new TblUseraction
+                {
+                    UserId = newUser.UserId,
+                    Action = newUser.Username+" Sisteme Kayıt oldu!!",
+                    ActionTime = DateTime.Now
+                };
+                _context.TblUseractions.Add(action);
+                _context.SaveChanges();
                 return Json(new { success = true, message = " Kayıt başarılı. Artık giriş yapabilirsiniz." });
             }
 
