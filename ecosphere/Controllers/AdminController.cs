@@ -68,8 +68,8 @@ public class AdminController : Controller
         dashboard.RoleDescriptions = new Dictionary<string, string>
 {
     { "Admin", "Sistemde tüm işlemleri yapabilir." },
-    { "Expert", "Raporları inceleyebilir." },
-    { "Observer", "Sadece gözlem yapabilir." },
+    { "Expert", "Admin panel harici fonksiyonları yerine getirebilir" },
+    { "Observer", "Gözlem verisi ekleyebilir Gözlem tablosunu görüntüleyebilir." },
     { "User", "Sistemi temel olarak kullanabilir." }
 };
         // Role Chart
