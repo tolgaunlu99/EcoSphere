@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="icon" type="image/png" sizes="16x16" href="~/images/DkmLogo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/4_dkm_ikon_kare.png" />
     @RenderSection("Styles", required: false)
 </head>
 
@@ -63,21 +63,22 @@
                             }
                             @if (userRoleId == 3 ) // Observer
                             {
-                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "ObservationView")">Observation</a> </li>
+                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "ObservationView")">Observation</a> </li>
                             }
                         
 
-                        <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">About Us</a> </li>
                         @if (userRoleId==1)
                         {
                             <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Admin")">Admin Panel</a> </li>
                         }
+
+                        <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">About Us</a> </li>
                         
                         @if (userRoleId > 0)
                         {
                             <li class="nav-item">
                                 <a href="@Url.Action("Logout", "UserView")" class="nav-link">
-                                    Sign Out
+                                    <i class="fa-solid fa-right-from-bracket"></i>
                                 </a>
                                 </li>
                         }

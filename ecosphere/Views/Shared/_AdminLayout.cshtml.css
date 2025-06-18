@@ -5,6 +5,7 @@
 
 body {
     overflow-x: hidden;
+
 }
 
     body.sticky-footer {
@@ -18,6 +19,7 @@ body {
 .content-wrapper {
     height: calc(100vh - 0px);
     padding-top: 1rem;
+    color:#010D00
 }
 
 .scroll-to-top {
@@ -44,7 +46,17 @@ body {
     .scroll-to-top i {
         font-weight: 800;
     }
+.nav-link{
+    color:#ffffff !important;
+}
 
+.sidenav-second-level {
+    background-color: #021b00 !important;
+}
+
+.table {
+    color: #010D00 !important;
+}
 .smaller {
     font-size: 0.7rem;
 }

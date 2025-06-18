@@ -18,7 +18,7 @@
 
     <div class="table-responsive">
         <table id="userTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
-            <thead class="table-active">
+            <thead class="table-active" style="background-color:#010D00; color:#ffffff">
                 <tr>
                     <th>User ID</th>
                     <th>Name</th>
@@ -31,7 +31,7 @@
                     <th class="noExport">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="color:#010D00;">
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var user in Model)
@@ -90,14 +90,6 @@
                         collectionLayout: 'fixed two-column'
                     },
                     {
-                        extend: 'copyHtml5',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('copy');
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
                         extend: 'csvHtml5',
                         exportOptions: { columns: ':not(.noExport)' },
                         action: function (e, dt, button, config) {
@@ -113,22 +105,7 @@
                             $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
                         }
                     },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('pdf');
-                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: { columns: ':not(.noExport)' },
-                        action: function (e, dt, button, config) {
-                            logExport('print');
-                            $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
-                        }
-                    }
+                   
                 ]
             });
 
