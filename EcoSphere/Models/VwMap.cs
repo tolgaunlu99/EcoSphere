@@ -36,4 +36,7 @@ public partial class VwMap
     public int UserId { get; set; }
     [Column("username")]
     public string? Username { get; set; }
+   
+    [Column("status")]
+    public int status { get; set; }
 }

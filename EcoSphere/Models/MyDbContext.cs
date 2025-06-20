@@ -379,6 +379,8 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.Long)
                 .HasMaxLength(50)
                 .HasColumnName("long");
+            entity.Property(e=>e.status).HasColumnName("status")
+                .HasDefaultValue(0); // Default to pending (0)
             entity.Property(e => e.MigrationStatusId).HasColumnName("Migration_status_ID");
             entity.Property(e => e.NeighborhoodId).HasColumnName("Neighborhood_ID");
             entity.Property(e => e.ProjectId).HasColumnName("Project_ID");

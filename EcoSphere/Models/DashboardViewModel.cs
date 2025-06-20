@@ -7,6 +7,8 @@ namespace EcoSphere.Models
         public int TotalUsers { get; set; }
         public int TotalCreatures { get; set; }
         public int TotalObservations { get; set; }
+        public int TotalPlants { get; set; }
+        public int TotalAnimals { get; set; }
         public int TodayLogins { get; set; }
         public int TotalLogs { get; set; }
 

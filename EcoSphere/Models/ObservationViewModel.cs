@@ -130,6 +130,8 @@ namespace EcoSphere.Models
 
         [DisplayName("Gender Name")]
         public string? GenderName { get; set; }
+        [DisplayName("status")]
+        public string? status { get; set; }
 
         [DisplayName("Full Name")]
         public string? FullName => $"{UserName} {UsersurName}";

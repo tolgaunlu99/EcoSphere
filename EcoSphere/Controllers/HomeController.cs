@@ -52,17 +52,21 @@ public class HomeController : Controller
         var totalCreatures = _context.VwSpecies.Count();
 
         var totalObservationsQuery = _context.VwMaps.AsQueryable();
-        if (roleID != 1 && roleID != 2) // Sadece admin ve uzmanlar tümünü görür
+        if (roleID != 1 && roleID != 2)
         {
             totalObservationsQuery = totalObservationsQuery.Where(v => v.EndemicstatID != 1);
         }
 
-        var totalObservations = totalObservationsQuery.Count();
+        var totalObservations = totalObservationsQuery.Count(v => v.status == 1);
+        var totalPlants = totalObservationsQuery.Count(v => v.KingdomName == "Plantae" && v.status == 1);
+        var totalAnimals = totalObservationsQuery.Count(v => v.KingdomName == "Animalia" && v.status == 1);
 
         var model = new DashboardViewModel
         {
             TotalCreatures = totalCreatures,
-            TotalObservations = totalObservations
+            TotalObservations = totalObservations,
+            TotalPlants = totalPlants,
+            TotalAnimals = totalAnimals
         };
 
         return View(model);
@@ -73,7 +77,13 @@ public class HomeController : Controller
         ViewBag.UserRoleId = roleID;
         return View();
     }
-   
+    public IActionResult PendingObservations()
+    {
+        var roleID = GetCurrentUserRoleId();
+        ViewBag.UserRoleId = roleID;
+        return View();
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

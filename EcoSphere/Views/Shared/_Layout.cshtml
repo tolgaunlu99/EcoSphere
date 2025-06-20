@@ -59,12 +59,21 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
                                     <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Türler</a>
+                                    <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
                                 </div>
                             }
                             @if (userRoleId == 3 ) // Observer
                             {
-                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "ObservationView")">Gözlemler</a> </li>
+                             <a href="#" class="nav-link " data-bs-toggle="dropdown">Hizmetler</a>
+                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
+                                <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
+                             </div>
                             }
+                        @if (userRoleId == 5) // Volunteer
+                        {
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("AddObservation", "ObservationView")">Gözlem Ekle</a> </li>
+                        }
                         
 
                         @if (userRoleId==1)

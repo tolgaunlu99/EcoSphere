@@ -415,6 +415,17 @@
                                         if (document.getElementById("observationCount"))
                                             document.getElementById("observationCount").innerText = data.count;
                                     });
+                                fetch(`/ObservationView/GetPlantAnimalCountsByProvince?province=${provinceName}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        document.getElementById("plantCount").innerText = data.plantCount;
+                                        document.getElementById("animalCount").innerText = data.animalCount;
+                                    });
+                                fetch(`/ObservationView/GetCreatureCountsByProvince?province=${encodeURIComponent(provinceName)}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        document.getElementById("totalCreatures").innerText = data.totalCreatures;
+                                    });
                             });
 
                         return true;
@@ -463,6 +474,17 @@
                                     .then(data => {
                                         if (document.getElementById("observationCount"))
                                             document.getElementById("observationCount").innerText = data.count;
+                                    });
+                                fetch(`/ObservationView/GetPlantAnimalCountsByDistrict?district=${districtName}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        document.getElementById("plantCount").innerText = data.plantCount;
+                                        document.getElementById("animalCount").innerText = data.animalCount;
+                                    });
+                                fetch(`/ObservationView/GetCreatureCountsByDistrict?district=${encodeURIComponent(districtName)}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        document.getElementById("totalCreatures").innerText = data.totalCreatures;
                                     });
                             });
 

@@ -43,6 +43,7 @@ public partial class TblMaintable
     public string? Long { get; set; }
 
     public string? Lat { get; set; }
+    public int? status { get; set; } // 0: pending, 1: approved, 2: rejected
 
     public string? Activity { get; set; }
     public string? ImagePath { get; set; }

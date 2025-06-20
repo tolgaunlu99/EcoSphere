@@ -53,7 +53,49 @@ namespace EcoSphere.Controllers
                 return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
             }
         }
+        [HttpPost]
+        public IActionResult GetPendingObservations()
+        {
+            try
+            {
+                int? roleID = HttpContext.Session.GetInt32("Role_ID");
 
+                var data = _context.VwObservations
+                    .Where(x => x.status == 0) // 👈 sadece pending (status = 0)
+                    .AsQueryable();
+
+                // Eğer kullanıcı admin (1) ya da expert (2) değilse endemikleri gösterme
+                if (roleID != 1 && roleID != 2)
+                {
+                    data = data.Where(x => x.EndemicStatus != "True"); // veya EndemicStatusId != 1 ise
+                }
+
+                var result = data.Select(v => new
+                {
+                    v.Id,
+                    v.ScientificName,
+                    v.Username,
+                    v.ProvinceName,
+                    v.DistrictName,
+                    v.EndemicStatus,
+                    v.ProjectName,
+                    v.ReferenceName,
+                    v.LocationType,
+                    v.GenderName,
+                    v.Lat,
+                    v.Long,
+                    v.Activity,
+                    v.SeenTime,
+                    v.CreationDate                    
+                }).ToList();
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Bir hata oluştu: {ex.Message}");
+            }
+        }
 
         [HttpPost]
         public IActionResult LogUserExport(string exportType, string sourceTable)
@@ -104,7 +146,7 @@ namespace EcoSphere.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitObservation(ObservationViewModel model)
         {
-            
+
 
             var roleID = GetCurrentUserRoleId();
             ViewBag.UserRoleId = roleID;
@@ -138,7 +180,7 @@ namespace EcoSphere.Controllers
             }
 
             var province = await _context.TblProvinces.FirstOrDefaultAsync(p => p.ProvinceName == model.HiddenProvinceName);
-            var district = await _context.TblDistricts.FirstOrDefaultAsync(d => d.DistrictName == model.HiddenDistrictName);        
+            var district = await _context.TblDistricts.FirstOrDefaultAsync(d => d.DistrictName == model.HiddenDistrictName);
 
 
             if (province == null || district == null)
@@ -172,7 +214,8 @@ namespace EcoSphere.Controllers
                 LocationTypeId = 1,
                 LocationRangeId = 1,
                 GenderId = model.GenderId,
-                ImagePath = savedFileName // sadece dosya adı (örneğin: abc123.jpg)
+                ImagePath = savedFileName, // sadece dosya adı (örneğin: abc123.jpg)
+                status = (roleID == 5) ? 0 : 1
             };
 
             _context.TblMaintables.Add(newObs);
@@ -195,8 +238,9 @@ namespace EcoSphere.Controllers
             var addedLocationType = _context.TblLocationtypes.FirstOrDefault(l => l.LocationTypeId == newObs.LocationTypeId);
             var addedGender = _context.TblGenders.FirstOrDefault(g => g.GenderId == newObs.GenderId);
             var addedEndemic = _context.TblEndemicstatuses.FirstOrDefault(e => e.EndemicStatusId == newObs.EndemicStatusId);
-
-            ObservationCache.AddObservation(new ObservationViewModel
+            if (newObs.status == 1)
+            {
+                ObservationCache.AddObservation(new ObservationViewModel
             {
                 Id = newObs.Id,
                 CreatureName = addedCreature?.ScientificName,
@@ -213,8 +257,9 @@ namespace EcoSphere.Controllers
                 Activity = newObs.Activity,
                 SeenTime = newObs.SeenTime,
                 CreationDate = newObs.CreationDate
-            });
 
+            });
+        }
             return RedirectToAction("AddObservation");
         }
         [HttpPost]
@@ -273,7 +318,7 @@ namespace EcoSphere.Controllers
         {
             int? UserroleId = HttpContext.Session.GetInt32("Role_ID");
 
-            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3)) // 1=Admin, 2=Expert , 3=Observer
+            if (UserroleId == null || (UserroleId != 1 && UserroleId != 2 && UserroleId != 3 && UserroleId != 5)) // 1=Admin, 2=Expert , 3=Observer,5=Volunteer
             {
                 return RedirectToAction("AccessDenied", "UserView");
             }
@@ -294,7 +339,7 @@ namespace EcoSphere.Controllers
         {
             int? roleID = HttpContext.Session.GetInt32("Role_ID");
 
-            var query = _context.VwMaps.Where(v => v.ProvinceName == province);
+            var query = _context.VwMaps.Where(v => v.ProvinceName == province && v.status == 1);
 
             if (roleID != 1 && roleID != 2)
             {
@@ -310,7 +355,7 @@ namespace EcoSphere.Controllers
         {
             int? roleID = HttpContext.Session.GetInt32("Role_ID");
 
-            var query = _context.VwMaps.Where(v => v.DistrictName == district);
+            var query = _context.VwMaps.Where(v => v.DistrictName == district && v.status == 1);
 
             if (roleID != 1 && roleID != 2)
             {
@@ -319,6 +364,78 @@ namespace EcoSphere.Controllers
 
             int count = query.Count();
             return Json(new { count });
+        }
+        [HttpGet]
+        public JsonResult GetPlantAnimalCountsByProvince(string province)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps.Where(v => v.ProvinceName == province && v.status == 1);
+
+            if (roleID != 1 && roleID != 2)
+                query = query.Where(v => v.EndemicstatID != 1);
+
+            int plantCount = query.Count(v => v.KingdomName == "Plantae");
+            int animalCount = query.Count(v => v.KingdomName == "Animalia");
+
+            return Json(new { plantCount, animalCount });
+        }
+        [HttpGet]
+        public JsonResult GetCreatureCountsByProvince(string province)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps
+                .Where(v => v.ProvinceName == province && v.status == 1);
+
+            if (roleID != 1 && roleID != 2)
+                query = query.Where(v => v.EndemicstatID != 1);
+
+            var distinctCreatures = query
+                .GroupBy(v => v.CreatureId)
+                .Select(g => g.Key)
+                .ToList();
+
+            int totalCreatures = distinctCreatures.Count;
+
+            return Json(new { totalCreatures });
+        }
+
+        [HttpGet]
+        public JsonResult GetCreatureCountsByDistrict(string district)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps
+                .Where(v => v.DistrictName == district && v.status == 1);
+
+            if (roleID != 1 && roleID != 2)
+                query = query.Where(v => v.EndemicstatID != 1);
+
+            var distinctCreatures = query
+                .GroupBy(v => v.CreatureId)
+                .Select(g => g.Key)
+                .ToList();
+
+            int totalCreatures = distinctCreatures.Count;
+
+            return Json(new { totalCreatures });
+        }
+
+        [HttpGet]
+        public JsonResult GetPlantAnimalCountsByDistrict(string district)
+        {
+            int? roleID = HttpContext.Session.GetInt32("Role_ID");
+
+            var query = _context.VwMaps.Where(v => v.DistrictName == district && v.status == 1);
+
+            if (roleID != 1 && roleID != 2)
+                query = query.Where(v => v.EndemicstatID != 1);
+
+            int plantCount = query.Count(v => v.KingdomName == "Plantae");
+            int animalCount = query.Count(v => v.KingdomName == "Animalia");
+
+            return Json(new { plantCount, animalCount });
         }
         [HttpPost]
         public JsonResult Delete(int id)
@@ -358,7 +475,8 @@ namespace EcoSphere.Controllers
             var query = _context.VwMaps
                 .Where(v => v.Lat != null
                             && v.Long != null
-                            && v.ProvinceName == province);
+                            && v.ProvinceName == province
+                            && v.status == 1);
 
             // Sadece admin (1) ve expert (2) endemikleri görebilsin
             if (roleID != 1 && roleID != 2)
@@ -391,7 +509,8 @@ namespace EcoSphere.Controllers
             var query = _context.VwMaps
                 .Where(v => v.Lat != null
                             && v.Long != null
-                            && v.DistrictName == district);
+                            && v.DistrictName == district
+                            && v.status == 1);
 
             if (roleID != 1 && roleID != 2)
             {
@@ -414,7 +533,54 @@ namespace EcoSphere.Controllers
             return Json(observations);
         }
 
+        [HttpPost]
+        public JsonResult Approve(int id)
+        {
+            var main = _context.TblMaintables.FirstOrDefault(o => o.Id == id);
+            if (main == null)
+                return Json(new { success = false, message = "Kayıt bulunamadı." });
 
+            main.status = 1;
+            _context.SaveChanges(); // ✅ burada gerçek update gerçekleşiyor
+
+            // Şimdi view'den bilgiyi çekip cache'e ekle
+            var newCacheEntry = _context.VwObservations.FirstOrDefault(o => o.Id == id);
+            if (newCacheEntry != null)
+            {
+                ObservationCache.AddObservation(new ObservationViewModel
+                {
+                    Id = newCacheEntry.Id,
+                    CreatureName = newCacheEntry.ScientificName,
+                    UserName = newCacheEntry.Username,
+                    provincename = newCacheEntry.ProvinceName,
+                    DistrictName = newCacheEntry.DistrictName,
+                    EndemicStatName = newCacheEntry.EndemicStatus,
+                    ProjectName = newCacheEntry.ProjectName,
+                    ReferenceName = newCacheEntry.ReferenceName,
+                    LocationType = newCacheEntry.LocationType,
+                    GenderName = newCacheEntry.GenderName,
+                    Lat = newCacheEntry.Lat,
+                    Long = newCacheEntry.Long,
+                    Activity = newCacheEntry.Activity,
+                    SeenTime = newCacheEntry.SeenTime,
+                    CreationDate = newCacheEntry.CreationDate
+                });
+            }
+
+            var userId = HttpContext.Session.GetInt32("UserID");
+            var username = _context.TblUsers.FirstOrDefault(u => u.UserId == userId)?.Username ?? "Unknown";
+
+            _context.TblUseractions.Add(new TblUseraction
+            {
+                UserId = userId ?? 0,
+                Action = $"{id} ID'li gözlem {username} tarafından onaylandı.",
+                ActionTime = DateTime.Now
+            });
+
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
 
         [HttpGet]
         public IActionResult Details(int id)

@@ -26,11 +26,26 @@
 	<div class="container">
 		<!-- Success Message -->
 		@if (TempData["SuccessMessage"] != null)
-		{
-			<div class="alert alert-success">
-				@TempData["SuccessMessage"]
-			</div>
-		}
+{
+    <div class="alert alert-success" id="successAlert">
+        @TempData["SuccessMessage"]
+    </div>
+
+    <script>
+        // Mesajı 3 saniye sonra yavaşça gizle
+        setTimeout(() => {
+            const alert = document.getElementById("successAlert");
+            if (alert) {
+                alert.style.transition = "opacity 0.5s ease";
+                alert.style.opacity = 0;
+
+                setTimeout(() => {
+                    alert.remove(); // tamamen DOM'dan kaldır
+                }, 500);
+            }
+        }, 3000);
+    </script>
+}
 
 		<!-- Main Card -->
 		<div class="main-card">
@@ -366,7 +381,11 @@
 				}
 			});
 		}
-
+		setTimeout(() => {
+			document.querySelector("form").reset();
+			const previewWrapper = document.getElementById("imageWrapper");
+			if (previewWrapper) previewWrapper.style.display = "none";
+		}, 1000);
 		function saveNewReference() {
 			const name = $("#newReferenceName").val().trim();
 			if (!name) return;

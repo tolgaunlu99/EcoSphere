@@ -10,12 +10,15 @@
             <div class="row align-items-center">
                 <!-- Sol: Toplam Species -->
                 <div class="col-md-3">
-
-                        <div class="card-body text-center py-2">
-                            <div class="text-uppercase mb-1" style="font-size: 0.75rem;">Toplam Tür</div>
-                            <div class="h6 mb-0 font-weight-bold">@Model.TotalCreatures</div>
+                    <div class="card-body text-center py-2">
+                        <div class="text-uppercase mb-1" style="font-size: 0.75rem;">Toplam Tür</div>
+                        <div class="h6 mb-0 font-weight-bold">
+                            <span id="totalCreatures">@Model.TotalCreatures</span>
                         </div>
-
+                        <div class="text-white" style="font-size: 0.75rem;">
+                            Toplam Bitki: <span id="plantCount">@Model.TotalPlants</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Orta: Başlık -->
@@ -25,17 +28,17 @@
 
                 <!-- Sağ: Toplam Observations -->
                 <div class="col-md-3">
-
-                        <div class="card-body text-center py-2">
-                            <div class="text-uppercase mb-1" style="font-size: 0.75rem;">Toplam Gözlem</div>
-                            <div id="observationCount" class="h6 mb-0 font-weight-bold">@Model.TotalObservations</div>
-                        </div>
-
+                    <div class="card-body text-center py-2">
+                        <div class="text-uppercase mb-1" style="font-size: 0.75rem;">Toplam Gözlem</div>
+                        <div id="observationCount" class="h6 mb-0 font-weight-bold">@Model.TotalObservations</div>
+                        <div class="text-white" style="font-size: 0.75rem;">Toplam Hayvan: <span id="animalCount">@Model.TotalAnimals</span></div>
+                    </div>
                 </div>
             </div>
         </div>
-            <!-- Map Container -->
-            <div id="map" style="width: 100%; height: 700px; position: relative;"></div>
+
+        <!-- Map Container -->
+        <div id="map" style="width: 100%; height: 700px; position: relative;"></div>
     </div>
 </div>
 

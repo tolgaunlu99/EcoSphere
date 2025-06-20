@@ -52,6 +52,7 @@ namespace EcoSphere.Caching
         private static List<ObservationViewModel> LoadFromDatabase(MyDbContext context)
         {
             return context.VwObservations
+                .Where(v => v.status == 1) // 👈 Sadece onaylı gözlemler
                 .Select(v => new ObservationViewModel
                 {
                     Id = v.Id,

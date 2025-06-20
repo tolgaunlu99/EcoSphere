@@ -69,8 +69,10 @@ public class AdminController : Controller
 {
     { "Admin", "Sistemde tüm işlemleri yapabilir." },
     { "Expert", "Admin panel harici fonksiyonları yerine getirebilir" },
-    { "Observer", "Gözlem verisi ekleyebilir Gözlem tablosunu görüntüleyebilir." },
+    { "Observer", "Gözlem verisi ekleyebilir, Gözlem tablosunu görüntüleyebilir ve bekleyen Gözlemleri düzenleyebilir." },
+    { "Volunteer", "Yetkililerin onayına tâbi tutularak gözlem ekleyebilir." },
     { "User", "Sistemi temel olarak kullanabilir." }
+
 };
         // Role Chart
         var roleGroups = _context.TblUserRoles

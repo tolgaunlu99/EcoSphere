@@ -37,5 +37,8 @@ public partial class VwObservation
     public DateTime? SeenTime { get; set; }
     [Column("creation_date")]
     public DateTime? CreationDate { get; set; }
+    
+    [Column("status")]
+    public int status { get; set; }
 }
 
