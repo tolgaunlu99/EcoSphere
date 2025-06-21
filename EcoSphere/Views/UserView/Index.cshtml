@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-
+<link rel="icon" type="image/png" sizes="16x16" href="~/images/4_dkm_ikon_kare.png" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,15 +58,15 @@
                 <input type="hidden" name="formAction" value="login" />
                 <h1>Login</h1>
                 <div class="input-box">
-                    <input type="text" name="Username" placeholder="Username" required />
+                    <input type="text" name="Username" placeholder="Kullanıcı Adı" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="Password" placeholder="Password" required />
+                    <input type="password" name="Password" placeholder="Şifre" required />
                     <i class='bx bxs-lock-alt'></i>
                 </div>
-                <div class="forgot-link"><a href='UserView/ForgotPassword'>Forgot Password?</a></div>
-                <button type="submit" class="btn">Login</button>
+                <div class="forgot-link"><a href='UserView/ForgotPassword'>Şifreni mi unuttun?</a></div>
+                <button type="submit" class="btn">Giriş</button>
             </form>
         </div>
 
@@ -76,15 +76,15 @@
                 <input type="hidden" name="formAction" value="signup" />
                 <h1>Registration</h1>
                 <div class="input-box">
-                    <input type="text" name="Name" placeholder="Name" required />
+                    <input type="text" name="Name" placeholder="İsim" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="text" name="Surname" placeholder="Surname" required />
+                    <input type="text" name="Surname" placeholder="Soyisim" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
-                    <input type="text" name="Username" placeholder="Username" required />
+                    <input type="text" name="Username" placeholder="Kullanıcı Adı" required />
                     <i class='bx bxs-user'></i>
                 </div>
                 <div class="input-box">
@@ -92,25 +92,25 @@
                     <i class='bx bxs-envelope'></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" name="Password" placeholder="Password" minlength="8" required />
+                    <input type="password" name="Password" placeholder="Şifre" minlength="8" required />
                     <i class='bx bxs-lock-alt'></i>
 
                 </div>
-                <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn">Kayıt ol</button>
             </form>
         </div>
 
         <!-- TOGGLE PANEL -->
         <div class="toggle-box">
             <div class="toggle-panel toggle-left">
-                <h1>Merhaba,Hoşgeliniz!</h1>
+                <h1>Hoşgeliniz!</h1>
                 <p>Hesabınız yok mu?</p>
                 <button class="btn register-btn">Kayıt Ol</button>
             </div>
             <div class="toggle-panel toggle-right">
-                <h1>Welcome Back!</h1>
-                <p>Already have an account?</p>
-                <button class="btn login-btn">Login</button>
+                <h1>Yeniden Hoşgeliniz!</h1>
+                <p>Çoktan bir hesabınız var mı?</p>
+                <button class="btn login-btn">Giriş</button>
             </div>
         </div>
     </div>
