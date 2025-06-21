@@ -187,21 +187,21 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="AddPhylumModalLabel">Add New Phylum</h5>
+					<h5 class="modal-title" id="AddPhylumModalLabel">Yeni Şube Ekle</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<form id="AddPhylumForm" method="post" action="/CreaturesView/AddCreature">
 				<div class="modal-body">
 						<input type="hidden" id="SelectedKingdomID" name="KingdomID">
-					<label for="PhylumName">Phylum Name</label>
+						<label for="PhylumName">Şube Adı</label>
 
-						<input type="text" id="PhylumName2" name="PhylumName2" class="form-control" placeholder="Phylum Name" required>
-					<label for="PhylumScientificName">Phylum Scientific Name</label>
+						<input type="text" id="PhylumName2" name="PhylumName2" class="form-control" placeholder="Şube Adı" required>
+						<label for="PhylumScientificName">Şube Bilimsel Adı</label>
 
-						<input type="text" id="PhylumScientificName" name="PhylumScientificName" class="form-control" placeholder="Phylum Scientific Name" required>
+						<input type="text" id="PhylumScientificName" name="PhylumScientificName" class="form-control" placeholder="Şube Bilimsel Adı" required>
 				</div>
 				<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 				</div>
 			</form>
 		</div>
@@ -215,19 +215,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddClassModalLabel">Add New Class</h5>
+					<h5 class="modal-title" id="AddClassModalLabel">Yeni Sınıf Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddClassForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
 						<input type="hidden" id="SelectedPhylumID" name="PhylumID">
-						<label for="ClassName">Class Name</label>
+						<label for="ClassName">Sınıf Adı</label>
 						<input type="text" id="ClassName2" name="ClassName2" class="form-control" required>
-						<label for="ClassScientificName">Class Scientific Name</label>
+						<label for="ClassScientificName">Sınıfın Bilimsel Adı</label>
 						<input type="text" id="ClassScientificName" name="ClassScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -238,19 +238,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddOrderModalLabel">Add New Order</h5>
+					<h5 class="modal-title" id="AddOrderModalLabel">Yeni Takım Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddOrderForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
 						<input type="hidden" id="SelectedClassID" name="ClassID">
-						<label for="OrderName">Order Name</label>
+						<label for="OrderName">Takım Adı</label>
 						<input type="text" id="OrderName2" name="OrderName2" class="form-control" required>
-						<label for="OrderScientificName">Order Scientific Name</label>
+						<label for="OrderScientificName">Takım Bilimsel Adı</label>
 						<input type="text" id="OrderScientificName" name="OrderScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -261,19 +261,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddFamilyModalLabel">Add New Family</h5>
+					<h5 class="modal-title" id="AddFamilyModalLabel">Yeni Familya Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddFamilyForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
 						<input type="hidden" id="SelectedOrderID" name="OrderID">
-						<label for="FamilyName">Family Name</label>
+						<label for="FamilyName">Familya Adı</label>
 						<input type="text" id="FamilyName2" name="FamilyName2" class="form-control" required>
-						<label for="FamilyScientificName">Family Scientific Name</label>
+						<label for="FamilyScientificName">Familya Bilimsel Adı</label>
 						<input type="text" id="FamilyScientificName" name="FamilyScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -284,19 +284,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddGenusModalLabel">Add New Genus</h5>
+					<h5 class="modal-title" id="AddGenusModalLabel">Yeni Cins Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddGenusForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
 						<input type="hidden" id="SelectedFamilyID" name="FamilyID">
-						<label for="GenusName">Genus Name</label>
+						<label for="GenusName">Cins Adı</label>
 						<input type="text" id="GenusName2" name="GenusName2" class="form-control" required>
-						<label for="GenusScientificName">Genus Scientific Name</label>
+						<label for="GenusScientificName">Cinsin Bilimsel Adı</label>
 						<input type="text" id="GenusScientificName" name="GenusScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 				</div>
@@ -307,19 +307,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddSpeciesModalLabel">Add New Species</h5>
+					<h5 class="modal-title" id="AddSpeciesModalLabel">Yeni Tür Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddSpeciesForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
 						<input type="hidden" id="SelectedGenusID" name="GenusID">
-						<label for="SpeciesName">Species Name</label>
+						<label for="SpeciesName">Tür Adı</label>
 						<input type="text" id="SpeciesName2" name="SpeciesName2" class="form-control" required>
-						<label for="SpeciesScientificName">Species Scientific Name</label>
+						<label for="SpeciesScientificName">Türün Bilimsel Adı</label>
 						<input type="text" id="SpeciesScientificName" name="SpeciesScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -330,18 +330,18 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddSubSpeciesModalLabel">Add New Subspecies</h5>
+					<h5 class="modal-title" id="AddSubSpeciesModalLabel">Yeni Alt Tür Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddSubSpeciesForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
-						<label for="SubspeciesName">Subspecies Name</label>
+						<label for="SubspeciesName">Alt Tür Adı</label>
 						<input type="text" id="SubspeciesName2" name="SubspeciesName2" class="form-control" required>
-						<label for="SubspeciesScientificName">Subspecies Scientific Name</label>
+						<label for="SubspeciesScientificName">Alt Türün Bilimsel Adı</label>
 						<input type="text" id="SubspeciesScientificName" name="SubspeciesScientificName" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -352,16 +352,16 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="AddAuthorModalLabel">Add New Author</h5>
+					<h5 class="modal-title" id="AddAuthorModalLabel">Yeni Yazar Ekle</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<form id="AddAuthorForm" method="post" action="/CreaturesView/AddCreature">
 					<div class="modal-body">
-						<label for="AuthorName2">Author Name</label>
+						<label for="AuthorName2">Yazar Adı</label>
 						<input type="text" id="AuthorName2" name="AuthorName2" class="form-control" required>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-add-new">Save</button>
+						<button type="submit" class="btn btn-add-new">Kaydet</button>
 					</div>
 				</form>
 			</div>
@@ -642,7 +642,7 @@
 						.then(response => response.json())
 						.then(data => {
 							// Önce Kingdom dropdown'ını temizle
-							kingdomDropdown.innerHTML = '<option value="">Select Kingdom</option>';
+								kingdomDropdown.innerHTML = '<option value="">Alem Seçin</option>';
 
 							// Gelen veriyi dropdown'a ekle
 							data.forEach(kingdom => {
@@ -655,7 +655,7 @@
 						.catch(error => console.error('Error fetching kingdoms:', error));
 				} else {
 					// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-					kingdomDropdown.innerHTML = '<option value="">Select Kingdom</option>';
+							kingdomDropdown.innerHTML = '<option value="">Alem Seçin</option>';
 				}
 			});
 
@@ -673,7 +673,7 @@
 									fetch(`/CreaturesView/GetPhylumsByKingdom?kingdomID=${kingdomID}`)
 							.then(response => response.json())
 							.then(data => {
-									PhylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
+										PhylumDropdown.innerHTML = '<option value="">Şube Seçin</option>';
 
 								data.forEach(phylum => {
 									const option = document.createElement('option');
@@ -685,7 +685,7 @@
 							.catch(error => console.error('Error fetching Phylums:', error));
 					} else {
 						// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-							PhylumDropdown.innerHTML = '<option value="">Select Phylum</option>';
+									PhylumDropdown.innerHTML = '<option value="">Şube Seçin</option>';
 					}
 				});
 
@@ -699,7 +699,7 @@
 								fetch(`/CreaturesView/GetClassByPhylum?phylumID=${phylumID}`)
 								.then(response => response.json())
 								.then(data => {
-								ClassDropdown.innerHTML = '<option value="">Select Class</option>';
+									ClassDropdown.innerHTML = '<option value="">Sınıf Seçin</option>';
 
 									data.forEach(classes => {
 										const option = document.createElement('option');
@@ -711,7 +711,7 @@
 								.catch(error => console.error('Error fetching Class:', error));
 						} else {
 							// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-								ClassDropdown.innerHTML = '<option value="">Select Class</option>';
+										ClassDropdown.innerHTML = '<option value="">Sınıf Seçin</option>';
 						}
 					});
 
@@ -725,7 +725,7 @@
 									fetch(`/CreaturesView/GetOrderByClass?ClassID=${ClassID}`)
 									.then(response => response.json())
 									.then(data => {
-									OrderDropdown.innerHTML = '<option value="">Select Order</option>';
+										OrderDropdown.innerHTML = '<option value="">Takım Seçin</option>';
 
 										data.forEach(Order => {
 											const option = document.createElement('option');
@@ -737,7 +737,7 @@
 									.catch(error => console.error('Error fetching Order:', error));
 							} else {
 								// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-									OrderDropdown.innerHTML = '<option value="">Select Order</option>';
+											OrderDropdown.innerHTML = '<option value="">Takım Seçin</option>';
 							}
 						});
 
@@ -751,7 +751,7 @@
 										fetch(`/CreaturesView/GetFamilyByOrder?OrderID=${OrderID}`)
 										.then(response => response.json())
 										.then(data => {
-										FamilyDropdown.innerHTML = '<option value="">Select Family</option>';
+											FamilyDropdown.innerHTML = '<option value="">Familya Seçin</option>';
 
 											data.forEach(Family => {
 												const option = document.createElement('option');
@@ -763,7 +763,7 @@
 										.catch(error => console.error('Error fetching Family:', error));
 								} else {
 									// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-										FamilyDropdown.innerHTML = '<option value="">Select Family</option>';
+												FamilyDropdown.innerHTML = '<option value="">Familya Seçin</option>';
 								}
 							});
 
@@ -777,7 +777,7 @@
 											fetch(`/CreaturesView/GetGenusByFamily?FamilyID=${FamilyID}`)
 											.then(response => response.json())
 											.then(data => {
-												GenusDropdown.innerHTML = '<option value="">Select Genus</option>';
+													GenusDropdown.innerHTML = '<option value="">Cins Seçin</option>';
 
 												data.forEach(Genus => {
 													const option = document.createElement('option');
@@ -789,7 +789,7 @@
 											.catch(error => console.error('Error fetching Genus:', error));
 									} else {
 										// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-												GenusDropdown.innerHTML = '<option value="">Select Genus</option>';
+														GenusDropdown.innerHTML = '<option value="">Cins Seçin</option>';
 									}
 								});
 
@@ -803,7 +803,7 @@
 														fetch(`/CreaturesView/GetSpeciesByGenus?genusID=${genusID}`)
 												.then(response => response.json())
 												.then(data => {
-														SpeciesDropdown.innerHTML = '<option value="">Select Species</option>';
+															SpeciesDropdown.innerHTML = '<option value="">Tür Seçin</option>';
 
 													data.forEach(Species => {
 														const option = document.createElement('option');
@@ -815,7 +815,7 @@
 												.catch(error => console.error('Error fetching Species:', error));
 										} else {
 											// Upper Realm seçilmezse Kingdom dropdown'ını temizle
-														SpeciesDropdown.innerHTML = '<option value="">Select Species</option>';
+														SpeciesDropdown.innerHTML = '<option value="">Tür Seçin</option>';
 										}
 									});
 

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
     <!-- Yerel SB-Admin -->
     <link rel="stylesheet" href="~/lib/sb-admin-2/css/sb-admin-2.min.css" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/4_dkm_ikon_kare.png" />
     @RenderSection("Styles", required: false)
 </head>
 
@@ -33,7 +34,7 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
                     <a class="nav-link" href="@Url.Action("Index", "Admin")">
                         <i class="fa fa-fw fa-dashboard"></i>
-                        <span class="nav-link-text">Dashboard</span>
+                        <span class="nav-link-text">Gösterge Paneli</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Kullanıcı Paneli">
@@ -54,9 +55,6 @@
                         <span class="nav-link-text">Data Paneli</span>
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseComponents">
-                        <li>
-                            <a href="@Url.Action("ObservationManagement", "Admin")">Gözlem Yönetim Paneli</a>
-                        </li>
                         <li>
                             <a href="@Url.Action("SpeciesManagement", "Admin")">Tür Yönetim Paneli</a>
                         </li>
@@ -90,15 +88,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ayrılmaya Hazır Mısınız?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Mevcut oturumunuzu sonlandırmaya hazırsanız aşağıdaki "Çıkış"ı seçin.</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" style="color:#ffffff" href="@Url.Action("Index", "Home")">Exit</a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">İptal</button>
+                    <a class="btn btn-primary" style="color:#ffffff" href="@Url.Action("Index", "Home")">Çıkış</a>
                     </div>
                 </div>
             </div>

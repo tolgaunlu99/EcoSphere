@@ -1,93 +1,109 @@
 ﻿.main-card {
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     margin: 20px 0;
     overflow: hidden;
 }
 
 .card-header {
-    background: linear-gradient(135deg, #2E590E, #548C1C);
+    background: linear-gradient(135deg, #1a4d0a, #2E590E, #548C1C);
     color: white;
     border: none;
-    padding: 20px 30px;
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
 }
 
-    .card-header h1 {
-        margin: 0;
-        font-weight: 700;
-        font-size: 2.2rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
     }
 
-    .card-header .summary-card {
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-        min-width: auto;
-        max-width: none;
-    }
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin: 0;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    letter-spacing: -1px;
+    position: relative;
+    z-index: 2;
+}
 
-        .card-header .summary-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-        }
+.title-underline {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    margin: 15px auto 0;
+    border-radius: 2px;
+    position: relative;
+    z-index: 2;
+}
 
-.summary-cards {
+.stats-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.stats-icon {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    color: #fff;
+}
+
+.stats-breakdown {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 30px;
-    width: 100%;
-    padding: 0;
-    box-sizing: border-box;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 5px;
 }
 
-.summary-card {
-    flex: 1;
-    min-width: 250px;
-    max-width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    transition: all 0.3s ease;
-    border: none;
+.breakdown-item {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    padding: 2px 0;
 }
 
-    .summary-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
-
-    .summary-card .card-body {
-        padding: 25px 20px;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .summary-card .card-body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            transform: translate(15px, -15px);
-        }
-
-    .summary-card .text-uppercase {
-        font-size: 0.85rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        opacity: 0.9;
-    }
-
-    .summary-card .h5 {
-        font-size: 2.2rem;
+    .breakdown-item span {
         font-weight: 800;
-        margin: 0;
+        color: #f0f8e8;
+        margin-left: 5px;
     }
 
 .map-container {
@@ -127,36 +143,58 @@
 .card-body {
     padding: 30px;
     background: #0C2605;
-    border-radius:15px;
+    border-radius: 15px;
 }
 
 /* Responsive improvements */
-@media (max-width: 768px) {
-    .card-header {
-        padding: 15px;
+@media (max-width: 992px) {
+    .main-title {
+        font-size: 2.8rem;
+        margin-bottom: 20px;
     }
 
-        .card-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
+    .stats-card {
+        margin-bottom: 20px;
+    }
 
-        .card-header .row {
-            flex-direction: column;
-            text-align: center !important;
-        }
+    .stats-number {
+        font-size: 2.2rem;
+    }
+}
 
-        .card-header .col-md-3,
-        .card-header .col-md-6 {
-            margin-bottom: 10px;
-        }
+@media (max-width: 768px) {
+    .card-header {
+        padding: 25px 15px;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
+        margin-bottom: 25px;
+    }
+
+    .stats-card {
+        padding: 20px 15px;
+        margin-bottom: 15px;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+    }
+
+    .stats-icon {
+        font-size: 1.5rem;
+    }
+
+    .stats-label {
+        font-size: 0.8rem;
+    }
+
+    .breakdown-item {
+        font-size: 0.8rem;
+    }
 
     .card-body {
         padding: 20px;
-    }
-
-    .summary-card {
-        min-width: 200px;
     }
 
     .map-legend-box {
@@ -164,6 +202,20 @@
         right: 10px;
         width: 150px;
         padding: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-title {
+        font-size: 1.8rem;
+    }
+
+    .stats-number {
+        font-size: 1.8rem;
+    }
+
+    .stats-card {
+        padding: 18px 12px;
     }
 }
 
