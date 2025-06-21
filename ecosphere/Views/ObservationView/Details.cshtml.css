@@ -16,6 +16,50 @@
         transform: translateY(-5px);
         box-shadow: 0 25px 50px rgba(46, 89, 14, 0.2);
     }
+.endemik1 {
+    background-color: #e80000;
+}
+
+.endemik2 {
+     background-color: #548C1C;
+}
+
+.endemik3 {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.detail-item.endemic-item-green {
+    background-color: #548C1C;
+}
+
+.detail-item.endemic-item-red {
+    background-color: #e80000;
+}
+
+.detail-item.endemic-item-gray {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.detail-item.endemic-item-green:hover {
+    background-color: #548C1C !important;
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.detail-item.endemic-item-red:hover {
+    background-color: #e80000 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.detail-item.endemic-item-gray:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
 
 .card-header {
     background: linear-gradient(135deg, #2E590E, #548C1C);

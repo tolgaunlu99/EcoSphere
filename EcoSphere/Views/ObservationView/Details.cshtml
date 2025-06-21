@@ -208,33 +208,37 @@
                                 @{
                                     string endemicClass = "";
                                     string endemicText = "";
+                                    string detailItemClass = ""; // Yeni eklenen
 
                                     if (!string.IsNullOrEmpty(Model.EndemicStatus))
                                     {
                                         if (Model.EndemicStatus.Equals("true", System.StringComparison.OrdinalIgnoreCase))
                                         {
-                                            endemicClass = "bg-danger text-white";
-                                            endemicText = "Endemik bir türdür";
+                                            endemicClass = "endemik1 text-white";
+                                            endemicText = "Endemik bir türdür!";
+                                            detailItemClass = "endemic-item-red"; // Kırmızı background
                                         }
                                         else if (Model.EndemicStatus.Equals("false", System.StringComparison.OrdinalIgnoreCase))
                                         {
-                                            endemicClass = "bg-success text-white";
+                                            endemicClass = "endemik2 text-white";
                                             endemicText = "Endemik değildir";
+                                            detailItemClass = "endemic-item-green"; // Yeşil background
                                         }
                                         else
                                         {
-                                            endemicClass = "bg-secondary text-white";
+                                            endemicClass = "endemik3 text-white";
                                             endemicText = "Endemiklik Bilinmiyor";
+                                            detailItemClass = "endemic-item-gray"; // Gri background
                                         }
                                     }
                                     else
                                     {
                                         endemicClass = "bg-secondary text-white";
                                         endemicText = "Bilinmiyor";
+                                        detailItemClass = "endemic-item-gray"; // Gri background
                                     }
                                 }
-
-                                <div class="detail-item">
+                                <div class="detail-item @detailItemClass">
                                     <div class="detail-content">
                                         <div class="detail-value p-2 rounded @endemicClass">@endemicText</div>
                                     </div>
@@ -258,12 +262,6 @@
                                     <div class="detail-content">
                                         <div class="detail-label">Bölge</div>
                                         <div class="detail-value">@Model.ProvinceName/@Model.DistrictName</div>
-                                    </div>
-                                </div>
-
-                                <div class="detail-item compact">
-                                    <div class="detail-content">
-                                        <div class="detail-label">Konum Bilgileri</div>
                                     </div>
                                 </div>
 

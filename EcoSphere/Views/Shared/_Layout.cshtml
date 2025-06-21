@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,152 +20,176 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="icon" type="image/png" sizes="16x16" href="~/images/4_dkm_ikon_kare.png" />
     @RenderSection("Styles", required: false)
+
+    <style>
+        /* Sticky Footer Styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            min-height: 94vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="wrapper">
+        @{
+            int userRoleId = ViewBag.UserRoleId;
+        }
+        <header class="header-area overlay">
+            <nav class="navbar navbar-expand-md @(ViewData["NavbarClass"] ?? "navbar-default")">
+                <div class="container container-nav">
+                    <div class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
 
-    @{
-        int userRoleId = ViewBag.UserRoleId;
-    }
-    <header class="header-area overlay">
-        <nav class="navbar navbar-expand-md @(ViewData["NavbarClass"] ?? "navbar-default")">
-            <div class="container container-nav">
-                <div class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                        <a asp-controller="Home" asp-action="Index">
+                            <img img src="~/images/DkmLogo.png" href="" alt="EcoSphere Logo" width="50" height="40" class="me-2">
+                        </a>
 
-                    <a asp-controller="Home" asp-action="Index">
-                        <img img src="~/images/DkmLogo.png" href="" alt="EcoSphere Logo" width="50" height="40" class="me-2">
-                    </a>
-                    
-                </div>
+                    </div>
 
-                <button class="navbar-toggler collapsed" type="button"
-                data-bs-toggle="collapse" data-bs-target="#main-nav"
-                aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="menu-icon-bar"></span>
-                    <span class="menu-icon-bar"></span>
-                    <span class="menu-icon-bar"></span>
-                </button>
+                    <button class="navbar-toggler collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#main-nav"
+                            aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="menu-icon-bar"></span>
+                        <span class="menu-icon-bar"></span>
+                        <span class="menu-icon-bar"></span>
+                    </button>
 
-                <div id="main-nav" class="ml-auto">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Home")">Ana Sayfa</a> </li>
-                        <li class="nav-item"> <a class="nav-link" href="@Url.Action("Explore", "Home")">Keşfet</a> </li>
-                        <li class="nav-item dropdown">
+                    <div id="main-nav" class="ml-auto">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Home")">Ana Sayfa</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Explore", "Home")">Keşfet</a> </li>
+                            <li class="nav-item dropdown">
 
-                            @if (userRoleId == 1 || userRoleId == 2) // Admin ve Expert
-                            {
-                                <a href="#" class="nav-link " data-bs-toggle="dropdown">Hizmetler</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Türler</a>
-                                    <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
-                                </div>
-                            }
-                            @if (userRoleId == 3 ) // Observer
-                            {
-                             <a href="#" class="nav-link " data-bs-toggle="dropdown">Hizmetler</a>
-                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
-                                <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
-                             </div>
-                            }
-                        @if (userRoleId == 5) // Volunteer
-                        {
-                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("AddObservation", "ObservationView")">Gözlem Ekle</a> </li>
-                        }
-                        
+                                @if (userRoleId == 1 || userRoleId == 2) // Admin ve Expert
+                                {
+                                    <a href="#" class="nav-link " data-bs-toggle="dropdown">Hizmetler</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
+                                        <a class="dropdown-item" href="@Url.Action("Index", "CreaturesView")">Türler</a>
+                                        <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
+                                    </div>
+                                }
+                                @if (userRoleId == 3) // Observer
+                                {
+                                    <a href="#" class="nav-link " data-bs-toggle="dropdown">Hizmetler</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="@Url.Action("Index", "ObservationView")">Gözlemler</a>
+                                        <a class="dropdown-item" href="@Url.Action("PendingObservations", "Home")">Bekleyen Gözlemler</a>
+                                    </div>
+                                }
+                                @if (userRoleId == 5) // Volunteer
+                                {
+                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("AddObservation", "ObservationView")">Gözlem Ekle</a> </li>
+                                }
 
-                        @if (userRoleId==1)
-                        {
-                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Admin")">Yönetim Paneli</a> </li>
-                        }
 
-                        <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">Hakkımızda</a> </li>
-                        
-                        @if (userRoleId > 0)
-                        {
-                            <li class="nav-item">
-                                <a href="@Url.Action("Logout", "UserView")" class="nav-link">
-                                    <i class="fa-solid fa-right-from-bracket"></i>
-                                </a>
+                                @if (userRoleId == 1)
+                                {
+                                <li class="nav-item"> <a class="nav-link" href="@Url.Action("Index", "Admin")">Yönetim Paneli</a> </li>
+                                }
+
+                            <li class="nav-item"> <a class="nav-link" href="@Url.Action("Privacy", "Home")">Hakkımızda</a> </li>
+
+                                @if (userRoleId > 0)
+                                {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Logout", "UserView")" class="nav-link">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                    </a>
                                 </li>
-                        }
-                        else { 
-                        <li class="nav-item">
-                            <a href="@Url.Action("Index", "UserView")" class="nav-link">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        }
-                    </ul>
+                                }
+                                else
+                                {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "UserView")" class="nav-link">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                }
+                        </ul>
+                    </div>
                 </div>
+            </nav>
+        </header>
 
-
-            </div>
-        </nav>
-
-    </header>
-
-    <div>
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
-
-
-
-
-            
-    <footer class="footer">
-        <!-- Logo -->
-        <div class="logo">
-            <img src="~/images/DkmLogoYazılı.png" width="182" height="98" alt="DKM Logo">
-        </div>
-
-        <div class="contact-container">
-            <!-- Address -->
-            <div class="contact-item">
-                <div class="icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="contact-text">
-                    Çiğdem Mahallesi 1594. Sokak No: 3 06530<br>
-                    Çankaya/Ankara
-                </div>
-            </div>
-
-            <!-- Phone -->
-            <div class="contact-item">
-                <div class="icon">
-                    <i class="fas fa-phone"></i>
-                </div>
-                <div class="contact-text">
-                    +90 312 287 40 67
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div class="contact-item">
-                <div class="icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="contact-text email">
-                    dkm@dkm.org.tr
-                </div>
+        <div class="main-content">
+            <div class="content-wrapper">
+                <main role="main">
+                    @RenderBody()
+                </main>
             </div>
         </div>
-    </footer>
 
-    <!-- Copyright Bar -->
-    <div class="copyright-bar">
-        Copyright © Tüm hakları saklıdır 2024 / DOĞA KORUMA MERKEZİ
-        <span style="margin: 0 10px;">|</span>
-        <a href="https://dkm.org.tr/tr/cerez-politikasi">Çerez Politikası</a>
-        <span style="margin: 0 10px;">|</span>
-        <a href="https://dkm.org.tr/tr/kvkk">KVKK Metni</a>
+        <footer class="footer">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/images/DkmLogoYazılı.png" width="182" height="98" alt="DKM Logo">
+            </div>
+
+            <div class="contact-container">
+                <!-- Address -->
+                <div class="contact-item">
+                    <div class="icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-text">
+                        Çiğdem Mahallesi 1594. Sokak No: 3 06530<br>
+                        Çankaya/Ankara
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="contact-item">
+                    <div class="icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-text">
+                        +90 312 287 40 67
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="contact-item">
+                    <div class="icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-text email">
+                        dkm@dkm.org.tr
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Copyright Bar -->
+        <div class="copyright-bar">
+            Copyright © Tüm hakları saklıdır 2024 / DOĞA KORUMA MERKEZİ
+            <span style="margin: 0 10px;">|</span>
+            <a href="https://dkm.org.tr/tr/cerez-politikasi">Çerez Politikası</a>
+            <span style="margin: 0 10px;">|</span>
+            <a href="https://dkm.org.tr/tr/kvkk">KVKK Metni</a>
+        </div>
     </div>
-
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -178,7 +201,5 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    
-
 </body>
 </html>
