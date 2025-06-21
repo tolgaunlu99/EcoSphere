@@ -242,6 +242,15 @@ public class AdminController : Controller
             {
                 _context.TblUserRoles.Remove(userRole);
             }
+            var userObservations = _context.TblMaintables
+    .Where(x => x.UserId == id)
+    .ToList();
+
+            // Eğer gözlem varsa önce bunları sil
+            if (userObservations.Any())
+            {
+                _context.TblMaintables.RemoveRange(userObservations);
+            }
 
             // 2️⃣ tbl_users tablosundan sil
             var user = _context.TblUsers.FirstOrDefault(x => x.UserId == id);
