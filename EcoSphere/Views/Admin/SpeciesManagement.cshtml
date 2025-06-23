@@ -82,7 +82,31 @@
     <script>
         $(document).ready(function () {
             var table = $('#creaturesTable').DataTable({
-                language: { lengthMenu: 'Show _MENU_' },
+                language: {
+                    "decimal": ",",
+                    "emptyTable": "Tabloda veri bulunmuyor",
+                    "info": "_TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                    "infoEmpty": "0 kayıttan 0 - 0 arası gösteriliyor",
+                    "infoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                    "infoPostFix": "",
+                    "thousands": ".",
+                    "lengthMenu": "Kayıt göster:_MENU_",
+                    "loadingRecords": "Yükleniyor...",
+                    "processing": "İşleniyor...",
+                    "search": "Genel Arama:",
+                    "searchPlaceholder": "Tabloda ara...",
+                    "zeroRecords": "Eşleşen kayıt bulunamadı",
+                    "paginate": {
+                        "first": "İlk",
+                        "last": "Son",
+                        "next": "Sonraki",
+                        "previous": "Önceki"
+                    },
+                    "aria": {
+                        "sortAscending": ": artan sütun sıralaması için aktif hale getir",
+                        "sortDescending": ": azalan sütun sıralaması için aktif hale getir"
+                    }
+                },
                 dom: '<"table-header d-flex justify-content-between mb-3"<"dt-buttons btn-group"B><"table-controls d-flex align-items-center"<"me-2"l><"table-search"f>>>rtip',
                 scrollX: true,
                 paging: true,

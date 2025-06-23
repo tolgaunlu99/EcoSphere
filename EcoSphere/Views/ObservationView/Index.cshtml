@@ -29,13 +29,67 @@
                     <th>Gözlem Zamanı</th>
                     <th>Oluşturulma Tarihi</th>
                     <th class="noExport" style="text-align:center; width:120px;">İşlemler</th>
-
                 </tr>
+                <tr class="search-row">
+                    <th style="display:none;"></th>
+                    <th><input data-column="1" type="text" class="form-control form-control-sm column-search" placeholder="Tür ara..." /></th>
+                    <th><input data-column="2" type="text" class="form-control form-control-sm column-search" placeholder="Kullanıcı ara..." /></th>
+                    <th><input data-column="3" type="text" class="form-control form-control-sm column-search" placeholder="İl ara..." /></th>
+                    <th><input data-column="4" type="text" class="form-control form-control-sm column-search" placeholder="İlçe ara..." /></th>
+                    <th><input data-column="5" type="text" class="form-control form-control-sm column-search" placeholder="Endemik ara..." /></th>
+                    <th><input data-column="6" type="text" class="form-control form-control-sm column-search" placeholder="Proje ara..." /></th>
+                    <th><input data-column="7" type="text" class="form-control form-control-sm column-search" placeholder="Referans ara..." /></th>
+                    <th><input data-column="8" type="text" class="form-control form-control-sm column-search" placeholder="Lokasyon ara..." /></th>
+                    <th><input data-column="9" type="text" class="form-control form-control-sm column-search" placeholder="Cinsiyet ara..." /></th>
+                    <th><input data-column="10" type="text" class="form-control form-control-sm column-search" placeholder="Boylam ara..." /></th>
+                    <th><input data-column="11" type="text" class="form-control form-control-sm column-search" placeholder="Enlem ara..." /></th>
+                    <th><input data-column="12" type="text" class="form-control form-control-sm column-search" placeholder="Aktivite ara..." /></th>
+                    <th></th>
+                    <th></th>
+
+                    <th class="noExport"></th>
+                </tr>
+
             </thead>
             <tbody></tbody>
         </table>
     </div>
 </div>
+
+<style>
+    .search-row th {
+        padding: 8px 4px !important;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .column-search {
+        width: 100%;
+        font-size: 12px;
+        padding: 4px 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+        .column-search:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .date-search {
+        width: 100%;
+        font-size: 12px;
+        padding: 4px 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+        .date-search:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+</style>
 
 @section Scripts {
     <script>
@@ -61,18 +115,43 @@
                     url: '/ObservationView/GetObservations',
                     type: 'POST',
                     dataSrc: function (json) {
-                        // Eğer kullanıcı Observer ise "True" olan endemic kayıtları filtrele
                         if (userRoleId !== 1 && userRoleId !== 2) {
                             json = json.filter(item => item.endemicStatName !== "True");
                         }
                         return json;
                     }
                 },
-                language: { lengthMenu: 'Show _MENU_' },
+                language: {
+                    "decimal": ",",
+                    "emptyTable": "Tabloda veri bulunmuyor",
+                    "info": "_TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                    "infoEmpty": "0 kayıttan 0 - 0 arası gösteriliyor",
+                    "infoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                    "infoPostFix": "",
+                    "thousands": ".",
+                    "lengthMenu": "Kayıt göster:_MENU_",
+                    "loadingRecords": "Yükleniyor...",
+                    "processing": "İşleniyor...",
+                    "search": "Genel Arama:",
+                    "searchPlaceholder": "Tabloda ara...",
+                    "zeroRecords": "Eşleşen kayıt bulunamadı",
+                    "paginate": {
+                        "first": "İlk",
+                        "last": "Son",
+                        "next": "Sonraki",
+                        "previous": "Önceki"
+                    },
+                    "aria": {
+                        "sortAscending": ": artan sütun sıralaması için aktif hale getir",
+                        "sortDescending": ": azalan sütun sıralaması için aktif hale getir"
+                    }
+                },
                 dom: '<"table-header d-flex justify-content-between mb-3"<"dt-buttons btn-group"B><"table-controls d-flex align-items-center"<"me-2"l><"table-search"f>>>rtip',
                 scrollX: true,
                 paging: true,
                 autoWidth: false,
+                orderCellsTop: true,
+                fixedHeader: true,
                 columns: [
                     { data: 'id', visible: false },
                     { data: 'creatureName' },
@@ -103,61 +182,118 @@
                         data: null,
                         className: 'text-center',
                         render: function (data, type, row) {
-                            if (userRoleId === 3) return ''; // Observer'a silme butonu gösterme
+                            if (userRoleId === 3) return '';
                             return '<button type="button" class="btn btn-sm btn-danger dt-delete">Sil</button>';
                         },
-                        orderable: false
+                        orderable: false,
+                        searchable: false
                     }
                 ],
-                    buttons: userRoleId === 3
-        ? [
-            {
-                extend: 'colvis',
-                text: 'Columns',
-                collectionLayout: 'fixed two-column'
-            }
-        ]
-        : [
-            {
-                extend: 'colvis',
-                text: 'Sütunlar',
-                collectionLayout: 'fixed two-column'
-            },
-            {
-                extend: 'csvHtml5',
-                exportOptions: { columns: ':not(.noExport)' },
-                action: function (e, dt, button, config) {
-                    logExport('csv');
-                    $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                exportOptions: { columns: ':not(.noExport)' },
-                action: function (e, dt, button, config) {
-                    logExport('excel');
-                    $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
-                }
-            }
-        ]
+                buttons: userRoleId === 3
+                    ? [
+                        {
+                            extend: 'colvis',
+                            text: 'Sütunlar',
+                            collectionLayout: 'fixed two-column'
+                        }
+                    ]
+                    : [
+                        {
+                            extend: 'colvis',
+                            text: 'Sütunlar',
+                            collectionLayout: 'fixed two-column'
+                        },
+                        {
+                            text: 'Aramaları Temizle',
+                            className: 'btn-secondary',
+                            action: function (e, dt, node, config) {
+                                dt.columns().search('').draw();
+                                $('.column-search').val('');
+                                dt.search('').draw();
+                            }
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            exportOptions: { columns: ':not(.noExport)' },
+                            action: function (e, dt, button, config) {
+                                logExport('csv');
+                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: { columns: ':not(.noExport)' },
+                            action: function (e, dt, button, config) {
+                                logExport('excel');
+                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
+                            }
+                        }
+                        
+                    ]
             });
 
-            function logExport(type) {
-                $.ajax({
-                    url: '/ObservationView/LogUserExport',
-                    type: 'POST',
-                    data: { exportType: type, sourceTable: 'Observation' },
-                    success: function (res) {
-                        if (!res.success) {
-                            console.error("Export log kaydedilirken hata:", res.message);
+                 $('.column-search').on('keyup change clear', function () {
+            var columnIndex = $(this).data('column');
+            if (columnIndex === undefined) return;
+
+            var searchValue = this.value.trim();
+
+            if ($(this).hasClass('date-filter') && searchValue) {
+                // Tüm verileri al, filtreleme client-side yapılacak
+                table.column(columnIndex).search('').draw();
+
+                table.rows().every(function () {
+                    var cellData = this.data();
+                    var dateStr = columnIndex === 13 ? cellData.seenTime : cellData.creationDate;
+                    var dateObj = new Date(dateStr);
+
+                    // Format: YYYY-MM
+                    var rowYear = dateObj.getFullYear().toString();
+                    var rowMonth = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                    var rowYearMonth = `${rowYear}-${rowMonth}`;
+
+                    // Kullanıcı sadece yıl girdiyse
+                    if (/^\d{4}$/.test(searchValue)) {
+                        if (rowYear === searchValue) {
+                            $(this.node()).show();
+                        } else {
+                            $(this.node()).hide();
                         }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Export log kaydedilirken hata:", error);
+                    }
+
+                    // Kullanıcı ay+yıl girdiyse
+                    else if (/^\d{4}-\d{2}$/.test(searchValue)) {
+                        if (rowYearMonth === searchValue) {
+                            $(this.node()).show();
+                        } else {
+                            $(this.node()).hide();
+                        }
+                    }
+
+                    // Geçersiz format: hiçbir filtre uygulanmaz
+                    else {
+                        $(this.node()).show();
                     }
                 });
             }
+            else {
+                table
+                    .column(columnIndex)
+                    .search(searchValue)
+                    .draw();
+            }
+        });
 
+
+            // 🔄 Arama kutularını çift tıklamayla temizleme
+            $('.column-search').on('dblclick', function () {
+                var columnIndex = $(this).data('column');
+                if (columnIndex === undefined) return;
+                $(this).val('');
+                table.column(columnIndex).search('').draw();
+            });
+
+            // 🗑 Silme işlemi
             if (userRoleId !== 3) {
                 $('#observationTable').on('click', '.dt-delete', function (e) {
                     e.preventDefault();
@@ -196,6 +332,24 @@
                     });
                 });
             }
+
+            // ⏺ Export log fonksiyonu
+            function logExport(type) {
+                $.ajax({
+                    url: '/ObservationView/LogUserExport',
+                    type: 'POST',
+                    data: { exportType: type, sourceTable: 'Observation' },
+                    success: function (res) {
+                        if (!res.success) {
+                            console.error("Export log kaydedilirken hata:", res.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Export log kaydedilirken hata:", error);
+                    }
+                });
+            }
         });
+
     </script>
 }
