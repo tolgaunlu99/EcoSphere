@@ -78,6 +78,6 @@ _Add here if needed: form view, map page, species management panel, download UI_
 
 We thank the nature conservation professionals who provided real-world insights during the design phase. This project aims to make biodiversity tracking more efficient, accessible, and secure.
 
----
+--
 
 Feel free to contribute, suggest improvements, or reach out if you're working on similar conservation tech!
